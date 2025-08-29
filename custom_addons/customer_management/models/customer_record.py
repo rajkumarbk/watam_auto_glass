@@ -49,18 +49,20 @@ class ClientRecord(models.Model):
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
 
+    def _get_current_time_float(self):
+        # Get current time in your timezone, e.g., Asia/Riyadh
+        tz = pytz.timezone("Asia/Riyadh")
+        now = datetime.now(tz)
+        return now.hour + now.minute / 60.0  # convert to float
+
     start_time = fields.Float(
         string="Start Time",
         readonly=True,
-        default=lambda self: self._get_ksa_time_float()
+        default=_get_current_time_float
     )
     end_time = fields.Float(string="End Time", readonly=True)
 
-    def _get_ksa_time_float(self):
-        """Return current Saudi Arabia time as float (hours + minutes/60)"""
-        ksa_tz = pytz.timezone("Asia/Riyadh")
-        now = datetime.now(pytz.utc).astimezone(ksa_tz)
-        return now.hour + now.minute / 60.0
+    
 
     def action_set_done(self):
         """Set status to done and record end_time"""
