@@ -49,36 +49,23 @@ class ClientRecord(models.Model):
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
 
-    # Start & End Time
-    start_time = fields.Float(
-        string="Start Time",
-        default=lambda self: self._get_ksa_time_float(),
-        readonly=True,
-    )
-    end_time = fields.Float(
-        string="End Time",
-        readonly=True,
-    )
+    start_time = fields.Float(string="Start Time", readonly=True,
+                              default=lambda self: self._get_user_time_float())
+    end_time = fields.Float(string="End Time", readonly=True)
 
-    def _get_ksa_time_float(self):
-        """Return current KSA time as float (hours + minutes/60)"""
-        ksa_tz = pytz.timezone("Asia/Riyadh")
-        now_ksa = datetime.now(ksa_tz)
-        return now_ksa.hour + now_ksa.minute / 60.0
+    def _get_user_time_float(self):
+        """Return current user local time as float (hours + minutes/60)"""
+        user_tz = pytz.timezone(self.env.user.tz or 'UTC')  # fallback to UTC
+        now = datetime.now(pytz.utc).astimezone(user_tz)
+        return now.hour + now.minute / 60.0
 
-    # Button Actions
     def action_set_done(self):
-        """Set status to 'done' and record end_time"""
+        """Set status to done and end_time"""
         for record in self:
             record.status = 'done'
-            record.end_time = self._get_ksa_time_float()
+            record.end_time = self._get_user_time_float()
 
-    # Button Actions
-    def action_set_done(self):
-        """Set status to 'done' and record end_time"""
-        for record in self:
-            record.status = 'done'
-            record.end_time = self._get_ksa_time_float()
+
 
     # Work Info
     difficulty = fields.Selection([
