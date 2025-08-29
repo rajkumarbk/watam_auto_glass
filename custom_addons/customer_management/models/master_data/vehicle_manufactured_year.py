@@ -1,5 +1,6 @@
 from odoo import models, fields
 
+
 class ManufacturedYear(models.Model):
     _name = "manufactured.year"
     _description = "Vehicle year"
