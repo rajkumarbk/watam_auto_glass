@@ -50,21 +50,35 @@ class ClientRecord(models.Model):
     notes = fields.Text(string="Notes")
 
     # Start & End Time
-    def _default_start_time(self):
-        """Return current KSA time as HH:MM"""
-        ksa_tz = pytz.timezone("Asia/Riyadh")
-        now_ksa = datetime.now(ksa_tz)
-        return now_ksa.strftime("%H:%M")   # example: "07:55"
-
-    start_time = fields.Char(
+    start_time = fields.Float(
         string="Start Time",
-        default=_default_start_time,
+        default=lambda self: self._get_ksa_time_float(),
         readonly=True,
     )
-    end_time = fields.Char(
+    end_time = fields.Float(
         string="End Time",
         readonly=True,
     )
+
+    def _get_ksa_time_float(self):
+        """Return current KSA time as float (hours + minutes/60)"""
+        ksa_tz = pytz.timezone("Asia/Riyadh")
+        now_ksa = datetime.now(ksa_tz)
+        return now_ksa.hour + now_ksa.minute / 60.0
+
+    # Button Actions
+    def action_set_done(self):
+        """Set status to 'done' and record end_time"""
+        for record in self:
+            record.status = 'done'
+            record.end_time = self._get_ksa_time_float()
+
+    # Button Actions
+    def action_set_done(self):
+        """Set status to 'done' and record end_time"""
+        for record in self:
+            record.status = 'done'
+            record.end_time = self._get_ksa_time_float()
 
     # Work Info
     difficulty = fields.Selection([
@@ -128,8 +142,6 @@ class ClientRecord(models.Model):
         Either add it in `status` field or this will raise a ValueError."""
         self.status = 'on_progress'
 
-    def action_set_done(self):
-        self.status = 'done'
 
     # Constraints
 

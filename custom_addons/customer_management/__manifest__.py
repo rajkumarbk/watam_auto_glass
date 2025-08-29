@@ -14,7 +14,7 @@ Long description of module's purpose
     'version': '0.1',
     'sequence' :1,
     # any module necessary for this one to work correctly
-    'depends': ['base', 'hr', 'field_timepicker','hide_menu_user'],
+    'depends': ['base', 'hr','hide_menu_user'],
 
     # always loaded
     'data': [
