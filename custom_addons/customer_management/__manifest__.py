@@ -1,0 +1,45 @@
+# -*- coding: utf-8 -*-
+{
+    'name': "Watam Auto Glass - Customer Management",
+
+    'summary': "Short (1 phrase/line) summary of the module's purpose",
+
+    'description': """
+Long description of module's purpose
+    """,
+
+    'author': "Dishan Shrestha",
+   
+    'category': 'Human Resource',
+    'version': '0.1',
+    'sequence' :1,
+    # any module necessary for this one to work correctly
+    'depends': ['base', 'hr', 'field_timepicker','hide_menu_user'],
+
+    # always loaded
+    'data': [
+        'security/security_group.xml',
+        'security/ir.model.access.csv',
+        'data/vehicle_brand_data.xml',
+        'data/vehicle_model_data.xml',
+        'data/manufactured_year.xml',
+        'data/glass_data.xml',
+        'views/master_data/vehicle_brand.xml',
+        'views/master_data/vehicle_model.xml',
+        'views/master_data/vehicle_manufactured_year.xml',
+        'views/master_data/vehicle_glass.xml',
+        'views/customer_record.xml',
+        'views/views.xml',
+        'views/templates.xml',
+    ],
+    # only loaded in demonstration mode
+    'demo': [
+        'demo/demo.xml',
+    ],
+    'images': ['static/description/icon.png'],
+    "license": "LGPL-3",
+    "installable": True,
+    "auto_install": False,
+    "application": True,
+}
+

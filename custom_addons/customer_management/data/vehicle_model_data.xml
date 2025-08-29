@@ -1,0 +1,19 @@
+<odoo>
+    <record id="vehicle_model_corolla" model="vehicle.model">
+        <field name="name">Corolla</field>
+        <field name="brand_id" ref="customer_management.vehicle_brand_toyota"/>
+        
+    </record>
+
+    <record id="vehicle_model_civic" model="vehicle.model">
+        <field name="name">Civic</field>
+        <field name="brand_id" ref="customer_management.vehicle_brand_honda"/>
+ 
+    </record>
+
+    <record id="vehicle_model_focus" model="vehicle.model">
+        <field name="name">Focus</field>
+        <field name="brand_id" ref="customer_management.vehicle_brand_ford"/>
+
+    </record>
+</odoo>

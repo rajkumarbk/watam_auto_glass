@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_manufactured_year_list" model="ir.ui.view">
+            <field name="name">Manufactured Year</field>
+            <field name="model">manufactured.year</field>
+            <field name="arch" type="xml">
+                <list editable="bottom">
+                    <field name="name" />
+                </list>
+            </field>
+        </record>
+        <record id="action_manufactured_year" model="ir.actions.act_window">
+            <field name="name">Manufactured Year</field>
+            <field name="res_model">manufactured.year</field>
+            <field name="view_mode">list</field>
+        </record>
+    </data>
+</odoo>

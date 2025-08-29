@@ -1,0 +1,68 @@
+<odoo>
+    <record id="glass_1" model="vehicle.glass">
+        <field name="name">BDL</field>
+    </record>
+    <record id="glass_2" model="vehicle.glass">
+        <field name="name">BDR</field>
+    </record>
+    <record id="glass_3" model="vehicle.glass">
+        <field name="name">FDL</field>
+    </record>
+    <record id="glass_4" model="vehicle.glass">
+        <field name="name">FDR</field>
+    </record>
+    <record id="glass_5" model="vehicle.glass">
+        <field name="name">LFW</field>
+    </record>
+    <record id="glass_6" model="vehicle.glass">
+        <field name="name">FVL</field>
+    </record>
+    <record id="glass_7" model="vehicle.glass">
+        <field name="name">FVR</field>
+    </record>
+    <record id="glass_8" model="vehicle.glass">
+        <field name="name">FQL</field>
+    </record>
+    <record id="glass_9" model="vehicle.glass">
+        <field name="name">FQR</field>
+    </record>
+    <record id="glass_10" model="vehicle.glass">
+        <field name="name">RDL</field>
+    </record>
+    <record id="glass_11" model="vehicle.glass">
+        <field name="name">RDR</field>
+    </record>
+    <record id="glass_12" model="vehicle.glass">
+        <field name="name">RQL</field>
+    </record>
+    <record id="glass_13" model="vehicle.glass">
+        <field name="name">RQR</field>
+    </record>
+    <record id="glass_14" model="vehicle.glass">
+        <field name="name">RWH</field>
+    </record>
+    <record id="glass_15" model="vehicle.glass">
+        <field name="name">RWL</field>
+    </record>
+    <record id="glass_16" model="vehicle.glass">
+        <field name="name">RWR</field>
+    </record>
+    <record id="glass_17" model="vehicle.glass">
+        <field name="name">RWM</field>
+    </record>
+    <record id="glass_18" model="vehicle.glass">
+        <field name="name">SQL</field>
+    </record>
+    <record id="glass_19" model="vehicle.glass">
+        <field name="name">SQR</field>
+    </record>
+    <record id="glass_20" model="vehicle.glass">
+        <field name="name">SWL</field>
+    </record>
+    <record id="glass_21" model="vehicle.glass">
+        <field name="name">SWR</field>
+    </record>
+    <record id="glass_22" model="vehicle.glass">
+        <field name="name">Roof</field>
+    </record>
+</odoo>
