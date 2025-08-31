@@ -1,0 +1,11 @@
+<odoo>
+    <record id="prob1" model="what.problem">
+        <field name="name">Silicon not adjust</field>
+    </record>
+    <record id="prob2" model="what.problem">
+        <field name="name">Glass Crack</field>
+    </record>
+    <record id="prob3" model="what.problem">
+        <field name="name">Rubber not fitted</field>
+    </record>
+</odoo>

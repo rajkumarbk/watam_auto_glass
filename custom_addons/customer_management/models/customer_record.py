@@ -72,37 +72,13 @@ class ClientRecord(models.Model):
             record.status = "done"
             record.end_time = self._get_ksa_time_float()
 
-    # Work Info
-    difficulty = fields.Selection(
-        [
-            ("select", "Select"),
-            ("easy", "Easy"),
-            ("medium", "Medium"),
-            ("hard", "Hard"),
-        ],
-        string="Difficulty",
+
+    problem = fields.Many2one(
+        "what.problem", string="Problem", required=True, help="Problem of the vehicle"
     )
 
-    problem = fields.Selection(
-        [
-            ("problem1", "Problem 1"),
-            ("problem2", "Problem 2"),
-            ("problem3", "Problem 3"),
-            ("problem4", "Problem 4"),
-            ("problem5", "Problem 5"),
-        ],
-        string="Problem",
-    )
-
-    solution = fields.Selection(
-        [
-            ("solution1", "Solution 1"),
-            ("solution2", "Solution 2"),
-            ("solution3", "Solution 3"),
-            ("solution4", "Solution 4"),
-            ("solution5", "Solution 5"),
-        ],
-        string="Solution",
+    solution = fields.Many2one(
+        "what.solution", string="Solution", required=True
     )
 
     workplace = fields.Selection(

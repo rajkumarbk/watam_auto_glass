@@ -1,0 +1,50 @@
+<odoo>
+    <!-- List View -->
+    <record id="view_problem_solution_list" model="ir.ui.view">
+        <field name="name">problem.solution.list</field>
+        <field name="model">problem.solution</field>
+        <field name="arch" type="xml">
+            <list>
+                
+                <field name="problem"/>
+                <field name="solution"/>
+               
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_problem_solution_form" model="ir.ui.view">
+        <field name="name">problem.solution.form</field>
+        <field name="model">problem.solution</field>
+        <field name="arch" type="xml">
+            <form>
+            <header>
+                            <field name="date"/>
+                            <field name="branch_id" readonly="1"/>
+                            <field name="start_time" widget="easy_timepicker" />
+
+                        </header>
+                <sheet>
+                    <group>
+                            <field name="vehicle_brand" />
+                            <field name="vehicle_model" />
+                            <field name="manufactured_year_id" />
+                            <field name="vehicle_number" />
+
+                            <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee"/>
+                            <field name="problem" placeholder="Select the problem"/>
+                            <field name="solution" placeholder="Select the Solution"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action: Active Records -->
+    <record id="action_problem_solution" model="ir.actions.act_window">
+        <field name="name">Problem and Solution</field>
+        <field name="res_model">problem.solution</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
