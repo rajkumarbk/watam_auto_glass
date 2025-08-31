@@ -19,10 +19,7 @@ class ClientRecord(models.Model):
         default=lambda self: self.env.company,
     )
     name = fields.Char(string="Customer", required=True)
-    email = fields.Char(string="Email")
     phone = fields.Char(string="Phone", required=True, default="05")
-    address = fields.Char(string="Address")
-    avatar = fields.Binary(string="Avatar")
 
     vehicle_brand = fields.Many2one(
         "vehicle.brand", string="Vehicle Brand", required=True
@@ -45,7 +42,6 @@ class ClientRecord(models.Model):
         compute="_compute_vehicle_display",
     )
 
-    color = fields.Char(string="Color")
     vehicle_number = fields.Char(string="Vehicle Number", required=True)
     date = fields.Date(
         string="Date",
@@ -70,16 +66,7 @@ class ClientRecord(models.Model):
         """Set status to done and record end_time"""
         for record in self:
             record.status = "done"
-            record.end_time = self._get_ksa_time_float()
-
-
-    problem = fields.Many2one(
-        "what.problem", string="Problem", required=True, help="Problem of the vehicle"
-    )
-
-    solution = fields.Many2one(
-        "what.solution", string="Solution", required=True
-    )
+            record.end_time = self._get_current_time_float()
 
     workplace = fields.Selection(
         [
