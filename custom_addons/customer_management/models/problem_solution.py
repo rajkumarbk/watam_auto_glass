@@ -18,16 +18,12 @@ class ProblemSolution(models.Model):
         string="Branch",
         default=lambda self: self.env.company,
     )
-    name = fields.Char(string="Customer", required=True)
-    phone = fields.Char(string="Phone", required=True, default="05")
-    vehicle_brand = fields.Many2one(
-        "vehicle.brand", string="Vehicle Brand", required=True
-    )
-    vehicle_model = fields.Many2one(
-        "vehicle.model", string="Vehicle Model", required=True
-    )
+    name = fields.Char(string="Customer")
+    phone = fields.Char(string="Phone", default="05")
+    vehicle_brand = fields.Many2one("vehicle.brand", string="Vehicle Brand")
+    vehicle_model = fields.Many2one("vehicle.model", string="Vehicle Model")
     manufactured_year_id = fields.Many2one(
-        "manufactured.year", string="Manufactured Year", required=True
+        "manufactured.year", string="Manufactured Year"
     )
 
     available_year_ids = fields.Many2many(
@@ -41,7 +37,7 @@ class ProblemSolution(models.Model):
         compute="_compute_vehicle_display",
     )
 
-    vehicle_number = fields.Char(string="Vehicle Number", required=True)
+    vehicle_number = fields.Char(string="Vehicle Number")
     date = fields.Date(
         string="Date",
         default=fields.Date.context_today,
@@ -67,10 +63,10 @@ class ProblemSolution(models.Model):
             record.end_time = self._get_ksa_time_float()
 
     problem = fields.Many2one(
-        "what.problem", string="Problem", required=True, help="Problem of the vehicle"
+        "what.problem", string="Problem", help="Problem of the vehicle"
     )
 
-    solution = fields.Many2one("what.solution", string="Solution", required=True)
+    solution = fields.Many2one("what.solution", string="Solution")
 
     workplace = fields.Selection(
         [
@@ -91,10 +87,8 @@ class ProblemSolution(models.Model):
         tracking=True,
     )
 
-    glass_destination = fields.Many2one(
-        "vehicle.glass", string="Glass Destination", required=True
-    )
-    invoice_number = fields.Char(string="Invoice Number", required=True)
+    glass_destination = fields.Many2one("vehicle.glass", string="Glass Destination")
+    invoice_number = fields.Char(string="Invoice Number")
 
     @api.depends("vehicle_model")
     def _compute_available_years(self):
@@ -125,8 +119,8 @@ class ProblemSolution(models.Model):
         self.status = "on_progress"
 
     # Constraints
-    @api.constrains("phone")
-    def _check_phone(self):
-        for record in self:
-            if record.phone and not re.fullmatch(r"\d{10}", record.phone):
-                raise ValidationError(_("Phone number must be exactly 10 digits."))
+    # @api.constrains("phone")
+    # def _check_phone(self):
+    #     for record in self:
+    #         if record.phone and not re.fullmatch(r"\d{10}", record.phone):
+    #             raise ValidationError(_("Phone number must be exactly 10 digits."))

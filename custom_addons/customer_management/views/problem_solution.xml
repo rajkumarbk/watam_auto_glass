@@ -5,10 +5,15 @@
         <field name="model">problem.solution</field>
         <field name="arch" type="xml">
             <list>
-                
+
+                <field name="date"/>
+                <field name="branch_id"/>
+                <field name="employee_id"/>
+                <field name="vehicle_display"/>
+                <field name="vehicle_number"/>
                 <field name="problem"/>
                 <field name="solution"/>
-               
+
             </list>
         </field>
     </record>
@@ -19,22 +24,22 @@
         <field name="model">problem.solution</field>
         <field name="arch" type="xml">
             <form>
-            <header>
-                            <field name="date"/>
-                            <field name="branch_id" readonly="1"/>
-                            <field name="start_time" widget="easy_timepicker" />
+                <header>
+                    <field name="date"/>
+                    <field name="branch_id" readonly="1"/>
+                    <field name="start_time" widget="easy_timepicker" />
 
-                        </header>
+                </header>
                 <sheet>
                     <group>
-                            <field name="vehicle_brand" />
-                            <field name="vehicle_model" />
-                            <field name="manufactured_year_id" />
-                            <field name="vehicle_number" />
+                        <field name="vehicle_brand" />
+                        <field name="vehicle_model" />
+                        <field name="manufactured_year_id" />
+                        <field name="vehicle_number" />
 
-                            <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee"/>
-                            <field name="problem" placeholder="Select the problem"/>
-                            <field name="solution" placeholder="Select the Solution"/>
+                        <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee"/>
+                        <field name="problem" placeholder="Select the problem"/>
+                        <field name="solution" placeholder="Select the Solution"/>
                     </group>
                 </sheet>
             </form>

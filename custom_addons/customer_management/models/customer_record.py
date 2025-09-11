@@ -20,7 +20,6 @@ class ClientRecord(models.Model):
     )
     name = fields.Char(string="Customer", required=True)
     phone = fields.Char(string="Phone", required=True, default="05")
-
     vehicle_brand = fields.Many2one(
         "vehicle.brand", string="Vehicle Brand", required=True
     )
