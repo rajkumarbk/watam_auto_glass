@@ -51,13 +51,21 @@ class ClientRecord(models.Model):
     notes = fields.Text(string="Notes")
 
     def _get_current_time_float(self):
-        # Get current time in your timezone, e.g., Asia/Riyadh
         tz = pytz.timezone("Asia/Riyadh")
         now = datetime.now(tz)
-        return now.hour + now.minute / 60.0  # convert to float
+        hour = now.hour % 12 or 12
+        self.am_pm = 'AM' if now.hour < 12 else 'PM'
+        return hour + now.minute / 60.0
 
     start_time = fields.Float(
-        string="Start Time", readonly=True, default=_get_current_time_float
+        string="Start Time",
+        readonly=True,
+        default=_get_current_time_float
+    )
+
+    am_pm = fields.Char(
+        string="AM/PM",
+        readonly=True
     )
     end_time = fields.Float(string="End Time", readonly=True)
 
