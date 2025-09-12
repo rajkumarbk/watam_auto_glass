@@ -1,0 +1,11 @@
+<odoo>
+    <record id="soln1" model="what.solution">
+        <field name="name">Re-apply silicon </field>
+    </record>
+    <record id="soln2" model="what.solution">
+        <field name="name">Change the glass</field>
+    </record>
+    <record id="soln3" model="what.solution">
+        <field name="name">Re-apply the rubber</field>
+    </record>
+</odoo>

@@ -1,134 +1,313 @@
 <odoo>
-    <record id="vehicle_brand_toyota" model="vehicle.brand">
-        <field name="name">Toyota</field>
-    </record>
-    <record id="vehicle_brand_honda" model="vehicle.brand">
-        <field name="name">Honda</field>
-    </record>
-    <record id="vehicle_brand_ford" model="vehicle.brand">
-        <field name="name">Ford</field>
-    </record>
-    <record id="vehicle_brand_chevrolet" model="vehicle.brand">
-        <field name="name">Chevrolet</field>
-    </record>
-    <record id="vehicle_brand_nissan" model="vehicle.brand">
-        <field name="name">Nissan</field>
-    </record>
-    <record id="vehicle_brand_volkswagen" model="vehicle.brand">
-        <field name="name">Volkswagen</field>
-    </record>
-    <record id="vehicle_brand_bmw" model="vehicle.brand">
-        <field name="name">BMW</field>
-    </record>
-    <record id="vehicle_brand_mercedes_benz" model="vehicle.brand">
-        <field name="name">Mercedes-Benz</field>
+    <!-- European & Japanese Brands -->
+    <record id="vehicle_brand_alfa_romeo" model="vehicle.brand">
+        <field name="name">Alfa Romeo</field>
     </record>
     <record id="vehicle_brand_audi" model="vehicle.brand">
         <field name="name">Audi</field>
     </record>
-    <record id="vehicle_brand_hyundai" model="vehicle.brand">
-        <field name="name">Hyundai</field>
+    <record id="vehicle_brand_bentley" model="vehicle.brand">
+        <field name="name">Bentley</field>
     </record>
-    <record id="vehicle_brand_kia" model="vehicle.brand">
-        <field name="name">Kia</field>
+    <record id="vehicle_brand_bmw" model="vehicle.brand">
+        <field name="name">BMW</field>
     </record>
-    <record id="vehicle_brand_subaru" model="vehicle.brand">
-        <field name="name">Subaru</field>
+    <record id="vehicle_brand_citroen" model="vehicle.brand">
+        <field name="name">Citroen</field>
     </record>
-    <record id="vehicle_brand_mazda" model="vehicle.brand">
-        <field name="name">Mazda</field>
+    <record id="vehicle_brand_daewoo" model="vehicle.brand">
+        <field name="name">Daewoo</field>
     </record>
-    <record id="vehicle_brand_tesla" model="vehicle.brand">
-        <field name="name">Tesla</field>
+    <record id="vehicle_brand_daf" model="vehicle.brand">
+        <field name="name">DAF</field>
     </record>
-    <record id="vehicle_brand_volvo" model="vehicle.brand">
-        <field name="name">Volvo</field>
-    </record>
-    <record id="vehicle_brand_jaguar" model="vehicle.brand">
-        <field name="name">Jaguar</field>
-    </record>
-    <record id="vehicle_brand_land_rover" model="vehicle.brand">
-        <field name="name">Land Rover</field>
-    </record>
-    <record id="vehicle_brand_mitsubishi" model="vehicle.brand">
-        <field name="name">Mitsubishi</field>
-    </record>
-    <record id="vehicle_brand_suzuki" model="vehicle.brand">
-        <field name="name">Suzuki</field>
-    </record>
-    <record id="vehicle_brand_dodge" model="vehicle.brand">
-        <field name="name">Dodge</field>
-    </record>
-    <record id="vehicle_brand_jeep" model="vehicle.brand">
-        <field name="name">Jeep</field>
+    <record id="vehicle_brand_daihatsu" model="vehicle.brand">
+        <field name="name">Daihatsu</field>
     </record>
     <record id="vehicle_brand_fiat" model="vehicle.brand">
         <field name="name">Fiat</field>
     </record>
-    <record id="vehicle_brand_peugeot" model="vehicle.brand">
-        <field name="name">Peugeot</field>
+    <record id="vehicle_brand_hino" model="vehicle.brand">
+        <field name="name">Hino</field>
     </record>
-    <record id="vehicle_brand_renault" model="vehicle.brand">
-        <field name="name">Renault</field>
+    <record id="vehicle_brand_honda" model="vehicle.brand">
+        <field name="name">Honda</field>
     </record>
-    <record id="vehicle_brand_citroen" model="vehicle.brand">
-        <field name="name">Citroën</field>
+    <record id="vehicle_brand_hyundai" model="vehicle.brand">
+        <field name="name">Hyundai</field>
     </record>
-    <record id="vehicle_brand_skoda" model="vehicle.brand">
-        <field name="name">Skoda</field>
-    </record>
-    <record id="vehicle_brand_seat" model="vehicle.brand">
-        <field name="name">Seat</field>
-    </record>
-    <record id="vehicle_brand_alfa_romeo" model="vehicle.brand">
-        <field name="name">Alfa Romeo</field>
-    </record>
-    <record id="vehicle_brand_lexus" model="vehicle.brand">
-        <field name="name">Lexus</field>
-    </record>
-    <record id="vehicle_brand_acura" model="vehicle.brand">
-        <field name="name">Acura</field>
+    <record id="vehicle_brand_ineos" model="vehicle.brand">
+        <field name="name">Ineos (Grenadier)</field>
     </record>
     <record id="vehicle_brand_infiniti" model="vehicle.brand">
         <field name="name">Infiniti</field>
     </record>
-    <record id="vehicle_brand_cadillac" model="vehicle.brand">
-        <field name="name">Cadillac</field>
+    <record id="vehicle_brand_isuzu" model="vehicle.brand">
+        <field name="name">Isuzu</field>
     </record>
-    <record id="vehicle_brand_chrysler" model="vehicle.brand">
-        <field name="name">Chrysler</field>
+    <record id="vehicle_brand_iveco" model="vehicle.brand">
+        <field name="name">Iveco</field>
     </record>
-    <record id="vehicle_brand_ram" model="vehicle.brand">
-        <field name="name">Ram</field>
+    <record id="vehicle_brand_jaguar" model="vehicle.brand">
+        <field name="name">Jaguar</field>
     </record>
-    <record id="vehicle_brand_mini" model="vehicle.brand">
-        <field name="name">Mini</field>
+    <record id="vehicle_brand_kia" model="vehicle.brand">
+        <field name="name">Kia</field>
     </record>
-    <record id="vehicle_brand_porsche" model="vehicle.brand">
-        <field name="name">Porsche</field>
-    </record>
-    <record id="vehicle_brand_bentley" model="vehicle.brand">
-        <field name="name">Bentley</field>
-    </record>
-    <record id="vehicle_brand_maserati" model="vehicle.brand">
-        <field name="name">Maserati</field>
+    <record id="vehicle_brand_lada" model="vehicle.brand">
+        <field name="name">Lada</field>
     </record>
     <record id="vehicle_brand_lamborghini" model="vehicle.brand">
         <field name="name">Lamborghini</field>
     </record>
-    <record id="vehicle_brand_ferrari" model="vehicle.brand">
-        <field name="name">Ferrari</field>
+    <record id="vehicle_brand_land_rover" model="vehicle.brand">
+        <field name="name">Land Rover</field>
     </record>
-    <record id="vehicle_brand_aston_martin" model="vehicle.brand">
-        <field name="name">Aston Martin</field>
+    <record id="vehicle_brand_lexus" model="vehicle.brand">
+        <field name="name">Lexus</field>
     </record>
-    <record id="vehicle_brand_bugatti" model="vehicle.brand">
-        <field name="name">Bugatti</field>
+    <record id="vehicle_brand_lucid" model="vehicle.brand">
+        <field name="name">Lucid</field>
     </record>
-    <record id="vehicle_brand_rolls_royce" model="vehicle.brand">
-        <field name="name">Rolls-Royce</field>
+    <record id="vehicle_brand_mahindra" model="vehicle.brand">
+        <field name="name">Mahindra</field>
     </record>
-    <record id="vehicle_brand_mclaren" model="vehicle.brand">
-        <field name="name">McLaren</field>
+    <record id="vehicle_brand_man" model="vehicle.brand">
+        <field name="name">MAN</field>
+    </record>
+    <record id="vehicle_brand_maserati" model="vehicle.brand">
+        <field name="name">Maserati</field>
+    </record>
+    <record id="vehicle_brand_mazda" model="vehicle.brand">
+        <field name="name">Mazda</field>
+    </record>
+    <record id="vehicle_brand_mercedes" model="vehicle.brand">
+        <field name="name">Mercedes</field>
+    </record>
+    <record id="vehicle_brand_mini_cooper" model="vehicle.brand">
+        <field name="name">Mini Cooper</field>
+    </record>
+    <record id="vehicle_brand_mitsubishi" model="vehicle.brand">
+        <field name="name">Mitsubishi</field>
+    </record>
+    <record id="vehicle_brand_nissan" model="vehicle.brand">
+        <field name="name">Nissan</field>
+    </record>
+    <record id="vehicle_brand_opel" model="vehicle.brand">
+        <field name="name">Opel</field>
+    </record>
+    <record id="vehicle_brand_perodua" model="vehicle.brand">
+        <field name="name">Perodua</field>
+    </record>
+    <record id="vehicle_brand_peugeot" model="vehicle.brand">
+        <field name="name">Peugeot</field>
+    </record>
+    <record id="vehicle_brand_porsche" model="vehicle.brand">
+        <field name="name">Porsche</field>
+    </record>
+    <record id="vehicle_brand_proton" model="vehicle.brand">
+        <field name="name">Proton</field>
+    </record>
+    <record id="vehicle_brand_renault" model="vehicle.brand">
+        <field name="name">Renault</field>
+    </record>
+    <record id="vehicle_brand_rollsroyce" model="vehicle.brand">
+        <field name="name">Rolls Royce</field>
+    </record>
+    <record id="vehicle_brand_rover" model="vehicle.brand">
+        <field name="name">Rover</field>
+    </record>
+    <record id="vehicle_brand_saab" model="vehicle.brand">
+        <field name="name">Saab</field>
+    </record>
+    <record id="vehicle_brand_samsung" model="vehicle.brand">
+        <field name="name">Samsung</field>
+    </record>
+    <record id="vehicle_brand_scania" model="vehicle.brand">
+        <field name="name">Scania</field>
+    </record>
+    <record id="vehicle_brand_seat" model="vehicle.brand">
+        <field name="name">Seat</field>
+    </record>
+    <record id="vehicle_brand_setra" model="vehicle.brand">
+        <field name="name">Setra</field>
+    </record>
+    <record id="vehicle_brand_skoda" model="vehicle.brand">
+        <field name="name">Skoda</field>
+    </record>
+    <record id="vehicle_brand_ssangyong" model="vehicle.brand">
+        <field name="name">Ssangyong</field>
+    </record>
+    <record id="vehicle_brand_steyer" model="vehicle.brand">
+        <field name="name">Steyer</field>
+    </record>
+    <record id="vehicle_brand_subaru" model="vehicle.brand">
+        <field name="name">Subaru</field>
+    </record>
+    <record id="vehicle_brand_suzuki" model="vehicle.brand">
+        <field name="name">Suzuki</field>
+    </record>
+    <record id="vehicle_brand_tata" model="vehicle.brand">
+        <field name="name">Tata</field>
+    </record>
+    <record id="vehicle_brand_tetra" model="vehicle.brand">
+        <field name="name">Tetra</field>
+    </record>
+    <record id="vehicle_brand_toyota" model="vehicle.brand">
+        <field name="name">Toyota</field>
+    </record>
+    <record id="vehicle_brand_volkswagen" model="vehicle.brand">
+        <field name="name">Volkswagen</field>
+    </record>
+    <record id="vehicle_brand_volvo" model="vehicle.brand">
+        <field name="name">Volvo</field>
+    </record>
+    <record id="vehicle_brand_buick" model="vehicle.brand">
+        <field name="name">Buick</field>
+    </record>
+
+    <!-- American Brands -->
+    <record id="vehicle_brand_freightliner" model="vehicle.brand">
+        <field name="name">Freightliner</field>
+    </record>
+    <record id="vehicle_brand_cadillac" model="vehicle.brand">
+        <field name="name">Cadillac</field>
+    </record>
+    <record id="vehicle_brand_chevrolet" model="vehicle.brand">
+        <field name="name">Chevrolet</field>
+    </record>
+    <record id="vehicle_brand_chrysler" model="vehicle.brand">
+        <field name="name">Chrysler</field>
+    </record>
+    <record id="vehicle_brand_dodge" model="vehicle.brand">
+        <field name="name">Dodge</field>
+    </record>
+    <record id="vehicle_brand_ford" model="vehicle.brand">
+        <field name="name">Ford</field>
+    </record>
+    <record id="vehicle_brand_gmc" model="vehicle.brand">
+        <field name="name">GMC</field>
+    </record>
+    <record id="vehicle_brand_hummer" model="vehicle.brand">
+        <field name="name">Hummer</field>
+    </record>
+    <record id="vehicle_brand_jeep" model="vehicle.brand">
+        <field name="name">Jeep</field>
+    </record>
+    <record id="vehicle_brand_lincoln" model="vehicle.brand">
+        <field name="name">Lincoln</field>
+    </record>
+    <record id="vehicle_brand_mercury" model="vehicle.brand">
+        <field name="name">Mercury</field>
+    </record>
+    <record id="vehicle_brand_navistar" model="vehicle.brand">
+        <field name="name">Navistar</field>
+    </record>
+    <record id="vehicle_brand_pontiac" model="vehicle.brand">
+        <field name="name">Pontiac</field>
+    </record>
+    <record id="vehicle_brand_rosenpower" model="vehicle.brand">
+        <field name="name">Rosenpower</field>
+    </record>
+    <record id="vehicle_brand_saturn" model="vehicle.brand">
+        <field name="name">Saturn</field>
+    </record>
+    <record id="vehicle_brand_tesla" model="vehicle.brand">
+        <field name="name">Tesla</field>
+    </record>
+    <record id="vehicle_brand_thomas" model="vehicle.brand">
+        <field name="name">Thomas</field>
+    </record>
+    <record id="vehicle_brand_tam" model="vehicle.brand">
+        <field name="name">Tam</field>
+    </record>
+
+    <!-- Chinese Brands -->
+    <record id="vehicle_brand_baic" model="vehicle.brand">
+        <field name="name">BAIC</field>
+    </record>
+    <record id="vehicle_brand_bus_chinese" model="vehicle.brand">
+        <field name="name">Bus Chinese</field>
+    </record>
+    <record id="vehicle_brand_byd" model="vehicle.brand">
+        <field name="name">BYD</field>
+    </record>
+    <record id="vehicle_brand_changan" model="vehicle.brand">
+        <field name="name">Changan</field>
+    </record>
+    <record id="vehicle_brand_chery" model="vehicle.brand">
+        <field name="name">Chery</field>
+    </record>
+    <record id="vehicle_brand_cnhtc" model="vehicle.brand">
+        <field name="name">CNHTC</field>
+    </record>
+    <record id="vehicle_brand_dongfeng" model="vehicle.brand">
+        <field name="name">Dongfeng</field>
+    </record>
+    <record id="vehicle_brand_faw" model="vehicle.brand">
+        <field name="name">FAW</field>
+    </record>
+    <record id="vehicle_brand_forthing" model="vehicle.brand">
+        <field name="name">Forthing</field>
+    </record>
+    <record id="vehicle_brand_foton" model="vehicle.brand">
+        <field name="name">Foton</field>
+    </record>
+    <record id="vehicle_brand_gac" model="vehicle.brand">
+        <field name="name">GAC</field>
+    </record>
+    <record id="vehicle_brand_geely" model="vehicle.brand">
+        <field name="name">Geely</field>
+    </record>
+    <record id="vehicle_brand_greatwall" model="vehicle.brand">
+        <field name="name">Great Wall</field>
+    </record>
+    <record id="vehicle_brand_haval" model="vehicle.brand">
+        <field name="name">Haval</field>
+    </record>
+    <record id="vehicle_brand_hongqi" model="vehicle.brand">
+        <field name="name">Hongqi</field>
+    </record>
+    <record id="vehicle_brand_huanghai" model="vehicle.brand">
+        <field name="name">Huanghai</field>
+    </record>
+    <record id="vehicle_brand_jac" model="vehicle.brand">
+        <field name="name">JAC</field>
+    </record>
+    <record id="vehicle_brand_jetour" model="vehicle.brand">
+        <field name="name">Jetour</field>
+    </record>
+    <record id="vehicle_brand_jmc" model="vehicle.brand">
+        <field name="name">JMC</field>
+    </record>
+    <record id="vehicle_brand_lifan" model="vehicle.brand">
+        <field name="name">Lifan</field>
+    </record>
+    <record id="vehicle_brand_lynkco" model="vehicle.brand">
+        <field name="name">Lynk &amp; Co</field>
+    </record>
+    <record id="vehicle_brand_maxus" model="vehicle.brand">
+        <field name="name">Maxus</field>
+    </record>
+    <record id="vehicle_brand_mg_roewe" model="vehicle.brand">
+        <field name="name">MG (Roewe)</field>
+    </record>
+    <record id="vehicle_brand_sany" model="vehicle.brand">
+        <field name="name">Sany</field>
+    </record>
+    <record id="vehicle_brand_shacman" model="vehicle.brand">
+        <field name="name">Shacman</field>
+    </record>
+    <record id="vehicle_brand_soueast" model="vehicle.brand">
+        <field name="name">Soueast</field>
+    </record>
+    <record id="vehicle_brand_veryca" model="vehicle.brand">
+        <field name="name">Veryca</field>
+    </record>
+    <record id="vehicle_brand_vgv" model="vehicle.brand">
+        <field name="name">VGV</field>
+    </record>
+    <record id="vehicle_brand_zeekr" model="vehicle.brand">
+        <field name="name">Zeekr</field>
     </record>
 </odoo>
