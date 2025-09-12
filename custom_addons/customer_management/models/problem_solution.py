@@ -15,7 +15,8 @@ class ProblemSolution(models.Model):
     customer_record_id = fields.Many2one(
         "customer.record",
         string="Invoice Number",
-        help="Select the related customer work order (invoice number)"
+        help="Select the related customer work order (invoice number)",
+        domain=[("status", "=", "done")],
     )
     invoice_number = fields.Char(
         string="Inv No",

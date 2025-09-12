@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <list>
 
-                <field name="date"/>
+                <field name="datetime"/>
                 <field name="branch_id"/>
                 <field name="employee_id"/>
                 <field name="vehicle_display"/>
@@ -25,9 +25,9 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <field name="date"/>
+                    <field name="datetime"/>
                     <field name="branch_id" readonly="1"/>
-                    <field name="start_time" widget="easy_timepicker" />
+                    <!-- <field name="start_time" widget="easy_timepicker" /> -->
 
                 </header>
                 <sheet>
