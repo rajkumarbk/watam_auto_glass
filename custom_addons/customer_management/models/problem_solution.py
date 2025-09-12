@@ -18,7 +18,7 @@ class ProblemSolution(models.Model):
         help="Select the related customer work order (invoice number)"
     )
     invoice_number = fields.Char(
-        string="Invoice Number",
+        string="Invoice Num",
         related="customer_record_id.invoice_number",
         store=True,
         readonly=False  # if you want it editable, else keep True
@@ -89,9 +89,7 @@ class ProblemSolution(models.Model):
         default="not_started",
         tracking=True,
     )
-
     glass_destination = fields.Many2one("vehicle.glass", string="Glass Destination")
-    invoice_number = fields.Char(string="Invoice Number")
 
     @api.onchange("customer_record_id")
     def _onchange_customer_record(self):    
