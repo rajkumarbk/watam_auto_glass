@@ -1,6 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from datetime import datetime
+from time import time
 import pytz
 import re
 
@@ -11,6 +12,17 @@ class ProblemSolution(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "name asc"
 
+    customer_record_id = fields.Many2one(
+        "customer.record",
+        string="Invoice Number",
+        help="Select the related customer work order (invoice number)"
+    )
+    invoice_number = fields.Char(
+        string="Inv No",
+        related="customer_record_id.invoice_number",
+        store=True,
+        readonly=False  # if you want it editable, else keep True
+    )
     employee_id = fields.Many2one("hr.employee", string="Employee")
     assistant_staff = fields.Many2one("hr.employee", string="Assistant Staff")
     branch_id = fields.Many2one(
@@ -38,23 +50,14 @@ class ProblemSolution(models.Model):
     )
 
     vehicle_number = fields.Char(string="Vehicle Number")
-    date = fields.Date(
-        string="Date",
-        default=fields.Date.context_today,
-        readonly=True,
+    
+    datetime = fields.Datetime(
+        string="Date & Time",
+        default=fields.Datetime.now  # automatically sets current date & time
     )
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
 
-    def _get_current_time_float(self):
-        tz = pytz.timezone("Asia/Riyadh")
-        now = datetime.now(tz)
-        return now.hour + now.minute / 60.0
-
-    start_time = fields.Float(
-        string="Start Time", readonly=True, default=_get_current_time_float
-    )
-    end_time = fields.Float(string="End Time", readonly=True)
 
     def action_set_done(self):
         """Set status to done and record end_time"""
@@ -88,8 +91,22 @@ class ProblemSolution(models.Model):
     )
 
     glass_destination = fields.Many2one("vehicle.glass", string="Glass Destination")
-    invoice_number = fields.Char(string="Invoice Number")
 
+    @api.onchange("customer_record_id")
+    def _onchange_customer_record(self):    
+        for rec in self:
+            if rec.customer_record_id:
+                cr = rec.customer_record_id
+                # rec.assistant_staff = cr.assistant_staff
+                rec.vehicle_brand = cr.vehicle_brand
+                rec.vehicle_model = cr.vehicle_model
+                rec.manufactured_year_id = cr.manufactured_year_id
+                rec.vehicle_number = cr.vehicle_number
+                rec.employee_id = cr.employee_id
+                # rec.name = cr.name
+                # rec.phone = cr.phone
+                # rec.glass_destination = cr.glass_destination
+    
     @api.depends("vehicle_model")
     def _compute_available_years(self):
         for rec in self:

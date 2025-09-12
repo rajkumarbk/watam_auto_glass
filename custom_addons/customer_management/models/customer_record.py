@@ -10,6 +10,7 @@ class ClientRecord(models.Model):
     _description = "Customer Records"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "name asc"
+    _rec_name = "invoice_number"
 
     employee_id = fields.Many2one("hr.employee", string="Employee")
     assistant_staff = fields.Many2one("hr.employee", string="Assistant Staff")
@@ -51,21 +52,13 @@ class ClientRecord(models.Model):
     notes = fields.Text(string="Notes")
 
     def _get_current_time_float(self):
+        # Get current time in your timezone, e.g., Asia/Riyadh
         tz = pytz.timezone("Asia/Riyadh")
         now = datetime.now(tz)
-        hour = now.hour % 12 or 12
-        self.am_pm = 'AM' if now.hour < 12 else 'PM'
-        return hour + now.minute / 60.0
+        return now.hour + now.minute / 60.0  # convert to float
 
     start_time = fields.Float(
-        string="Start Time",
-        readonly=True,
-        default=_get_current_time_float
-    )
-
-    am_pm = fields.Char(
-        string="AM/PM",
-        readonly=True
+        string="Start Time", readonly=True, default=_get_current_time_float
     )
     end_time = fields.Float(string="End Time", readonly=True)
 
