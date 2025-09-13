@@ -43,7 +43,6 @@
                     <group>
                         <!-- Before Work -->
                         <group invisible="status not in ('not_started','done')">
-                            <separator string="Before Starting the Work" colspan="4" />
                             <field name="branch_id" readonly="1" />
                             <field name="workplace" placeholder="Select workplace" />
                             <field name="employee_id"
@@ -68,7 +67,6 @@
 
                         <!-- After Work -->
                         <group invisible="status not in ('started','done')">
-                            <separator string="After Finishing the Work" colspan="4" />
                             <field name="end_time" widget="easy_timepicker" />
                             <field name="assistant_staff"
                                 options="{'no_create': True, 'no_create_edit': True}"
