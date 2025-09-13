@@ -1,11 +1,31 @@
 <odoo>
+    <!-- Solutions for Silicon not adjust -->
     <record id="soln1" model="what.solution">
-        <field name="name">Re-apply silicon </field>
+        <field name="name">Re-apply silicon properly</field>
+        <field name="problem_id" ref="customer_management.prob1"/>
     </record>
     <record id="soln2" model="what.solution">
-        <field name="name">Change the glass</field>
+        <field name="name">Use high-quality adhesive</field>
+        <field name="problem_id" ref="customer_management.prob1"/>
     </record>
+
+    <!-- Solutions for Glass Crack -->
     <record id="soln3" model="what.solution">
-        <field name="name">Re-apply the rubber</field>
+        <field name="name">Replace the cracked glass</field>
+        <field name="problem_id" ref="customer_management.prob2"/>
+    </record>
+    <record id="soln4" model="what.solution">
+        <field name="name">Check installation pressure</field>
+        <field name="problem_id" ref="customer_management.prob2"/>
+    </record>
+
+    <!-- Solutions for Rubber not fitted -->
+    <record id="soln5" model="what.solution">
+        <field name="name">Refit the rubber manually</field>
+        <field name="problem_id" ref="customer_management.prob3"/>
+    </record>
+    <record id="soln6" model="what.solution">
+        <field name="name">Use lubricant for fitting</field>
+        <field name="problem_id" ref="customer_management.prob3"/>
     </record>
 </odoo>

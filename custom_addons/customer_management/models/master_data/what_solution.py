@@ -7,3 +7,4 @@ class WhatSolution(models.Model):
     _order = "name asc"
 
     name = fields.Char(string="solution")
+    problem_id = fields.Many2one("what.problem", string="Problem", required=True)

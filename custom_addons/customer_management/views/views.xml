@@ -2,21 +2,18 @@
   <data>
     <menuitem id="menu_record_root" name="Watam Auto Glass" />
 
-
-    <!--Customer Record-->
     <menuitem id="menu_client_record" name="Work Order" parent="menu_record_root" action="action_customer_record" sequence="1"/>
-    <!-- Menu for Finished Work -->
     <menuitem id="menu_client_record_finished" name="Completed Operations" parent="menu_record_root" action="action_customer_record_finished" sequence="2" />
+    <menuitem id="menu_prob_soln" name="Complaints Registration" parent="menu_record_root" action="action_problem_solution" sequence="3"/>
 
     <!--Master DATA-->
     <menuitem id="menu_master_data" name="Master Data" parent="menu_record_root" sequence="4" />
-    <menuitem id="menu_vehicle_data" name="Vehicle Details" parent="menu_master_data"/>
-    <!-- Vehicle Data Submenus -->
-    <menuitem id="menu_vehicle_brand" name="Vehicle Brands" parent="menu_vehicle_data" action="action_vehicle_brand"/>
-    <menuitem id="menu_vehicle_model" name="Vehicle Models" parent="menu_vehicle_data" action="action_vehicle_model"/>
-    <menuitem id="menu_vehicle_manufactured_year" name="Manufactured Year" parent="menu_vehicle_data" action="action_manufactured_year"/>
-    <menuitem id="menu_vehicle_glass_details" name="Glass Details" parent="menu_vehicle_data" action="action_glass_details"/>
-    
-    <menuitem id="menu_prob_soln" name="Complaints Registration" parent="menu_record_root" action="action_problem_solution" sequence="3"/>
+    <!-- Master Data Submenus -->
+    <menuitem id="menu_vehicle_brand" name="Vehicle Brands" parent="menu_master_data" action="action_vehicle_brand"/>
+    <menuitem id="menu_vehicle_model" name="Vehicle Models" parent="menu_master_data" action="action_vehicle_model"/>
+    <menuitem id="menu_vehicle_manufactured_year" name="Manufactured Year" parent="menu_master_data" action="action_manufactured_year"/>
+    <menuitem id="menu_vehicle_glass_details" name="Glass Details" parent="menu_master_data" action="action_glass_details"/>
+    <menuitem id="menu_problem" name="Problem" parent="menu_master_data" action="action_problem"/>
+    <menuitem id="menu_solution" name="Solution" parent="menu_master_data" action="action_solution"/>
   </data>
 </odoo>
