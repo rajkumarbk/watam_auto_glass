@@ -58,10 +58,10 @@
                                 placeholder="Select Manufactured Year"
                                 options="{'no_create': True, 'no_create_edit': True}" />
                             <field name="glass_destination" placeholder="Select Glass Destination" />
-                            <field name="name" placeholder="Customer name"/>
-                            <field name="phone" />
-                            <field name="vehicle_number" />
-                            <field name="invoice_number" />
+                            <field name="name" placeholder="Enter Customer's Name"/>
+                            <field name="phone" placeholder="Enter Customer's Contact Number" />
+                            <field name="vehicle_number" placeholder="Enter Vehicle Number"/>
+                            <field name="invoice_number" placeholder="Enter Invoice Number"/>
                             <field name="date" />
                             <field name="start_time" widget="easy_timepicker" />
                         </group>
@@ -103,4 +103,29 @@
         <field name="domain">[('status', '=', 'done')]</field>
         <field name="context">{'create': False}</field>
     </record>
+
+    <record id="view_customer_search" model="ir.ui.view">
+    <field name="name">customer.record.search</field>
+    <field name="model">customer.record</field> <!-- replace with your model -->
+    <field name="arch" type="xml">
+        <search string="Customer Records">
+            <!-- Quick search across multiple fields -->
+            <field name="name" string="Name"/>
+            <field name="phone" string="Phone"/>
+            <field name="vehicle_number" string="Vehicle Number"/>
+            <field name="invoice_number" string="Invoice Number"/>
+
+            <!-- Optional filters -->
+            <filter string="With Phone" name="with_phone" domain="[('phone','!=',False)]"/>
+            <filter string="With Vehicle" name="with_vehicle" domain="[('vehicle_number','!=',False)]"/>
+
+            <!-- Group by options -->
+            <group expand="0" string="Group By">
+                <filter string="Name" name="group_name" context="{'group_by':'name'}"/>
+                <filter string="Vehicle" name="group_vehicle" context="{'group_by':'vehicle_number'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
 </odoo>

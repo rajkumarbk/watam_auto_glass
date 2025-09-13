@@ -12,15 +12,15 @@ class ClientRecord(models.Model):
     _order = "name asc"
     _rec_name = "invoice_number"
 
-    employee_id = fields.Many2one("hr.employee", string="Employee")
-    assistant_staff = fields.Many2one("hr.employee", string="Assistant Staff")
+    employee_id = fields.Many2one("hr.employee", string="Employee Name")
+    assistant_staff = fields.Many2one("hr.employee", string="Assistant Staff Name")
     branch_id = fields.Many2one(
         "res.company",
         string="Branch",
         default=lambda self: self.env.company,
     )
     name = fields.Char(string="Customer Name", required=True)
-    phone = fields.Char(string="Phone", required=True, default="05")
+    phone = fields.Char(string="Contact Number", required=True)
     vehicle_brand = fields.Many2one(
         "vehicle.brand", string="Vehicle Brand", required=True
     )
@@ -74,7 +74,8 @@ class ClientRecord(models.Model):
             ("outside", "Outside"),
         ],
         string="Workplace",
-        default="inside",
+        default = "inside",
+        required=True,
     )
 
     status = fields.Selection(
