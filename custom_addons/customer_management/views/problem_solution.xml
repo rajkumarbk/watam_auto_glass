@@ -5,7 +5,6 @@
         <field name="model">problem.solution</field>
         <field name="arch" type="xml">
             <list>
-
                 <field name="datetime"/>
                 <field name="branch_id"/>
                 <field name="employee_id"/>
@@ -24,30 +23,11 @@
         <field name="model">problem.solution</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                    <field name="datetime"/>
-                    <field name="branch_id" readonly="1"/>
-                    <!-- <field name="start_time" widget="easy_timepicker" /> -->
-
-                </header>
                 <sheet>
                     <group>
-<<<<<<< Updated upstream
-                        <field name="vehicle_brand" />
-                        <field name="vehicle_model" />
-                        <field name="manufactured_year_id" />
-                        <field name="vehicle_number" />
-
-                        <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee"/>
-                        <field name="problem" placeholder="Select the problem"/>
-                        <field name="solution" placeholder="Select the Solution"/>
-=======
                         <group>
                            <field name="customer_record_id" options="{'no_create': True}" placeholder="Select Invoice"/>
                             <!-- <field name="invoice_number" readonly="1"/> -->
-
-                            <field name="name"/>
-                            <field name="phone"/>
                             <field name="vehicle_brand" />
                             <field name="vehicle_model" />
                             <field name="manufactured_year_id" />
@@ -60,7 +40,6 @@
                             <field name="datetime" readonly= "1"/>
                     <field name="branch_id" readonly="1"/>
                         </group>
->>>>>>> Stashed changes
                     </group>
                 </sheet>
             </form>
