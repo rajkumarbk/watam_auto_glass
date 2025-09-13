@@ -6,11 +6,12 @@
         <field name="arch" type="xml">
             <list>
                 <field name="datetime"/>
-                <field name="datetime"/>
                 <field name="branch_id"/>
                 <field name="employee_id"/>
                 <field name="vehicle_display"/>
                 <field name="vehicle_number"/>
+                <field name="name"/>
+                <field name="phone"/>
                 <field name="problem"/>
                 <field name="solution"/>
 

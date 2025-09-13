@@ -51,11 +51,6 @@
                         class="btn-primary" invisible="status != 'not_started'" />
                     <button name="action_set_done" string="Finish" type="object" class="btn-success"
                         invisible="status != 'started'" />
-                    <field name="status" widget="statusbar" statusbar_visible="started,done" />
-                    <button name="action_set_started" string="Start" type="object"
-                        class="btn-primary" invisible="status != 'not_started'" />
-                    <button name="action_set_done" string="Finish" type="object" class="btn-success"
-                        invisible="status != 'started'" />
                 </header>
 
                 <sheet>
