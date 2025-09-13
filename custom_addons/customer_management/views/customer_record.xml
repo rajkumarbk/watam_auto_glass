@@ -40,6 +40,7 @@
                 <sheet>
                     <group>
                         <!-- Before Work -->
+<<<<<<< Updated upstream
                         <group>
                             <separator string="Before Starting the Work" colspan="4"/>
                             <field name="branch_id" readonly="1"/>
@@ -56,6 +57,30 @@
                             <field name="invoice_number"/>
                             <field name="date"/>
                             <field name="start_time" widget="easy_timepicker"/>
+=======
+                        <group invisible="status not in ('not_started','done')">
+                            <separator string="Before Starting the Work" colspan="4" />
+                            <field name="branch_id" readonly="1" />
+                            <field name="workplace" placeholder="Select workplace" />
+                            <field name="employee_id"
+                                options="{'no_create': True, 'no_create_edit': True}"
+                                placeholder="Select Employee" />
+                            <field name="vehicle_brand" placeholder="Select Vehicle Brand" />
+                            <field name="vehicle_model" domain="[('brand_id', '=', vehicle_brand)]"
+                                placeholder="Select Vehicle Model" />
+                            <field name="available_year_ids" invisible="1" />
+                            <field name="manufactured_year_id"
+                                domain="[('id', 'in', available_year_ids)]"
+                                placeholder="Select Manufactured Year"
+                                options="{'no_create': True, 'no_create_edit': True}" />
+                            <field name="glass_destination" placeholder="Select Glass Destination" />
+                            <field name="name" placeholder=""/>
+                            <field name="phone" />
+                            <field name="vehicle_number" />
+                            <field name="invoice_number" />
+                            <field name="date" />
+                            <field name="start_time" widget="easy_timepicker" />
+>>>>>>> Stashed changes
                         </group>
 
                         <!-- After Work -->

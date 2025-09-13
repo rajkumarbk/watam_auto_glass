@@ -104,9 +104,9 @@ class ProblemSolution(models.Model):
                 rec.manufactured_year_id = cr.manufactured_year_id
                 rec.vehicle_number = cr.vehicle_number
                 rec.employee_id = cr.employee_id
-                # rec.name = cr.name
-                # rec.phone = cr.phone
-                # rec.glass_destination = cr.glass_destination
+                rec.name = cr.name
+                rec.phone = cr.phone
+                rec.glass_destination = cr.glass_destination
     
     @api.depends("vehicle_model")
     def _compute_available_years(self):
