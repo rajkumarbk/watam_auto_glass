@@ -58,7 +58,7 @@
                                 placeholder="Select Manufactured Year"
                                 options="{'no_create': True, 'no_create_edit': True}" />
                             <field name="glass_destination" placeholder="Select Glass Destination" />
-                            <field name="name" />
+                            <field name="name" placeholder="Customer name"/>
                             <field name="phone" />
                             <field name="vehicle_number" />
                             <field name="invoice_number" />
