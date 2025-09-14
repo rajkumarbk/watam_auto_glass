@@ -1,21 +1,16 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Watam Auto Glass - Customer Management",
-
-    'summary': "Short (1 phrase/line) summary of the module's purpose",
-
-    'description': """
+    "name": "Watam Auto Glass - Customer Management",
+    "summary": "Short (1 phrase/line) summary of the module's purpose",
+    "description": """
 Long description of module's purpose
     """,
-
-    'author': "Dishan Shrestha",
-   
-    'category': 'Human Resource',
-    'version': '0.1',
-    'sequence' :1,
+    "author": "Watam Auto Glass",
+    "category": "Human Resource",
+    "version": "0.1",
+    "sequence": 1,
     # any module necessary for this one to work correctly
-    'depends': ['base', 'easy_timepicker_widget', 'hr','hide_menu_user'],
-
+    "depends": ["base", "easy_timepicker_widget", "hr", "hide_menu_user"],
     # always loaded
     'data': [
         'security/security_group.xml',
@@ -38,13 +33,12 @@ Long description of module's purpose
         'views/templates.xml',
     ],
     # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
+    "demo": [
+        "demo/demo.xml",
     ],
-    'images': ['static/description/icon.png'],
+    "images": ["static/description/icon.png"],
     "license": "LGPL-3",
     "installable": True,
     "auto_install": False,
     "application": True,
 }
-

@@ -1,6 +1,8 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from datetime import datetime
+from time import time
+from time import time
 import pytz
 import re
 
@@ -11,15 +13,26 @@ class ProblemSolution(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "name asc"
 
-    employee_id = fields.Many2one("hr.employee", string="Employee")
+    customer_record_id = fields.Many2one(
+        "customer.record",
+        string="Invoice Number",
+        domain=[("status", "=", "done")],
+    )
+    invoice_number = fields.Char(
+        string="Inv No",
+        related="customer_record_id.invoice_number",
+        store=True,
+        readonly=False  # if you want it editable, else keep True
+    )
+    employee_id = fields.Many2one("hr.employee", string="Employee Name")
     assistant_staff = fields.Many2one("hr.employee", string="Assistant Staff")
     branch_id = fields.Many2one(
         "res.company",
         string="Branch",
         default=lambda self: self.env.company,
     )
-    name = fields.Char(string="Customer")
-    phone = fields.Char(string="Phone", default="05")
+    name = fields.Char(string="Customer's Name")
+    phone = fields.Char(string="Contact Number", default="05")
     vehicle_brand = fields.Many2one("vehicle.brand", string="Vehicle Brand")
     vehicle_model = fields.Many2one("vehicle.model", string="Vehicle Model")
     manufactured_year_id = fields.Many2one(
@@ -38,23 +51,14 @@ class ProblemSolution(models.Model):
     )
 
     vehicle_number = fields.Char(string="Vehicle Number")
-    date = fields.Date(
-        string="Date",
-        default=fields.Date.context_today,
-        readonly=True,
+    
+    datetime = fields.Datetime(
+        string="Date & Time",
+        default=fields.Datetime.now  
     )
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
 
-    def _get_current_time_float(self):
-        tz = pytz.timezone("Asia/Riyadh")
-        now = datetime.now(tz)
-        return now.hour + now.minute / 60.0
-
-    start_time = fields.Float(
-        string="Start Time", readonly=True, default=_get_current_time_float
-    )
-    end_time = fields.Float(string="End Time", readonly=True)
 
     def action_set_done(self):
         """Set status to done and record end_time"""
@@ -63,10 +67,11 @@ class ProblemSolution(models.Model):
             record.end_time = self._get_ksa_time_float()
 
     problem = fields.Many2one(
-        "what.problem", string="Problem", help="Problem of the vehicle"
+        "what.problem", string="Problem", required=True
     )
 
     solution = fields.Many2one("what.solution", string="Solution")
+
 
     workplace = fields.Selection(
         [
@@ -86,10 +91,23 @@ class ProblemSolution(models.Model):
         default="not_started",
         tracking=True,
     )
-
     glass_destination = fields.Many2one("vehicle.glass", string="Glass Destination")
-    invoice_number = fields.Char(string="Invoice Number")
 
+    @api.onchange("customer_record_id")
+    def _onchange_customer_record(self):    
+        for rec in self:
+            if rec.customer_record_id:
+                cr = rec.customer_record_id
+                # rec.assistant_staff = cr.assistant_staff
+                rec.vehicle_brand = cr.vehicle_brand
+                rec.vehicle_model = cr.vehicle_model
+                rec.manufactured_year_id = cr.manufactured_year_id
+                rec.vehicle_number = cr.vehicle_number
+                rec.employee_id = cr.employee_id
+                rec.name = cr.name
+                rec.phone = cr.phone
+                rec.glass_destination = cr.glass_destination
+    
     @api.depends("vehicle_model")
     def _compute_available_years(self):
         for rec in self:

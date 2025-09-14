@@ -1,11 +1,101 @@
 <odoo>
+    <!-- Solutions for Silicone not adjusted properly -->
     <record id="soln1" model="what.solution">
-        <field name="name">Re-apply silicon </field>
+        <field name="name">Re-apply silicone evenly</field>
+        <field name="problem_id" ref="customer_management.prob1"/>
     </record>
     <record id="soln2" model="what.solution">
-        <field name="name">Change the glass</field>
+        <field name="name">Use proper silicone gun and technique</field>
+        <field name="problem_id" ref="customer_management.prob1"/>
     </record>
+
+    <!-- Solutions for Glass cracked during installation -->
     <record id="soln3" model="what.solution">
-        <field name="name">Re-apply the rubber</field>
+        <field name="name">Replace the cracked glass</field>
+        <field name="problem_id" ref="customer_management.prob2"/>
+    </record>
+    <record id="soln4" model="what.solution">
+        <field name="name">Avoid excess force during fitting</field>
+        <field name="problem_id" ref="customer_management.prob2"/>
+    </record>
+
+    <!-- Solutions for Rubber seal not fitted correctly -->
+    <record id="soln5" model="what.solution">
+        <field name="name">Refit rubber seal carefully</field>
+        <field name="problem_id" ref="customer_management.prob3"/>
+    </record>
+    <record id="soln6" model="what.solution">
+        <field name="name">Apply lubricant to ease fitting</field>
+        <field name="problem_id" ref="customer_management.prob3"/>
+    </record>
+
+    <!-- Solutions for Improper alignment of glass -->
+    <record id="soln7" model="what.solution">
+        <field name="name">Realign glass before adhesive cures</field>
+        <field name="problem_id" ref="customer_management.prob4"/>
+    </record>
+    <record id="soln8" model="what.solution">
+        <field name="name">Use alignment tools or markers</field>
+        <field name="problem_id" ref="customer_management.prob4"/>
+    </record>
+
+    <!-- Solutions for Excess adhesive used -->
+    <record id="soln9" model="what.solution">
+        <field name="name">Remove extra adhesive immediately</field>
+        <field name="problem_id" ref="customer_management.prob5"/>
+    </record>
+    <record id="soln10" model="what.solution">
+        <field name="name">Train technicians on correct quantity</field>
+        <field name="problem_id" ref="customer_management.prob5"/>
+    </record>
+
+    <!-- Solutions for Insufficient adhesive bonding -->
+    <record id="soln11" model="what.solution">
+        <field name="name">Re-apply sufficient adhesive</field>
+        <field name="problem_id" ref="customer_management.prob6"/>
+    </record>
+    <record id="soln12" model="what.solution">
+        <field name="name">Use primer before adhesive application</field>
+        <field name="problem_id" ref="customer_management.prob6"/>
+    </record>
+
+    <!-- Solutions for Scratches on glass surface -->
+    <record id="soln13" model="what.solution">
+        <field name="name">Polish minor scratches</field>
+        <field name="problem_id" ref="customer_management.prob7"/>
+    </record>
+    <record id="soln14" model="what.solution">
+        <field name="name">Replace glass if damage is deep</field>
+        <field name="problem_id" ref="customer_management.prob7"/>
+    </record>
+
+    <!-- Solutions for Water leakage after installation -->
+    <record id="soln15" model="what.solution">
+        <field name="name">Seal gaps with additional adhesive</field>
+        <field name="problem_id" ref="customer_management.prob8"/>
+    </record>
+    <record id="soln16" model="what.solution">
+        <field name="name">Check rubber alignment and refit</field>
+        <field name="problem_id" ref="customer_management.prob8"/>
+    </record>
+
+    <!-- Solutions for Dust or dirt trapped inside -->
+    <record id="soln17" model="what.solution">
+        <field name="name">Clean glass thoroughly before fitting</field>
+        <field name="problem_id" ref="customer_management.prob9"/>
+    </record>
+    <record id="soln18" model="what.solution">
+        <field name="name">Work in dust-free environment</field>
+        <field name="problem_id" ref="customer_management.prob9"/>
+    </record>
+
+    <!-- Solutions for Incorrect glass size used -->
+    <record id="soln19" model="what.solution">
+        <field name="name">Use correct model-specific glass</field>
+        <field name="problem_id" ref="customer_management.prob10"/>
+    </record>
+    <record id="soln20" model="what.solution">
+        <field name="name">Verify size before installation</field>
+        <field name="problem_id" ref="customer_management.prob10"/>
     </record>
 </odoo>

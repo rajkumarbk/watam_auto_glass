@@ -9,25 +9,26 @@ class ClientRecord(models.Model):
     _name = "customer.record"
     _description = "Customer Records"
     _inherit = ["mail.thread", "mail.activity.mixin"]
-    _order = "name asc"
+    _order = "start_time desc"
+    _rec_name = "invoice_number"
 
-    employee_id = fields.Many2one("hr.employee", string="Employee")
-    assistant_staff = fields.Many2one("hr.employee", string="Assistant Staff")
+    employee_id = fields.Many2one("hr.employee", string="Employee Name")
+    assistant_staff = fields.Many2one("hr.employee", string="Secondary Technician")
     branch_id = fields.Many2one(
         "res.company",
-        string="Branch",
+        string="Branch Name",
         default=lambda self: self.env.company,
     )
     name = fields.Char(string="Customer Name", required=True)
-    phone = fields.Char(string="Phone", required=True, default="05")
+    phone = fields.Char(string="Mobile Number", required=True)
     vehicle_brand = fields.Many2one(
-        "vehicle.brand", string="Vehicle Brand", required=True
+        "vehicle.brand", string="Car Brand", required=True
     )
     vehicle_model = fields.Many2one(
-        "vehicle.model", string="Vehicle Model", required=True
+        "vehicle.model", string="Car Name", required=True
     )
     manufactured_year_id = fields.Many2one(
-        "manufactured.year", string="Manufactured Year", required=True
+        "manufactured.year", string="Car Model", required=True
     )
 
     available_year_ids = fields.Many2many(
@@ -41,7 +42,7 @@ class ClientRecord(models.Model):
         compute="_compute_vehicle_display",
     )
 
-    vehicle_number = fields.Char(string="Vehicle Number", required=True)
+    vehicle_number = fields.Char(string="Car Registration Number", required=True)
     date = fields.Date(
         string="Date",
         default=fields.Date.context_today,
@@ -57,9 +58,9 @@ class ClientRecord(models.Model):
         return now.hour + now.minute / 60.0  # convert to float
 
     start_time = fields.Float(
-        string="Start Time", readonly=True, default=_get_current_time_float
+        string=" WO Start Time", readonly=True, default=_get_current_time_float
     )
-    end_time = fields.Float(string="End Time", readonly=True)
+    end_time = fields.Float(string="WO Finishing Time", readonly=True)
 
     def action_set_done(self):
         """Set status to done and record end_time"""
@@ -69,10 +70,12 @@ class ClientRecord(models.Model):
 
     workplace = fields.Selection(
         [
-            ("inside", "Inside"),
-            ("outside", "Outside"),
+            ("inside", "Workshop"),
+            ("outside", "External"),
         ],
-        string="Workplace",
+        string="Service Location",
+        default = "inside",
+        required=True,
     )
 
     status = fields.Selection(
@@ -85,9 +88,64 @@ class ClientRecord(models.Model):
         default="not_started",
         tracking=True,
     )
+    service_complexity = fields.Selection(
+        [
+            ("easy", "Easy"),
+            ("medium", "Medium"),
+            ("complex", "Complex"),
+        ],
+        string="Service Complexity",
+    )
 
+    # Level 1
+    service_type = fields.Selection([
+        ('service', 'Service'),
+        ('glass_sale', 'Glass Sale and Installation')
+    ], string="Service Type")
+
+    # Level 2
+    service_option = fields.Selection([
+        ('remove_install', 'Remove and Install'),
+        ('glue_mirror', 'Glue for Mirror'),
+        ('cut_glass', 'Cut the Glass'),
+        ('rubber_fixing', 'Rubber Fixing'),
+        ('door_base', 'Door Base'),
+        ('silicon', 'Silicon')
+    ], string="Service Options")
+
+    glass_option = fields.Selection([
+        ('our_glass', 'Our Glass'),
+        ('retailer_glass', 'Retailer Glass')
+    ], string="Glass Sale Options")
+
+    # Level 3
+    retailer_type = fields.Selection([
+        ('oem', 'OEM'),
+        ('aftermarket', 'Aftermarket')
+    ], string="Retailer Glass Type")
+
+    # Reset irrelevant fields when selection changes
+    @api.onchange('service_type')
+    def _onchange_service_type(self):
+        for rec in self:
+            if rec.service_type == 'service':
+                rec.glass_option = False
+                rec.retailer_type = False
+            elif rec.service_type == 'glass_sale':
+                rec.service_option = False
+                rec.retailer_type = False
+            else:
+                rec.service_option = False
+                rec.glass_option = False
+                rec.retailer_type = False
+
+    @api.onchange('glass_option')
+    def _onchange_glass_option(self):
+        for rec in self:
+            if rec.glass_option != 'retailer_glass':
+                rec.retailer_type = False
     glass_destination = fields.Many2one(
-        "vehicle.glass", string="Glass Destination", required=True
+        "vehicle.glass", string="Glass Position", required=True
     )
     invoice_number = fields.Char(string="Invoice Number", required=True)
 

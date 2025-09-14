@@ -6,6 +6,7 @@
         <field name="model">what.solution</field>
         <field name="arch" type="xml">
             <list editable="bottom">
+                <field name="problem_id" />
                 <field name="name" />
             </list>
         </field>
