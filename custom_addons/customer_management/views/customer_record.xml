@@ -98,21 +98,17 @@
         <field name="context">{'create': False}</field>
     </record>
 
-    <!-- Search View -->
-    <record id="custom_search_model_search_view" model="ir.ui.view">
-        <field name="name">customer.record.model.search</field>
+    <record id="view_customer_search" model="ir.ui.view">
+        <field name="name">customer.record.search</field>
         <field name="model">customer.record</field>
         <field name="arch" type="xml">
-            <search string="Custom Search Model">
-                <field name="name"/>
-                <field name="phone"/>
-                <field name="vehicle_number"/>
-                <field name="invoice_number"/>
-                <filter string="Name" name="filter_name" domain="[('name', 'ilike', self)]"/>
-                <filter string="Phone" name="filter_phone" domain="[('phone', 'ilike', self)]"/>
-                <filter string="Vehicle Number" name="filter_vehicle_number" domain="[('vehicle_number', 'ilike', self)]"/>
-                <filter string="Invoice Number" name="filter_invoice_number" domain="[('invoice_number', 'ilike', self)]"/>
+            <search string="Customer Records">
+                <field name="name" string="Name"/>
+                <field name="phone" string="Phone"/>
+                <field name="vehicle_number" string="Vehicle Number"/>
+                <field name="invoice_number" string="Invoice Number"/>
             </search>
         </field>
     </record>
+
 </odoo>

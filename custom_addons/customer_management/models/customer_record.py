@@ -57,39 +57,6 @@ class ClientRecord(models.Model):
     )
     end_time = fields.Float(string="WO Finishing Time", readonly=True)
 
-    @api.model
-    def _name_search(
-        self, name="", args=None, operator="ilike", limit=100, name_get_uid=None
-    ):
-        args = list(args or [])
-
-        if name:
-            # Build a domain to search across multiple fields
-            search_domain = [
-                "|",
-                "|",
-                "|",
-                ("name", operator, name),
-                ("phone", operator, name),
-                ("vehicle_number", operator, name),
-                ("invoice_number", operator, name),
-            ]
-            # Perform the search and return matching records
-            records = self._search(
-                search_domain + args, limit=limit, access_rights_uid=name_get_uid
-            )
-            if records:
-                return models.Model._name_get([records], name_get_uid=name_get_uid)
-
-        # Fallback to default behavior if no match or no name
-        return super()._name_search(
-            name=name,
-            args=args,
-            operator=operator,
-            limit=limit,
-            name_get_uid=name_get_uid,
-        )
-
     def action_set_done(self):
         """Set status to done and record end_time"""
         for record in self:
