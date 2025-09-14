@@ -7,5 +7,6 @@ from .master_data import vehicle_manufactured_year
 from .master_data import vehicle_glass
 from .master_data import what_problem
 from .master_data import what_solution
+from .master_data import service_option
 from . import customer_record
 from . import problem_solution

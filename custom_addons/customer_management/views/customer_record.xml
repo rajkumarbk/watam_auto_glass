@@ -19,7 +19,7 @@
                 <field name="end_time" widget="easy_timepicker" />
                 <field name="assistant_staff" />
                 <field name="notes" />
-                
+
                 <!-- <field name="photo" widget="image" /> -->
                 <field name="status" widget="badge" decoration-success="status == 'done'" decoration-info="status == 'started'"/>
             </list>
@@ -34,10 +34,8 @@
             <form>
                 <header>
                     <field name="status" widget="statusbar" statusbar_visible="started,done" />
-                    <button name="action_set_started" string="Start" type="object"
-                        class="btn-primary" invisible="status != 'not_started'" />
-                    <button name="action_set_done" string="Finish" type="object" class="btn-success"
-                        invisible="status != 'started'" />
+                    <button name="action_set_started" string="Start" type="object" class="btn-primary" invisible="status != 'not_started'" />
+                    <button name="action_set_done" string="Finish" type="object" class="btn-success" invisible="status != 'started'" />
                 </header>
 
                 <sheet>
@@ -46,37 +44,15 @@
                         <group invisible="status not in ('not_started','done')">
                             <field name="branch_id" readonly="1" />
                             <field name="workplace" placeholder="Select workplace" />
-                            <field name="employee_id"
-                                options="{'no_create': True, 'no_create_edit': True}"
-                                placeholder="Select Employee" />
+                            <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee" />
                             <field name="vehicle_brand" placeholder="Select Vehicle Brand" />
-                            <field name="vehicle_model" domain="[('brand_id', '=', vehicle_brand)]"
-                                placeholder="Select Vehicle Model" />
+                            <field name="vehicle_model" domain="[('brand_id', '=', vehicle_brand)]" placeholder="Select Vehicle Model" />
                             <field name="available_year_ids" invisible="1" />
-                            <field name="manufactured_year_id"
-                                domain="[('id', 'in', available_year_ids)]"
-                                placeholder="Select Manufactured Year"
-                                options="{'no_create': True, 'no_create_edit': True}" />
-
-                            <!-- Level 1 -->
-                    <field name="service_type"/>
-
-                    <!-- Level 2: Service Options -->
-                    <field name="service_option">
-                        <attribute name="modifiers">{'invisible': [('show_service_option','=',False)]}</attribute>
-                    </field>
-
-                    <!-- Level 2: Glass Sale Options -->
-                    <field name="glass_option">
-                        <attribute name="modifiers">{'invisible': [('show_glass_option','=',False)]}</attribute>
-                    </field>
-
-                    <!-- Level 3: Retailer Type -->
-                    <field name="retailer_type">
-                        <attribute name="modifiers">{'invisible': [('show_retailer_type','=',False)]}</attribute>
-                    </field>
-
-
+                            <field name="manufactured_year_id" domain="[('id', 'in', available_year_ids)]" placeholder="Select Manufactured Year" options="{'no_create': True, 'no_create_edit': True}" />
+                            <field name="service_type" placeholder="Select Service Type"/>
+                            <field name="service_option" invisible="service_type != 'service'" placeholder="Select Service Option"/>
+                            <field name="glass_option" invisible="service_type != 'glass_sale'" placeholder="Select Glass Option" />
+                            <field name="retailer_type" invisible="glass_option != 'retailer_glass'" placeholder="Select Retailer Type" />
                             <field name="glass_destination" placeholder="Select Glass Destination" />
                             <field name="name" placeholder="Enter Customer's Name"/>
                             <field name="phone" placeholder="Enter Customer's Contact Number" />
@@ -90,11 +66,8 @@
                         <!-- After Work -->
                         <group invisible="status not in ('started','done')">
                             <field name="end_time" widget="easy_timepicker" />
-                            <field name="assistant_staff"
-                                options="{'no_create': True, 'no_create_edit': True}"
-                                placeholder="Select Assistant Staff" />
-                            <field name="photo" widget="image" class="oe_avatar"
-                                options="{'preview_image': 'photo'}">
+                            <field name="assistant_staff" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Assistant Staff" />
+                            <field name="photo" widget="image" class="oe_avatar" options="{'preview_image': 'photo'}">
                                 <attribute name="accept">image/*</attribute>
                                 <attribute name="capture">camera</attribute>
                             </field>
@@ -125,28 +98,21 @@
         <field name="context">{'create': False}</field>
     </record>
 
-    <record id="view_customer_search" model="ir.ui.view">
-    <field name="name">customer.record.search</field>
-    <field name="model">customer.record</field> <!-- replace with your model -->
-    <field name="arch" type="xml">
-        <search string="Customer Records">
-            <!-- Quick search across multiple fields -->
-            <field name="name" string="Name"/>
-            <field name="phone" string="Phone"/>
-            <field name="vehicle_number" string="Vehicle Number"/>
-            <field name="invoice_number" string="Invoice Number"/>
-
-            <!-- Optional filters -->
-            <filter string="With Phone" name="with_phone" domain="[('phone','!=',False)]"/>
-            <filter string="With Vehicle" name="with_vehicle" domain="[('vehicle_number','!=',False)]"/>
-
-            <!-- Group by options -->
-            <group expand="0" string="Group By">
-                <filter string="Name" name="group_name" context="{'group_by':'name'}"/>
-                <filter string="Vehicle" name="group_vehicle" context="{'group_by':'vehicle_number'}"/>
-            </group>
-        </search>
-    </field>
-</record>
-
+    <!-- Search View -->
+    <record id="custom_search_model_search_view" model="ir.ui.view">
+        <field name="name">customer.record.model.search</field>
+        <field name="model">customer.record</field>
+        <field name="arch" type="xml">
+            <search string="Custom Search Model">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="vehicle_number"/>
+                <field name="invoice_number"/>
+                <filter string="Name" name="filter_name" domain="[('name', 'ilike', self)]"/>
+                <filter string="Phone" name="filter_phone" domain="[('phone', 'ilike', self)]"/>
+                <filter string="Vehicle Number" name="filter_vehicle_number" domain="[('vehicle_number', 'ilike', self)]"/>
+                <filter string="Invoice Number" name="filter_invoice_number" domain="[('invoice_number', 'ilike', self)]"/>
+            </search>
+        </field>
+    </record>
 </odoo>

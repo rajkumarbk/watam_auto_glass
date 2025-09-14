@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _, exceptions
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from datetime import datetime
 import pytz
@@ -21,12 +21,8 @@ class ClientRecord(models.Model):
     )
     name = fields.Char(string="Customer Name", required=True)
     phone = fields.Char(string="Mobile Number", required=True)
-    vehicle_brand = fields.Many2one(
-        "vehicle.brand", string="Car Brand", required=True
-    )
-    vehicle_model = fields.Many2one(
-        "vehicle.model", string="Car Name", required=True
-    )
+    vehicle_brand = fields.Many2one("vehicle.brand", string="Car Brand", required=True)
+    vehicle_model = fields.Many2one("vehicle.model", string="Car Name", required=True)
     manufactured_year_id = fields.Many2one(
         "manufactured.year", string="Car Model", required=True
     )
@@ -52,15 +48,47 @@ class ClientRecord(models.Model):
     notes = fields.Text(string="Notes")
 
     def _get_current_time_float(self):
-        # Get current time in your timezone, e.g., Asia/Riyadh
         tz = pytz.timezone("Asia/Riyadh")
         now = datetime.now(tz)
-        return now.hour + now.minute / 60.0  # convert to float
+        return now.hour + now.minute / 60.0
 
     start_time = fields.Float(
         string=" WO Start Time", readonly=True, default=_get_current_time_float
     )
     end_time = fields.Float(string="WO Finishing Time", readonly=True)
+
+    @api.model
+    def _name_search(
+        self, name="", args=None, operator="ilike", limit=100, name_get_uid=None
+    ):
+        args = list(args or [])
+
+        if name:
+            # Build a domain to search across multiple fields
+            search_domain = [
+                "|",
+                "|",
+                "|",
+                ("name", operator, name),
+                ("phone", operator, name),
+                ("vehicle_number", operator, name),
+                ("invoice_number", operator, name),
+            ]
+            # Perform the search and return matching records
+            records = self._search(
+                search_domain + args, limit=limit, access_rights_uid=name_get_uid
+            )
+            if records:
+                return models.Model._name_get([records], name_get_uid=name_get_uid)
+
+        # Fallback to default behavior if no match or no name
+        return super()._name_search(
+            name=name,
+            args=args,
+            operator=operator,
+            limit=limit,
+            name_get_uid=name_get_uid,
+        )
 
     def action_set_done(self):
         """Set status to done and record end_time"""
@@ -74,10 +102,9 @@ class ClientRecord(models.Model):
             ("outside", "External"),
         ],
         string="Service Location",
-        default = "inside",
+        default="inside",
         required=True,
     )
-
     status = fields.Selection(
         [
             ("not_started", "Not Started"),
@@ -97,41 +124,29 @@ class ClientRecord(models.Model):
         string="Service Complexity",
     )
 
-    # Level 1
-    service_type = fields.Selection([
-        ('service', 'Service'),
-        ('glass_sale', 'Glass Sale and Installation')
-    ], string="Service Type")
+    service_type = fields.Selection(
+        [("service", "Service"), ("glass_sale", "Glass Sale and Installation")],
+        string="Service Type",
+    )
 
-    # Level 2
-    service_option = fields.Selection([
-        ('remove_install', 'Remove and Install'),
-        ('glue_mirror', 'Glue for Mirror'),
-        ('cut_glass', 'Cut the Glass'),
-        ('rubber_fixing', 'Rubber Fixing'),
-        ('door_base', 'Door Base'),
-        ('silicon', 'Silicon')
-    ], string="Service Options")
+    service_option = fields.Many2one("service.option", string="Service Option")
 
-    glass_option = fields.Selection([
-        ('our_glass', 'Our Glass'),
-        ('retailer_glass', 'Retailer Glass')
-    ], string="Glass Sale Options")
+    glass_option = fields.Selection(
+        [("our_glass", "Our Glass"), ("retailer_glass", "Retailer Glass")],
+        string="Glass Sale Options",
+    )
 
-    # Level 3
-    retailer_type = fields.Selection([
-        ('oem', 'OEM'),
-        ('aftermarket', 'Aftermarket')
-    ], string="Retailer Glass Type")
+    retailer_type = fields.Selection(
+        [("oem", "OEM"), ("aftermarket", "Aftermarket")], string="Retailer Glass Type"
+    )
 
-    # Reset irrelevant fields when selection changes
-    @api.onchange('service_type')
+    @api.onchange("service_type")
     def _onchange_service_type(self):
         for rec in self:
-            if rec.service_type == 'service':
+            if rec.service_type == "service":
                 rec.glass_option = False
                 rec.retailer_type = False
-            elif rec.service_type == 'glass_sale':
+            elif rec.service_type == "glass_sale":
                 rec.service_option = False
                 rec.retailer_type = False
             else:
@@ -139,17 +154,16 @@ class ClientRecord(models.Model):
                 rec.glass_option = False
                 rec.retailer_type = False
 
-    @api.onchange('glass_option')
+    @api.onchange("glass_option")
     def _onchange_glass_option(self):
         for rec in self:
-            if rec.glass_option != 'retailer_glass':
+            if rec.glass_option != "retailer_glass":
                 rec.retailer_type = False
+
     glass_destination = fields.Many2one(
         "vehicle.glass", string="Glass Position", required=True
     )
     invoice_number = fields.Char(string="Invoice Number", required=True)
-
-    # Compute Methods
 
     @api.depends("vehicle_model")
     def _compute_available_years(self):
@@ -170,17 +184,33 @@ class ClientRecord(models.Model):
                 )
             )
 
-    # Button Actions
-
     def action_set_started(self):
         self.status = "started"
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "customer.record",
+            "view_mode": "list,form",
+            "domain": [("status", "=", "started")],
+            "target": "current",
+        }
 
     def action_set_on_progress(self):
         """⚠️ Note: 'on_progress' is not in your selection.
         Either add it in `status` field or this will raise a ValueError."""
         self.status = "on_progress"
 
-    # Constraints
+    def action_set_done(self):
+        """Set status to done and record end_time"""
+        for record in self:
+            record.status = "done"
+            record.end_time = self._get_current_time_float()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "customer.record",
+            "view_mode": "list,form",
+            "domain": [("status", "=", "done")],
+            "target": "current",
+        }
 
     @api.constrains("phone")
     def _check_phone(self):

@@ -22,7 +22,7 @@ class ProblemSolution(models.Model):
         string="Inv No",
         related="customer_record_id.invoice_number",
         store=True,
-        readonly=False  # if you want it editable, else keep True
+        readonly=False,  # if you want it editable, else keep True
     )
     employee_id = fields.Many2one("hr.employee", string="Employee Name")
     assistant_staff = fields.Many2one("hr.employee", string="Assistant Staff")
@@ -51,14 +51,10 @@ class ProblemSolution(models.Model):
     )
 
     vehicle_number = fields.Char(string="Vehicle Number")
-    
-    datetime = fields.Datetime(
-        string="Date & Time",
-        default=fields.Datetime.now  
-    )
+
+    datetime = fields.Datetime(string="Date & Time", default=fields.Datetime.now)
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
-
 
     def action_set_done(self):
         """Set status to done and record end_time"""
@@ -66,12 +62,9 @@ class ProblemSolution(models.Model):
             record.status = "done"
             record.end_time = self._get_ksa_time_float()
 
-    problem = fields.Many2one(
-        "what.problem", string="Problem", required=True
-    )
+    problem = fields.Many2one("what.problem", string="Problem", required=True)
 
     solution = fields.Many2one("what.solution", string="Solution")
-
 
     workplace = fields.Selection(
         [
@@ -94,7 +87,7 @@ class ProblemSolution(models.Model):
     glass_destination = fields.Many2one("vehicle.glass", string="Glass Destination")
 
     @api.onchange("customer_record_id")
-    def _onchange_customer_record(self):    
+    def _onchange_customer_record(self):
         for rec in self:
             if rec.customer_record_id:
                 cr = rec.customer_record_id
@@ -107,7 +100,7 @@ class ProblemSolution(models.Model):
                 rec.name = cr.name
                 rec.phone = cr.phone
                 rec.glass_destination = cr.glass_destination
-    
+
     @api.depends("vehicle_model")
     def _compute_available_years(self):
         for rec in self:

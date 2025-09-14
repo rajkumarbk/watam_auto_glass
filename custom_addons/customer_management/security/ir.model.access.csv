@@ -24,6 +24,10 @@ access_customer_record_user,access.customer.record,model_customer_record,base.gr
 access_customer_record_supervisor,access.customer.record,model_customer_record,group_customer_supervisor,1,1,1,0
 access_customer_record_admin,access.customer.record,model_customer_record,group_customer_admin,1,1,1,1
 
+access_service_option_user,access.service.option,model_service_option,base.group_user,1,0,0,0
+access_service_option_supervisor,access.service.option,model_service_option,group_customer_supervisor,1,1,1,0
+access_service_option_admin,access.service.option,model_service_option,group_customer_admin,1,1,1,1
+
 access_what_problem_user,access.what.problem,model_what_problem,base.group_user,1,0,0,0
 access_what_problem_supervisor,access.what.problem,model_what_problem,group_customer_supervisor,1,1,1,0
 access_what_problem_admin,access.what.problem,model_what_problem,group_customer_admin,1,1,1,1

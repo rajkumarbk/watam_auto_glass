@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-     <record id="view_what_solution_list" model="ir.ui.view">
+    <record id="view_what_solution_list" model="ir.ui.view">
         <field name="name">what.solution.list</field>
         <field name="model">what.solution</field>
         <field name="arch" type="xml">
