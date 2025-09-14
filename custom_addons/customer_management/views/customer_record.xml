@@ -62,18 +62,16 @@
                     <field name="service_type"/>
 
                     <!-- Level 2: Service Options -->
-                    <field name="service_option">
-                        <attribute name="modifiers">{'invisible': [('show_service_option','=',False)]}</attribute>
-                    </field>
-
+                    <field name="service_option" invisible="service_type != 'service'"/>
+                      
                     <!-- Level 2: Glass Sale Options -->
-                    <field name="glass_option">
-                        <attribute name="modifiers">{'invisible': [('show_glass_option','=',False)]}</attribute>
+                    <field name="glass_option" invisible="service_type != 'glass_sale'">
+                       
                     </field>
 
                     <!-- Level 3: Retailer Type -->
-                    <field name="retailer_type">
-                        <attribute name="modifiers">{'invisible': [('show_retailer_type','=',False)]}</attribute>
+                    <field name="retailer_type" invisible="glass_option != 'retailer_glass'">
+                     
                     </field>
 
 
