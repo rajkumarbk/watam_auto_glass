@@ -62,11 +62,8 @@ class ClientRecord(models.Model):
     )
     end_time = fields.Float(string="WO Finishing Time", readonly=True)
 
-    def action_set_done(self):
-        """Set status to done and record end_time"""
-        for record in self:
-            record.status = "done"
-            record.end_time = self._get_current_time_float()
+    
+            
 
     workplace = fields.Selection(
         [
@@ -174,11 +171,31 @@ class ClientRecord(models.Model):
 
     def action_set_started(self):
         self.status = "started"
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'customer.record',
+            'view_mode': 'list,form',
+            'domain': [('status', '=', 'started')],
+            'target': 'current',
+        }
 
     def action_set_on_progress(self):
         """⚠️ Note: 'on_progress' is not in your selection.
         Either add it in `status` field or this will raise a ValueError."""
         self.status = "on_progress"
+        
+    def action_set_done(self):
+        """Set status to done and record end_time"""
+        for record in self:
+            record.status = "done"
+            record.end_time = self._get_current_time_float()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'customer.record',
+            'view_mode': 'list,form',
+            'domain': [('status', '=', 'done')],
+            'target': 'current',
+        }
 
     # Constraints
 
