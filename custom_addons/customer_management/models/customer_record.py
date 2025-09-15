@@ -10,7 +10,7 @@ class ClientRecord(models.Model):
     _description = "Customer Records"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "start_time desc"
-    _rec_name = "invoice_number"
+    _rec_name = "vehicle_number"
 
     employee_id = fields.Many2one("hr.employee", string="Employee Name")
     assistant_staff = fields.Many2one("hr.employee", string="Secondary Technician")
@@ -27,11 +27,11 @@ class ClientRecord(models.Model):
         "manufactured.year", string="Car Model", required=True
     )
 
-    available_year_ids = fields.Many2many(
-        "manufactured.year",
-        string="Available Years",
-        compute="_compute_available_years",
-    )
+    # available_year_ids = fields.Many2many(
+    #     "manufactured.year",
+    #     string="Available Years",
+    #     compute="_compute_available_years",
+    # )
 
     vehicle_display = fields.Char(
         string="Vehicle Info",
@@ -132,10 +132,10 @@ class ClientRecord(models.Model):
     )
     invoice_number = fields.Char(string="Invoice Number", required=True)
 
-    @api.depends("vehicle_model")
-    def _compute_available_years(self):
-        for rec in self:
-            rec.available_year_ids = rec.vehicle_model.manufactured_year_id
+    # @api.depends("vehicle_model")
+    # def _compute_available_years(self):
+    #     for rec in self:
+    #         rec.available_year_ids = rec.vehicle_model.manufactured_year_id
 
     @api.depends("vehicle_brand", "vehicle_model", "manufactured_year_id")
     def _compute_vehicle_display(self):

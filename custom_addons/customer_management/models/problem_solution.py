@@ -13,44 +13,58 @@ class ProblemSolution(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "name asc"
 
-    customer_record_id = fields.Many2one(
+    vehicle_record_id = fields.Many2one(
         "customer.record",
-        string="Invoice Number",
+        string="Search by Car Reg No",
         domain=[("status", "=", "done")],
     )
     invoice_number = fields.Char(
-        string="Inv No",
-        related="customer_record_id.invoice_number",
+        related="vehicle_record_id.invoice_number",
         store=True,
-        readonly=False,  # if you want it editable, else keep True
+        readonly=False,
+        string="Inv No",
     )
     employee_id = fields.Many2one("hr.employee", string="Employee Name")
-    assistant_staff = fields.Many2one("hr.employee", string="Assistant Staff")
+    assistant_staff = fields.Many2one("hr.employee", string="Secondary Technician")
     branch_id = fields.Many2one(
         "res.company",
-        string="Branch",
+        string="Branch Name",
         default=lambda self: self.env.company,
     )
-    name = fields.Char(string="Customer's Name")
-    phone = fields.Char(string="Contact Number", default="05")
-    vehicle_brand = fields.Many2one("vehicle.brand", string="Vehicle Brand")
-    vehicle_model = fields.Many2one("vehicle.model", string="Vehicle Model")
-    manufactured_year_id = fields.Many2one(
-        "manufactured.year", string="Manufactured Year"
+    name = fields.Char(
+        string="Customer's Name",
+        related="vehicle_record_id.name",
+        store=True,
+        readonly=False,
     )
+    phone = fields.Char(
+        string="Contact Number",
+        default="05",
+        related="vehicle_record_id.phone",
+        store=True,
+        readonly=False,
+    )
+    vehicle_brand = fields.Many2one("vehicle.brand", string="Car Brand")
+    vehicle_model = fields.Many2one("vehicle.model", string="Car Name")
+    manufactured_year_id = fields.Many2one("manufactured.year", string="Car Model")
 
-    available_year_ids = fields.Many2many(
-        "manufactured.year",
-        string="Available Years",
-        compute="_compute_available_years",
-    )
+    # available_year_ids = fields.Many2many(
+    #     "manufactured.year",
+    #     string="Available Years",
+    #     compute="_compute_available_years",
+    # )
 
     vehicle_display = fields.Char(
         string="Vehicle Info",
         compute="_compute_vehicle_display",
     )
 
-    vehicle_number = fields.Char(string="Vehicle Number")
+    vehicle_number = fields.Char(
+        string="Car Registration Number",
+        related="vehicle_record_id.vehicle_number",
+        store=True,
+        readonly=False,
+    )
 
     datetime = fields.Datetime(string="Date & Time", default=fields.Datetime.now)
     photo = fields.Binary(string="Photo")
@@ -68,8 +82,8 @@ class ProblemSolution(models.Model):
 
     workplace = fields.Selection(
         [
-            ("inside", "Inside"),
-            ("outside", "Outside"),
+            ("inside", "Workshop"),
+            ("outside", "External"),
         ],
         string="Workplace",
     )
@@ -86,11 +100,11 @@ class ProblemSolution(models.Model):
     )
     glass_destination = fields.Many2one("vehicle.glass", string="Glass Destination")
 
-    @api.onchange("customer_record_id")
+    @api.onchange("vehicle_record_id")
     def _onchange_customer_record(self):
         for rec in self:
-            if rec.customer_record_id:
-                cr = rec.customer_record_id
+            if rec.vehicle_record_id:
+                cr = rec.vehicle_record_id
                 # rec.assistant_staff = cr.assistant_staff
                 rec.vehicle_brand = cr.vehicle_brand
                 rec.vehicle_model = cr.vehicle_model
