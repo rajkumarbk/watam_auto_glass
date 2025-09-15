@@ -28,7 +28,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="vehicle_record_id" options="{'no_create': True, 'no_open': True}" placeholder="Select Vehicle Number..." />
+                            <field name="vehicle_record_id" options="{'no_create': True, 'no_open': True}" placeholder="Search by name, phone, car number, invoice" />
                             <field name="name" />
                             <field name="phone" />
                             <field name="vehicle_brand" />
@@ -38,7 +38,6 @@
                             <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee" />
                             <field name="problem" placeholder="Select the problem" />
                             <field name="solution" placeholder="Select the Solution" domain="[('problem_id', '=', problem)]" />
-
                         </group>
                         <group>
                             <field name="datetime" readonly= "1"/>

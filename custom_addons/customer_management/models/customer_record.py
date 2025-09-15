@@ -3,6 +3,7 @@ from odoo.exceptions import ValidationError
 from datetime import datetime
 import pytz
 import re
+from odoo.exceptions import UserError
 
 
 class ClientRecord(models.Model):
@@ -26,12 +27,6 @@ class ClientRecord(models.Model):
     manufactured_year_id = fields.Many2one(
         "manufactured.year", string="Car Model", required=True
     )
-
-    # available_year_ids = fields.Many2many(
-    #     "manufactured.year",
-    #     string="Available Years",
-    #     compute="_compute_available_years",
-    # )
 
     vehicle_display = fields.Char(
         string="Vehicle Info",
@@ -106,6 +101,10 @@ class ClientRecord(models.Model):
     retailer_type = fields.Selection(
         [("oem", "OEM"), ("aftermarket", "Aftermarket")], string="Retailer Glass Type"
     )
+    glass_destination = fields.Many2one(
+        "vehicle.glass", string="Glass Position", required=True
+    )
+    invoice_number = fields.Char(string="Invoice Number", required=True)
 
     @api.onchange("service_type")
     def _onchange_service_type(self):
@@ -126,16 +125,6 @@ class ClientRecord(models.Model):
         for rec in self:
             if rec.glass_option != "retailer_glass":
                 rec.retailer_type = False
-
-    glass_destination = fields.Many2one(
-        "vehicle.glass", string="Glass Position", required=True
-    )
-    invoice_number = fields.Char(string="Invoice Number", required=True)
-
-    # @api.depends("vehicle_model")
-    # def _compute_available_years(self):
-    #     for rec in self:
-    #         rec.available_year_ids = rec.vehicle_model.manufactured_year_id
 
     @api.depends("vehicle_brand", "vehicle_model", "manufactured_year_id")
     def _compute_vehicle_display(self):
@@ -184,3 +173,40 @@ class ClientRecord(models.Model):
         for record in self:
             if record.phone and not re.fullmatch(r"\d{10}", record.phone):
                 raise ValidationError(_("Phone number must be exactly 10 digits."))
+
+    def write(self, vals):
+        """Block editing if status = done, except for Admins."""
+        for rec in self:
+            if rec.status == "done" and not self.env.user.has_group(
+                "base.group_system"
+            ):
+                raise UserError(
+                    _(
+                        "You cannot edit a completed record. Please contact the administrator."
+                    )
+                )
+        return super().write(vals)
+
+    def unlink(self):
+        """Block deleting if status = done, except for Admins."""
+        for rec in self:
+            if rec.status == "done" and not self.env.user.has_group(
+                "base.group_system"
+            ):
+                raise UserError(
+                    _(
+                        "You cannot delete a completed record. Please contact the administrator."
+                    )
+                )
+        return super().unlink()
+
+    # available_year_ids = fields.Many2many(
+    #     "manufactured.year",
+    #     string="Available Years",
+    #     compute="_compute_available_years",
+    # )
+
+    # @api.depends("vehicle_model")
+    # def _compute_available_years(self):
+    #     for rec in self:
+    #         rec.available_year_ids = rec.vehicle_model.manufactured_year_id

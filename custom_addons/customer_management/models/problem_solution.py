@@ -15,7 +15,7 @@ class ProblemSolution(models.Model):
 
     vehicle_record_id = fields.Many2one(
         "customer.record",
-        string="Search by Car Reg No",
+        string="Search Record",
         domain=[("status", "=", "done")],
     )
     invoice_number = fields.Char(
@@ -32,13 +32,13 @@ class ProblemSolution(models.Model):
         default=lambda self: self.env.company,
     )
     name = fields.Char(
-        string="Customer's Name",
+        string="Customer Name",
         related="vehicle_record_id.name",
         store=True,
         readonly=False,
     )
     phone = fields.Char(
-        string="Contact Number",
+        string="Mobile Number",
         default="05",
         related="vehicle_record_id.phone",
         store=True,
@@ -47,13 +47,6 @@ class ProblemSolution(models.Model):
     vehicle_brand = fields.Many2one("vehicle.brand", string="Car Brand")
     vehicle_model = fields.Many2one("vehicle.model", string="Car Name")
     manufactured_year_id = fields.Many2one("manufactured.year", string="Car Model")
-
-    # available_year_ids = fields.Many2many(
-    #     "manufactured.year",
-    #     string="Available Years",
-    #     compute="_compute_available_years",
-    # )
-
     vehicle_display = fields.Char(
         string="Vehicle Info",
         compute="_compute_vehicle_display",
@@ -149,3 +142,9 @@ class ProblemSolution(models.Model):
     #     for record in self:
     #         if record.phone and not re.fullmatch(r"\d{10}", record.phone):
     #             raise ValidationError(_("Phone number must be exactly 10 digits."))
+
+    # available_year_ids = fields.Many2many(
+    #     "manufactured.year",
+    #     string="Available Years",
+    #     compute="_compute_available_years",
+    # )
