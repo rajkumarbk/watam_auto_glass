@@ -39,7 +39,6 @@ class ProblemSolution(models.Model):
     )
     phone = fields.Char(
         string="Mobile Number",
-        default="05",
         related="vehicle_record_id.phone",
         store=True,
         readonly=False,
