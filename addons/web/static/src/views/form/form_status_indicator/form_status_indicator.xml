@@ -15,7 +15,7 @@
             </button>
             <button
                 type="button"
-                class="o_form_button_cancel btn btn-primary px-1 py-0 lh-sm"
+                class="o_form_button_cancel btn btn-danger px-1 py-0 lh-sm"
                 data-hotkey="j"
                 t-on-click.stop="discard"
                 data-tooltip="Discard changes"
