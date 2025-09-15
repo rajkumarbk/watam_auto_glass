@@ -5,15 +5,15 @@
         <field name="model">problem.solution</field>
         <field name="arch" type="xml">
             <list decoration-warning="solution != False">
-                <field name="datetime"/>
-                <field name="branch_id"/>
-                <field name="employee_id"/>
-                <field name="vehicle_display"/>
-                <field name="vehicle_number"/>
-                <field name="name"/>
-                <field name="phone"/>
-                <field name="problem"/>
-                <field name="solution"/>
+                <field name="datetime" />
+                <field name="branch_id" />
+                <field name="employee_id" />
+                <field name="vehicle_display" />
+                <field name="vehicle_number" />
+                <field name="name" />
+                <field name="phone" />
+                <field name="problem" />
+                <field name="solution" />
 
             </list>
         </field>
@@ -28,21 +28,25 @@
                 <sheet>
                     <group>
                         <group>
-                           <field name="customer_record_id" options="{'no_create': True}" placeholder="Select Invoice"/>
-                            <field name="name"/>
+                            <field name="vehicle_record_id"
+                                options="{'no_create': True, 'no_open': True}"
+                                placeholder="Select Vehicle Number..." />
+                            <field name="name" />
                             <field name="phone" />
                             <field name="vehicle_brand" />
                             <field name="vehicle_model" />
                             <field name="manufactured_year_id" />
-                            <field name="vehicle_number" options="{'no_create': True}"/>
-                            <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee"/>
-                            <field name="problem" placeholder="Select the problem"/>
+                            <field name="vehicle_number" options="{'no_create': True}" />
+                            <field name="employee_id"
+                                options="{'no_create': True, 'no_create_edit': True}"
+                                placeholder="Select Employee" />
+                            <field name="problem" placeholder="Select the problem" />
                             <field name="solution" placeholder="Select the Solution"
-       domain="[('problem_id', '=', problem)]"/>
+                                domain="[('problem_id', '=', problem)]" />
                         </group>
                         <group>
-                            <field name="datetime" readonly= "1"/>
-                            <field name="branch_id" readonly="1"/>
+                            <field name="datetime" readonly="1" />
+                            <field name="branch_id" readonly="1" />
                         </group>
                     </group>
                 </sheet>

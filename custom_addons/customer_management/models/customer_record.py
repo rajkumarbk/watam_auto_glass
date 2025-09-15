@@ -10,7 +10,7 @@ class ClientRecord(models.Model):
     _description = "Customer Records"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "start_time desc"
-    _rec_name = "invoice_number"
+    _rec_name = "vehicle_number"
 
     employee_id = fields.Many2one("hr.employee", string="Employee Name")
     assistant_staff = fields.Many2one("hr.employee", string="Secondary Technician")
