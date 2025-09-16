@@ -13,7 +13,6 @@ class ProblemSolution(models.Model):
     _order = "name asc"
 
     vehicle_record_id = fields.Many2one(
-    vehicle_record_id = fields.Many2one(
         "customer.record",
         string="Search Record",
         domain=[("status", "=", "done")],
@@ -92,7 +91,6 @@ class ProblemSolution(models.Model):
     glass_destination = fields.Many2one("vehicle.glass", string="Glass Destination")
 
     @api.onchange("vehicle_record_id")
-    def _onchange_customer_record(self):
     def action_set_done(self):
         """Set status to done and record end_time"""
         for record in self:
