@@ -6,13 +6,11 @@
         <field name="model">vehicle.model</field>
         <field name="arch" type="xml">
             <list>
-                <field name="brand_id" />
                 <field name="name" />
-                <field name="manufactured_year_id" widget="many2many_tags" />
             </list>
         </field>
     </record>
-    <record id="view_vehicle_model_form" model="ir.ui.view">
+    <!-- <record id="view_vehicle_model_form" model="ir.ui.view">
         <field name="name">vehicle.model.form</field>
         <field name="model">vehicle.model</field>
         <field name="arch" type="xml">
@@ -26,7 +24,7 @@
                 </sheet>
             </form>
         </field>
-    </record>
+    </record> -->
     <!-- Action -->
     <record id="action_vehicle_model" model="ir.actions.act_window">
         <field name="name">Vehicle Models</field>

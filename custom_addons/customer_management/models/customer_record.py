@@ -1,8 +1,9 @@
-from odoo import api, fields, models, _, exceptions
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from datetime import datetime
 import pytz
 import re
+from odoo.exceptions import UserError
 
 
 class ClientRecord(models.Model):
@@ -21,20 +22,10 @@ class ClientRecord(models.Model):
     )
     name = fields.Char(string="Customer Name", required=True)
     phone = fields.Char(string="Mobile Number", required=True)
-    vehicle_brand = fields.Many2one(
-        "vehicle.brand", string="Car Brand", required=True
-    )
-    vehicle_model = fields.Many2one(
-        "vehicle.model", string="Car Name", required=True
-    )
+    vehicle_brand = fields.Many2one("vehicle.brand", string="Car Brand", required=True)
+    vehicle_model = fields.Many2one("vehicle.model", string="Car Name", required=True)
     manufactured_year_id = fields.Many2one(
         "manufactured.year", string="Car Model", required=True
-    )
-
-    available_year_ids = fields.Many2many(
-        "manufactured.year",
-        string="Available Years",
-        compute="_compute_available_years",
     )
 
     vehicle_display = fields.Char(
@@ -52,10 +43,9 @@ class ClientRecord(models.Model):
     notes = fields.Text(string="Notes")
 
     def _get_current_time_float(self):
-        # Get current time in your timezone, e.g., Asia/Riyadh
         tz = pytz.timezone("Asia/Riyadh")
         now = datetime.now(tz)
-        return now.hour + now.minute / 60.0  # convert to float
+        return now.hour + now.minute / 60.0
 
     start_time = fields.Float(
         string=" WO Start Time", readonly=True, default=_get_current_time_float
@@ -71,10 +61,9 @@ class ClientRecord(models.Model):
             ("outside", "External"),
         ],
         string="Service Location",
-        default = "inside",
+        default="inside",
         required=True,
     )
-
     status = fields.Selection(
         [
             ("not_started", "Not Started"),
@@ -94,41 +83,33 @@ class ClientRecord(models.Model):
         string="Service Complexity",
     )
 
-    # Level 1
-    service_type = fields.Selection([
-        ('service', 'Service'),
-        ('glass_sale', 'Glass Sale and Installation')
-    ], string="Service Type")
+    service_type = fields.Selection(
+        [("service", "Service"), ("glass_sale", "Glass Sale and Installation")],
+        string="Service Type",
+    )
 
-    # Level 2
-    service_option = fields.Selection([
-        ('remove_install', 'Remove and Install'),
-        ('glue_mirror', 'Glue for Mirror'),
-        ('cut_glass', 'Cut the Glass'),
-        ('rubber_fixing', 'Rubber Fixing'),
-        ('door_base', 'Door Base'),
-        ('silicon', 'Silicon')
-    ], string="Service Options")
+    service_option = fields.Many2one("service.option", string="Service Option")
 
-    glass_option = fields.Selection([
-        ('our_glass', 'Our Glass'),
-        ('retailer_glass', 'Retailer Glass')
-    ], string="Glass Sale Options")
+    glass_option = fields.Selection(
+        [("our_glass", "Our Glass"), ("retailer_glass", "Retailer Glass")],
+        string="Glass Sale Options",
+    )
 
-    # Level 3
-    retailer_type = fields.Selection([
-        ('oem', 'OEM'),
-        ('aftermarket', 'Aftermarket')
-    ], string="Retailer Glass Type")
+    retailer_type = fields.Selection(
+        [("oem", "OEM"), ("aftermarket", "Aftermarket")], string="Retailer Glass Type"
+    )
+    glass_destination = fields.Many2one(
+        "vehicle.glass", string="Glass Position", required=True
+    )
+    invoice_number = fields.Char(string="Invoice Number", required=True)
 
-    # Reset irrelevant fields when selection changes
-    @api.onchange('service_type')
+    @api.onchange("service_type")
     def _onchange_service_type(self):
         for rec in self:
-            if rec.service_type == 'service':
+            if rec.service_type == "service":
                 rec.glass_option = False
                 rec.retailer_type = False
-            elif rec.service_type == 'glass_sale':
+            elif rec.service_type == "glass_sale":
                 rec.service_option = False
                 rec.retailer_type = False
             else:
@@ -136,22 +117,11 @@ class ClientRecord(models.Model):
                 rec.glass_option = False
                 rec.retailer_type = False
 
-    @api.onchange('glass_option')
+    @api.onchange("glass_option")
     def _onchange_glass_option(self):
         for rec in self:
-            if rec.glass_option != 'retailer_glass':
+            if rec.glass_option != "retailer_glass":
                 rec.retailer_type = False
-    glass_destination = fields.Many2one(
-        "vehicle.glass", string="Glass Position", required=True
-    )
-    invoice_number = fields.Char(string="Invoice Number", required=True)
-
-    # Compute Methods
-
-    @api.depends("vehicle_model")
-    def _compute_available_years(self):
-        for rec in self:
-            rec.available_year_ids = rec.vehicle_model.manufactured_year_id
 
     @api.depends("vehicle_brand", "vehicle_model", "manufactured_year_id")
     def _compute_vehicle_display(self):
@@ -167,16 +137,14 @@ class ClientRecord(models.Model):
                 )
             )
 
-    # Button Actions
-
     def action_set_started(self):
         self.status = "started"
         return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'customer.record',
-            'view_mode': 'list,form',
-            'domain': [('status', '=', 'started')],
-            'target': 'current',
+            "type": "ir.actions.act_window",
+            "res_model": "customer.record",
+            "view_mode": "list,form",
+            "domain": [("status", "=", "started")],
+            "target": "current",
         }
 
     def action_set_on_progress(self):
@@ -197,10 +165,58 @@ class ClientRecord(models.Model):
             'target': 'current',
         }
 
-    # Constraints
+    def action_set_done(self):
+        """Set status to done and record end_time"""
+        for record in self:
+            record.status = "done"
+            record.end_time = self._get_current_time_float()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "customer.record",
+            "view_mode": "list,form",
+            "domain": [("status", "=", "done")],
+            "target": "current",
+        }
 
     @api.constrains("phone")
     def _check_phone(self):
         for record in self:
             if record.phone and not re.fullmatch(r"\d{10}", record.phone):
                 raise ValidationError(_("Phone number must be exactly 10 digits."))
+
+    def write(self, vals):
+        """Block editing if status = done, except for Admins."""
+        for rec in self:
+            if rec.status == "done" and not self.env.user.has_group(
+                "base.group_system"
+            ):
+                raise UserError(
+                    _(
+                        "You cannot edit a completed record. Please contact the administrator."
+                    )
+                )
+        return super().write(vals)
+
+    def unlink(self):
+        """Block deleting if status = done, except for Admins."""
+        for rec in self:
+            if rec.status == "done" and not self.env.user.has_group(
+                "base.group_system"
+            ):
+                raise UserError(
+                    _(
+                        "You cannot delete a completed record. Please contact the administrator."
+                    )
+                )
+        return super().unlink()
+
+    # available_year_ids = fields.Many2many(
+    #     "manufactured.year",
+    #     string="Available Years",
+    #     compute="_compute_available_years",
+    # )
+
+    # @api.depends("vehicle_model")
+    # def _compute_available_years(self):
+    #     for rec in self:
+    #         rec.available_year_ids = rec.vehicle_model.manufactured_year_id

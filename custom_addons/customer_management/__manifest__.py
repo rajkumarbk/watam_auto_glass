@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Watam Auto Glass - Customer Management",
+    "name": "CRM - Customer Management",
     "summary": "Short (1 phrase/line) summary of the module's purpose",
     "description": """
 Long description of module's purpose
     """,
-    "author": "Watam Auto Glass",
+    "author": "Watam And Salem",
     "category": "Human Resource",
     "version": "0.1",
     "sequence": 1,
@@ -21,6 +21,7 @@ Long description of module's purpose
         'data/glass_data.xml',
         'data/problem_data.xml',
         'data/solution_data.xml',
+        'data/service_data.xml',
         'views/master_data/vehicle_brand.xml',
         'views/master_data/vehicle_model.xml',
         'views/master_data/vehicle_manufactured_year.xml',

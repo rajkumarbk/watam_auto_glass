@@ -1,276 +1,276 @@
 <odoo>
     <!-- Manufactured Years -->
-        <record id="year_2050" model="manufactured.year">
-            <field name="name">2050</field>
-        </record>
-        <record id="year_2049" model="manufactured.year">
-            <field name="name">2049</field>
-        </record>
-        <record id="year_2048" model="manufactured.year">
-            <field name="name">2048</field>
-        </record>
-        <record id="year_2047" model="manufactured.year">
-            <field name="name">2047</field>
-        </record>
-        <record id="year_2046" model="manufactured.year">
-            <field name="name">2046</field>
-        </record>
-        <record id="year_2045" model="manufactured.year">
-            <field name="name">2045</field>
-        </record>
-        <record id="year_2044" model="manufactured.year">
-            <field name="name">2044</field>
-        </record>
-        <record id="year_2043" model="manufactured.year">
-            <field name="name">2043</field>
-        </record>
-        <record id="year_2042" model="manufactured.year">
-            <field name="name">2042</field>
-        </record>
-        <record id="year_2041" model="manufactured.year">
-            <field name="name">2041</field>
-        </record>
-        <record id="year_2040" model="manufactured.year">
-            <field name="name">2040</field>
-        </record>
-        <record id="year_2039" model="manufactured.year">
-            <field name="name">2039</field>
-        </record>
-        <record id="year_2038" model="manufactured.year">
-            <field name="name">2038</field>
-        </record>
-        <record id="year_2037" model="manufactured.year">
-            <field name="name">2037</field>
-        </record>
-        <record id="year_2036" model="manufactured.year">
-            <field name="name">2036</field>
-        </record>
-        <record id="year_2035" model="manufactured.year">
-            <field name="name">2035</field>
-        </record>
-        <record id="year_2034" model="manufactured.year">
-            <field name="name">2034</field>
-        </record>
-        <record id="year_2033" model="manufactured.year">
-            <field name="name">2033</field>
-        </record>
-        <record id="year_2032" model="manufactured.year">
-            <field name="name">2032</field>
-        </record>
-        <record id="year_2031" model="manufactured.year">
-            <field name="name">2031</field>
-        </record>
-        <record id="year_2030" model="manufactured.year">
-            <field name="name">2030</field>
-        </record>
-        <record id="year_2029" model="manufactured.year">
-            <field name="name">2029</field>
-        </record>
-        <record id="year_2028" model="manufactured.year">
-            <field name="name">2028</field>
-        </record>
-        <record id="year_2027" model="manufactured.year">
-            <field name="name">2027</field>
-        </record>
-        <record id="year_2026" model="manufactured.year">
-            <field name="name">2026</field>
-        </record>
-        <record id="year_2025" model="manufactured.year">
-            <field name="name">2025</field>
-        </record>
-        <record id="year_2024" model="manufactured.year">
-            <field name="name">2024</field>
-        </record>
-        <record id="year_2023" model="manufactured.year">
-            <field name="name">2023</field>
-        </record>
-        <record id="year_2022" model="manufactured.year">
-            <field name="name">2022</field>
-        </record>
-        <record id="year_2021" model="manufactured.year">
-            <field name="name">2021</field>
-        </record>
-        <record id="year_2020" model="manufactured.year">
-            <field name="name">2020</field>
-        </record>
-        <record id="year_2019" model="manufactured.year">
-            <field name="name">2019</field>
-        </record>
-        <record id="year_2018" model="manufactured.year">
-            <field name="name">2018</field>
-        </record>
-        <record id="year_2017" model="manufactured.year">
-            <field name="name">2017</field>
-        </record>
-        <record id="year_2016" model="manufactured.year">
-            <field name="name">2016</field>
-        </record>
-        <record id="year_2015" model="manufactured.year">
-            <field name="name">2015</field>
-        </record>
-        <record id="year_2014" model="manufactured.year">
-            <field name="name">2014</field>
-        </record>
-        <record id="year_2013" model="manufactured.year">
-            <field name="name">2013</field>
-        </record>
-        <record id="year_2012" model="manufactured.year">
-            <field name="name">2012</field>
-        </record>
-        <record id="year_2011" model="manufactured.year">
-            <field name="name">2011</field>
-        </record>
-        <record id="year_2010" model="manufactured.year">
-            <field name="name">2010</field>
-        </record>
-        <record id="year_2009" model="manufactured.year">
-            <field name="name">2009</field>
-        </record>
-        <record id="year_2008" model="manufactured.year">
-            <field name="name">2008</field>
-        </record>
-        <record id="year_2007" model="manufactured.year">
-            <field name="name">2007</field>
-        </record>
-        <record id="year_2006" model="manufactured.year">
-            <field name="name">2006</field>
-        </record>
-        <record id="year_2005" model="manufactured.year">
-            <field name="name">2005</field>
-        </record>
-        <record id="year_2004" model="manufactured.year">
-            <field name="name">2004</field>
-        </record>
-        <record id="year_2003" model="manufactured.year">
-            <field name="name">2003</field>
-        </record>
-        <record id="year_2002" model="manufactured.year">
-            <field name="name">2002</field>
-        </record>
-        <record id="year_2001" model="manufactured.year">
-            <field name="name">2001</field>
-        </record>
-        <record id="year_2000" model="manufactured.year">
-            <field name="name">2000</field>
-        </record>
-        <record id="year_1999" model="manufactured.year">
-            <field name="name">1999</field>
-        </record>
-        <record id="year_1998" model="manufactured.year">
-            <field name="name">1998</field>
-        </record>
-        <record id="year_1997" model="manufactured.year">
-            <field name="name">1997</field>
-        </record>
-        <record id="year_1996" model="manufactured.year">
-            <field name="name">1996</field>
-        </record>
-        <record id="year_1995" model="manufactured.year">
-            <field name="name">1995</field>
-        </record>
-        <record id="year_1994" model="manufactured.year">
-            <field name="name">1994</field>
-        </record>
-        <record id="year_1993" model="manufactured.year">
-            <field name="name">1993</field>
-        </record>
-        <record id="year_1992" model="manufactured.year">
-            <field name="name">1992</field>
-        </record>
-        <record id="year_1991" model="manufactured.year">
-            <field name="name">1991</field>
-        </record>
-        <record id="year_1990" model="manufactured.year">
-            <field name="name">1990</field>
-        </record>
-        <record id="year_1989" model="manufactured.year">
-            <field name="name">1989</field>
-        </record>
-        <record id="year_1988" model="manufactured.year">
-            <field name="name">1988</field>
-        </record>
-        <record id="year_1987" model="manufactured.year">
-            <field name="name">1987</field>
-        </record>
-        <record id="year_1986" model="manufactured.year">
-            <field name="name">1986</field>
-        </record>
-        <record id="year_1985" model="manufactured.year">
-            <field name="name">1985</field>
-        </record>
-        <record id="year_1984" model="manufactured.year">
-            <field name="name">1984</field>
-        </record>
-        <record id="year_1983" model="manufactured.year">
-            <field name="name">1983</field>
-        </record>
-        <record id="year_1982" model="manufactured.year">
-            <field name="name">1982</field>
-        </record>
-        <record id="year_1981" model="manufactured.year">
-            <field name="name">1981</field>
-        </record>
-        <record id="year_1980" model="manufactured.year">
-            <field name="name">1980</field>
-        </record>
-        <record id="year_1979" model="manufactured.year">
-            <field name="name">1979</field>
-        </record>
-        <record id="year_1978" model="manufactured.year">
-            <field name="name">1978</field>
-        </record>
-        <record id="year_1977" model="manufactured.year">
-            <field name="name">1977</field>
-        </record>
-        <record id="year_1976" model="manufactured.year">
-            <field name="name">1976</field>
-        </record>
-        <record id="year_1975" model="manufactured.year">
-            <field name="name">1975</field>
-        </record>
-        <record id="year_1974" model="manufactured.year">
-            <field name="name">1974</field>
-        </record>
-        <record id="year_1973" model="manufactured.year">
-            <field name="name">1973</field>
-        </record>
-        <record id="year_1972" model="manufactured.year">
-            <field name="name">1972</field>
-        </record>
-        <record id="year_1971" model="manufactured.year">
-            <field name="name">1971</field>
-        </record>
-        <record id="year_1970" model="manufactured.year">
-            <field name="name">1970</field>
-        </record>
-        <record id="year_1969" model="manufactured.year">
-            <field name="name">1969</field>
-        </record>
-        <record id="year_1968" model="manufactured.year">
-            <field name="name">1968</field>
-        </record>
-        <record id="year_1967" model="manufactured.year">
-            <field name="name">1967</field>
-        </record>
-        <record id="year_1966" model="manufactured.year">
-            <field name="name">1966</field>
-        </record>
-        <record id="year_1965" model="manufactured.year">
-            <field name="name">1965</field>
-        </record>
-        <record id="year_1964" model="manufactured.year">
-            <field name="name">1964</field>
-        </record>
-        <record id="year_1963" model="manufactured.year">
-            <field name="name">1963</field>
-        </record>
-        <record id="year_1962" model="manufactured.year">
-            <field name="name">1962</field>
-        </record>
-        <record id="year_1961" model="manufactured.year">
-            <field name="name">1961</field>
-        </record>
-        <record id="year_1960" model="manufactured.year">
-            <field name="name">1960</field>
-        </record>
-    </odoo>
+    <record id="year_2050" model="manufactured.year">
+        <field name="name">2050</field>
+    </record>
+    <record id="year_2049" model="manufactured.year">
+        <field name="name">2049</field>
+    </record>
+    <record id="year_2048" model="manufactured.year">
+        <field name="name">2048</field>
+    </record>
+    <record id="year_2047" model="manufactured.year">
+        <field name="name">2047</field>
+    </record>
+    <record id="year_2046" model="manufactured.year">
+        <field name="name">2046</field>
+    </record>
+    <record id="year_2045" model="manufactured.year">
+        <field name="name">2045</field>
+    </record>
+    <record id="year_2044" model="manufactured.year">
+        <field name="name">2044</field>
+    </record>
+    <record id="year_2043" model="manufactured.year">
+        <field name="name">2043</field>
+    </record>
+    <record id="year_2042" model="manufactured.year">
+        <field name="name">2042</field>
+    </record>
+    <record id="year_2041" model="manufactured.year">
+        <field name="name">2041</field>
+    </record>
+    <record id="year_2040" model="manufactured.year">
+        <field name="name">2040</field>
+    </record>
+    <record id="year_2039" model="manufactured.year">
+        <field name="name">2039</field>
+    </record>
+    <record id="year_2038" model="manufactured.year">
+        <field name="name">2038</field>
+    </record>
+    <record id="year_2037" model="manufactured.year">
+        <field name="name">2037</field>
+    </record>
+    <record id="year_2036" model="manufactured.year">
+        <field name="name">2036</field>
+    </record>
+    <record id="year_2035" model="manufactured.year">
+        <field name="name">2035</field>
+    </record>
+    <record id="year_2034" model="manufactured.year">
+        <field name="name">2034</field>
+    </record>
+    <record id="year_2033" model="manufactured.year">
+        <field name="name">2033</field>
+    </record>
+    <record id="year_2032" model="manufactured.year">
+        <field name="name">2032</field>
+    </record>
+    <record id="year_2031" model="manufactured.year">
+        <field name="name">2031</field>
+    </record>
+    <record id="year_2030" model="manufactured.year">
+        <field name="name">2030</field>
+    </record>
+    <record id="year_2029" model="manufactured.year">
+        <field name="name">2029</field>
+    </record>
+    <record id="year_2028" model="manufactured.year">
+        <field name="name">2028</field>
+    </record>
+    <record id="year_2027" model="manufactured.year">
+        <field name="name">2027</field>
+    </record>
+    <record id="year_2026" model="manufactured.year">
+        <field name="name">2026</field>
+    </record>
+    <record id="year_2025" model="manufactured.year">
+        <field name="name">2025</field>
+    </record>
+    <record id="year_2024" model="manufactured.year">
+        <field name="name">2024</field>
+    </record>
+    <record id="year_2023" model="manufactured.year">
+        <field name="name">2023</field>
+    </record>
+    <record id="year_2022" model="manufactured.year">
+        <field name="name">2022</field>
+    </record>
+    <record id="year_2021" model="manufactured.year">
+        <field name="name">2021</field>
+    </record>
+    <record id="year_2020" model="manufactured.year">
+        <field name="name">2020</field>
+    </record>
+    <record id="year_2019" model="manufactured.year">
+        <field name="name">2019</field>
+    </record>
+    <record id="year_2018" model="manufactured.year">
+        <field name="name">2018</field>
+    </record>
+    <record id="year_2017" model="manufactured.year">
+        <field name="name">2017</field>
+    </record>
+    <record id="year_2016" model="manufactured.year">
+        <field name="name">2016</field>
+    </record>
+    <record id="year_2015" model="manufactured.year">
+        <field name="name">2015</field>
+    </record>
+    <record id="year_2014" model="manufactured.year">
+        <field name="name">2014</field>
+    </record>
+    <record id="year_2013" model="manufactured.year">
+        <field name="name">2013</field>
+    </record>
+    <record id="year_2012" model="manufactured.year">
+        <field name="name">2012</field>
+    </record>
+    <record id="year_2011" model="manufactured.year">
+        <field name="name">2011</field>
+    </record>
+    <record id="year_2010" model="manufactured.year">
+        <field name="name">2010</field>
+    </record>
+    <record id="year_2009" model="manufactured.year">
+        <field name="name">2009</field>
+    </record>
+    <record id="year_2008" model="manufactured.year">
+        <field name="name">2008</field>
+    </record>
+    <record id="year_2007" model="manufactured.year">
+        <field name="name">2007</field>
+    </record>
+    <record id="year_2006" model="manufactured.year">
+        <field name="name">2006</field>
+    </record>
+    <record id="year_2005" model="manufactured.year">
+        <field name="name">2005</field>
+    </record>
+    <record id="year_2004" model="manufactured.year">
+        <field name="name">2004</field>
+    </record>
+    <record id="year_2003" model="manufactured.year">
+        <field name="name">2003</field>
+    </record>
+    <record id="year_2002" model="manufactured.year">
+        <field name="name">2002</field>
+    </record>
+    <record id="year_2001" model="manufactured.year">
+        <field name="name">2001</field>
+    </record>
+    <record id="year_2000" model="manufactured.year">
+        <field name="name">2000</field>
+    </record>
+    <record id="year_1999" model="manufactured.year">
+        <field name="name">1999</field>
+    </record>
+    <record id="year_1998" model="manufactured.year">
+        <field name="name">1998</field>
+    </record>
+    <record id="year_1997" model="manufactured.year">
+        <field name="name">1997</field>
+    </record>
+    <record id="year_1996" model="manufactured.year">
+        <field name="name">1996</field>
+    </record>
+    <record id="year_1995" model="manufactured.year">
+        <field name="name">1995</field>
+    </record>
+    <record id="year_1994" model="manufactured.year">
+        <field name="name">1994</field>
+    </record>
+    <record id="year_1993" model="manufactured.year">
+        <field name="name">1993</field>
+    </record>
+    <record id="year_1992" model="manufactured.year">
+        <field name="name">1992</field>
+    </record>
+    <record id="year_1991" model="manufactured.year">
+        <field name="name">1991</field>
+    </record>
+    <record id="year_1990" model="manufactured.year">
+        <field name="name">1990</field>
+    </record>
+    <record id="year_1989" model="manufactured.year">
+        <field name="name">1989</field>
+    </record>
+    <record id="year_1988" model="manufactured.year">
+        <field name="name">1988</field>
+    </record>
+    <record id="year_1987" model="manufactured.year">
+        <field name="name">1987</field>
+    </record>
+    <record id="year_1986" model="manufactured.year">
+        <field name="name">1986</field>
+    </record>
+    <record id="year_1985" model="manufactured.year">
+        <field name="name">1985</field>
+    </record>
+    <record id="year_1984" model="manufactured.year">
+        <field name="name">1984</field>
+    </record>
+    <record id="year_1983" model="manufactured.year">
+        <field name="name">1983</field>
+    </record>
+    <record id="year_1982" model="manufactured.year">
+        <field name="name">1982</field>
+    </record>
+    <record id="year_1981" model="manufactured.year">
+        <field name="name">1981</field>
+    </record>
+    <record id="year_1980" model="manufactured.year">
+        <field name="name">1980</field>
+    </record>
+    <record id="year_1979" model="manufactured.year">
+        <field name="name">1979</field>
+    </record>
+    <record id="year_1978" model="manufactured.year">
+        <field name="name">1978</field>
+    </record>
+    <record id="year_1977" model="manufactured.year">
+        <field name="name">1977</field>
+    </record>
+    <record id="year_1976" model="manufactured.year">
+        <field name="name">1976</field>
+    </record>
+    <record id="year_1975" model="manufactured.year">
+        <field name="name">1975</field>
+    </record>
+    <record id="year_1974" model="manufactured.year">
+        <field name="name">1974</field>
+    </record>
+    <record id="year_1973" model="manufactured.year">
+        <field name="name">1973</field>
+    </record>
+    <record id="year_1972" model="manufactured.year">
+        <field name="name">1972</field>
+    </record>
+    <record id="year_1971" model="manufactured.year">
+        <field name="name">1971</field>
+    </record>
+    <record id="year_1970" model="manufactured.year">
+        <field name="name">1970</field>
+    </record>
+    <record id="year_1969" model="manufactured.year">
+        <field name="name">1969</field>
+    </record>
+    <record id="year_1968" model="manufactured.year">
+        <field name="name">1968</field>
+    </record>
+    <record id="year_1967" model="manufactured.year">
+        <field name="name">1967</field>
+    </record>
+    <record id="year_1966" model="manufactured.year">
+        <field name="name">1966</field>
+    </record>
+    <record id="year_1965" model="manufactured.year">
+        <field name="name">1965</field>
+    </record>
+    <record id="year_1964" model="manufactured.year">
+        <field name="name">1964</field>
+    </record>
+    <record id="year_1963" model="manufactured.year">
+        <field name="name">1963</field>
+    </record>
+    <record id="year_1962" model="manufactured.year">
+        <field name="name">1962</field>
+    </record>
+    <record id="year_1961" model="manufactured.year">
+        <field name="name">1961</field>
+    </record>
+    <record id="year_1960" model="manufactured.year">
+        <field name="name">1960</field>
+    </record>
+</odoo>

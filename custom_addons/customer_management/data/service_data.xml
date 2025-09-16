@@ -1,0 +1,20 @@
+<odoo>
+    <record id="option1" model="service.option">
+        <field name="name">Remove and install</field>
+    </record>
+    <record id="option2" model="service.option">
+        <field name="name">Glue for mirror</field>
+    </record>
+    <record id="option3" model="service.option">
+        <field name="name">Cut the glass</field>
+    </record>
+    <record id="option4" model="service.option">
+        <field name="name">Rubber fixing</field>
+    </record>
+    <record id="option5" model="service.option">
+        <field name="name">Door base</field>
+    </record>
+    <record id="option6" model="service.option">
+        <field name="name">Silicon</field>
+    </record>
+</odoo>

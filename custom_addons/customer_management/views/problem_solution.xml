@@ -28,26 +28,26 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="vehicle_record_id"
-                                options="{'no_create': True, 'no_open': True}"
-                                placeholder="Select Vehicle Number..." />
-                            <field name="name" />
-                            <field name="phone" />
-                            <field name="vehicle_brand" />
-                            <field name="vehicle_model" />
-                            <field name="manufactured_year_id" />
-                            <field name="vehicle_number" options="{'no_create': True}" />
-                            <field name="employee_id"
-                                options="{'no_create': True, 'no_create_edit': True}"
-                                placeholder="Select Employee" />
+                            <field name="vehicle_record_id" options="{'no_create': True, 'no_open': True}" placeholder="Search by name, phone, car number, invoice" />
+                            <field name="name" placeholder="Enter Customer's Name"/>
+                            <field name="phone" placeholder="Enter Customer's Contact Number"/>
+                            <field name="vehicle_brand" placeholder="Select Vehicle brand"/>
+                            <field name="vehicle_model" placeholder="Select Vehicle name"/>
+                            <field name="manufactured_year_id" placeholder="Select Vehicle model"/>
+                            <field name="vehicle_number" options="{'no_create': True}" placeholder="Enter car plate number"/>
+                            <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee" />
                             <field name="problem" placeholder="Select the problem" />
-                            <field name="solution" placeholder="Select the Solution"
-                                domain="[('problem_id', '=', problem)]" />
+                            <field name="solution" placeholder="Select the Solution" domain="[('problem_id', '=', problem)]" />
                         </group>
                         <group>
                             <field name="datetime" readonly="1" />
                             <field name="branch_id" readonly="1" />
                         </group>
+                    </group>
+                    <group>
+                        <!-- <field name="status" widget="statusbar" statusbar_visible="started,done" /> -->
+                        <button name="action_set_started" string="Submit" type="object" class="btn-primary" invisible="status != 'not_started'" />
+                        <button name="action_set_done" string="Submit" type="object" class="btn-success" invisible="status != 'started'" />
                     </group>
                 </sheet>
             </form>
@@ -56,7 +56,7 @@
 
     <!-- Action: Active Records -->
     <record id="action_problem_solution" model="ir.actions.act_window">
-        <field name="name">Problem and Solution</field>
+        <field name="name">Complaints Registration</field>
         <field name="res_model">problem.solution</field>
         <field name="view_mode">list,form</field>
     </record>

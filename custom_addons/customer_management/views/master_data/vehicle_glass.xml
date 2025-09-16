@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-     <record id="view_vehicle_glass_list" model="ir.ui.view">
+    <record id="view_vehicle_glass_list" model="ir.ui.view">
         <field name="name">vehicle.glass.list</field>
         <field name="model">vehicle.glass</field>
         <field name="arch" type="xml">
