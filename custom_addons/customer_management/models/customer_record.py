@@ -200,6 +200,21 @@ class ClientRecord(models.Model):
                 )
         return super().unlink()
 
+    @api.constrains("manufactured_year_id")
+    def _check_manufactured_year_id(self):
+        current_year = datetime.now().year
+        for record in self:
+            if record.manufactured_year_id:
+                try:
+                    year = int(record.manufactured_year_id.name)
+                except ValueError:
+                    raise ValidationError("Invalid year format in master data.")
+
+                if year > current_year:
+                    raise ValidationError(
+                        "The model you entered is not manufactured yet. Please enter a valid year."
+                    )
+
     # available_year_ids = fields.Many2many(
     #     "manufactured.year",
     #     string="Available Years",

@@ -19,7 +19,6 @@
                 <field name="end_time" widget="easy_timepicker" />
                 <field name="assistant_staff" />
                 <field name="notes" />
-
                 <!-- <field name="photo" widget="image" /> -->
                 <field name="status" widget="badge" decoration-success="status == 'done'" decoration-info="status == 'started'"/>
             </list>
@@ -32,8 +31,6 @@
         <field name="model">customer.record</field>
         <field name="arch" type="xml">
             <form>
-
-
                 <sheet>
                     <group>
                         <!-- Before Work -->
@@ -51,7 +48,7 @@
                             <field name="retailer_type" invisible="glass_option != 'retailer_glass'" placeholder="Select Retailer Type" />
                             <field name="glass_destination" placeholder="Select Glass Destination" />
                             <field name="name" placeholder="Enter Customer's Name"/>
-                            <field name="phone" placeholder="Enter Customer's Contact Number" />
+                            <field name="phone" placeholder="Enter Customer's Contact Number"/>
                             <field name="service_complexity" placeholder="Select Service Complexity" />
                             <field name="vehicle_number" placeholder="Enter Vehicle Number"/>
                             <field name="invoice_number" placeholder="Enter Invoice Number"/>
@@ -111,5 +108,4 @@
             </search>
         </field>
     </record>
-
 </odoo>

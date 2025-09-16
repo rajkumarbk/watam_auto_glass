@@ -28,7 +28,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="vehicle_record_id" options="{'no_create': True, 'no_open': True}" placeholder="Search by name, phone, car number, invoice" />
+                            <field name="vehicle_record_id" options="{'no_create': True, 'no_open': True}" placeholder="Search car plate number..." />
                             <field name="name" placeholder="Enter Customer's Name"/>
                             <field name="phone" placeholder="Enter Customer's Contact Number"/>
                             <field name="vehicle_brand" placeholder="Select Vehicle brand"/>
