@@ -21,7 +21,7 @@ class ClientRecord(models.Model):
         default=lambda self: self.env.company,
     )
     name = fields.Char(string="Customer Name", required=True)
-    phone = fields.Char(string="Mobile Number", required=True)
+    phone = fields.Char(string="Mobile Number", required=True, size=10)
     vehicle_brand = fields.Many2one("vehicle.brand", string="Car Brand", required=True)
     vehicle_model = fields.Many2one("vehicle.model", string="Car Name", required=True)
     manufactured_year_id = fields.Many2one(
