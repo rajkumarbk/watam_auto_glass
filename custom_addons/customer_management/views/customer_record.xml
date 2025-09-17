@@ -71,7 +71,6 @@
                         </group>
                     </group>
                     <group>
-                        <!-- <field name="status" widget="statusbar" statusbar_visible="started,done" /> -->
                         <button name="action_set_started" string="Submit" type="object" class="btn-primary" invisible="status != 'not_started'" />
                         <button name="action_set_done" string="Submit" type="object" class="btn-success" invisible="status != 'started'" />
                     </group>
