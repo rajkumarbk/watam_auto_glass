@@ -154,7 +154,7 @@ class ClientRecord(models.Model):
         
     def action_set_done(self):
         """Set status to done and record end_time"""
-        for record in self:
+        for record in self.sudo():
             record.status = "done"
             record.end_time = self._get_current_time_float()
         return {
@@ -165,18 +165,6 @@ class ClientRecord(models.Model):
             'target': 'current',
         }
 
-    def action_set_done(self):
-        """Set status to done and record end_time"""
-        for record in self:
-            record.status = "done"
-            record.end_time = self._get_current_time_float()
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "customer.record",
-            "view_mode": "list,form",
-            "domain": [("status", "=", "done")],
-            "target": "current",
-        }
 
     @api.constrains("phone")
     def _check_phone(self):
@@ -184,18 +172,18 @@ class ClientRecord(models.Model):
             if record.phone and not re.fullmatch(r"\d{10}", record.phone):
                 raise ValidationError(_("Phone number must be exactly 10 digits."))
 
-    def write(self, vals):
-        """Block editing if status = done, except for Admins."""
-        for rec in self:
-            if rec.status == "done" and not self.env.user.has_group(
-                "base.group_system"
-            ):
-                raise UserError(
-                    _(
-                        "You cannot edit a completed record. Please contact the administrator."
-                    )
-                )
-        return super().write(vals)
+    # def write(self, vals):
+    #     """Block editing if status = done, except for Admins."""
+    #     for rec in self:
+    #         if rec.status == "done" and not self.env.user.has_group(
+    #             "base.group_system"
+    #         ):
+    #             raise UserError(
+    #                 _(
+    #                     "You cannot edit a completed record. Please contact the administrator."
+    #                 )
+    #             )
+    #     return super().write(vals)
 
     def unlink(self):
         """Block deleting if status = done, except for Admins."""

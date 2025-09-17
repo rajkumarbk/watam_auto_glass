@@ -95,7 +95,7 @@ class ProblemSolution(models.Model):
         """Set status to done and record end_time"""
         for record in self:
             record.status = "done"
-            record.end_time = time()
+            # record.end_time = time()
             
     @api.onchange("vehicle_record_id")
     def _onchange_vehicle_record(self):    
