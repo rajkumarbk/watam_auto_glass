@@ -40,16 +40,15 @@
                             <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee" class="input-field"/>
                             <field name="vehicle_brand" placeholder="Select Vehicle Brand" class="input-field"/>
                             <field name="vehicle_model" domain="[('brand_id', '=', vehicle_brand)]" placeholder="Select Vehicle Model" class="input-field"/>
-                            <!-- <field name="available_year_ids" invisible="1" /> -->
                             <field name="manufactured_year_id" placeholder="Select Manufactured Year" options="{'no_create': True, 'no_create_edit': True}" class="input-field"/>
-                            <field name="service_type" placeholder="Select Service Type" class="input-field"/>
-                            <field name="service_option" invisible="service_type != 'service'" placeholder="Select Service Option" class="input-field"/>
-                            <field name="glass_option" invisible="service_type != 'glass_sale'" placeholder="Select Glass Option" class="input-field"/>
-                            <field name="retailer_type" invisible="glass_option != 'retailer_glass'" placeholder="Select Retailer Type" class="input-field"/>
+                            <field name="service_type" class="input-field"/>
+                            <field name="service_option" invisible="service_type != 'service'"  class="input-field"/>
+                            <field name="glass_option" invisible="service_type != 'glass_sale'"  class="input-field"/>
+                            <field name="retailer_type" invisible="glass_option != 'retailer_glass'"  class="input-field"/>
                             <field name="glass_destination" placeholder="Select Glass Destination" class="input-field"/>
                             <field name="name" placeholder="Enter Customer's Name" class="input-field"/>
                             <field name="phone" placeholder="Enter Customer's Contact Number" class="input-field"/>
-                            <field name="service_complexity" placeholder="Select Service Complexity" class="input-field"/>
+                            <field name="service_complexity" class="input-field"/>
                             <field name="vehicle_number" placeholder="Enter Vehicle Number" class="vehicle-input input-field"/>
                             <field name="invoice_number" placeholder="Enter Invoice Number" class="input-field"/>
                             <field name="date" class="input-field"/>
@@ -69,8 +68,8 @@
                     </group>
 
                     <group>
-                        <button name="action_set_started" string="Submit" type="object" class="btn-primary" invisible="status != 'not_started'"/>
-                        <button name="action_set_done" string="Submit" type="object" class="btn-success" invisible="status != 'started'"/>
+                        <button name="action_set_started" string="Submit" type="object" class="btn-primary" invisible="status != 'not_started'" />
+                        <button name="action_set_done" string="Submit" type="object" class="btn-success" invisible="status != 'started'" />
                     </group>
                 </sheet>
             </form>

@@ -5,15 +5,15 @@
         <field name="model">problem.solution</field>
         <field name="arch" type="xml">
             <list decoration-warning="solution != False">
-                <field name="datetime"/>
-                <field name="branch_id"/>
-                <field name="employee_id"/>
-                <field name="vehicle_display"/>
-                <field name="vehicle_number"/>
-                <field name="name"/>
-                <field name="phone"/>
-                <field name="problem"/>
-                <field name="solution"/>
+                <field name="datetime" />
+                <field name="branch_id" />
+                <field name="employee_id" />
+                <field name="vehicle_display" />
+                <field name="vehicle_number" />
+                <field name="name" />
+                <field name="phone" />
+                <field name="problem" />
+                <field name="solution" />
 
             </list>
         </field>
@@ -28,25 +28,25 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="vehicle_record_id" options="{'no_create': True, 'no_open': True}" placeholder="Search car plate number..." class="input-field"/>
+                            <field name="vehicle_record_id" placeholder="Search car plate number..." class="input-field"/>
                             <field name="name" placeholder="Enter Customer's Name" class="input-field"/>
                             <field name="phone" placeholder="Enter Customer's Contact Number" class="input-field"/>
+                            <!-- <field name="vehicle_display" class="input-field"/> -->
                             <field name="vehicle_brand" placeholder="Select Vehicle brand" class="input-field"/>
                             <field name="vehicle_model" placeholder="Select Vehicle name" class="input-field"/>
                             <field name="manufactured_year_id" placeholder="Select Vehicle model" class="input-field"/>
-                            <field name="vehicle_number" options="{'no_create': True}" placeholder="Enter car plate number" class="vehicle-input input-field"/>
+                            <field name="vehicle_number" options="{'no_create': True}" placeholder="Enter car plate number" class="input-field"/>
                             <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee" class="input-field"/>
                             <field name="problem" placeholder="Select the problem" class="input-field"/>
                             <field name="solution" placeholder="Select the Solution" domain="[('problem_id', '=', problem)]" class="input-field"/>
                         </group>
                         <group>
-                            <field name="datetime" readonly="1" class="input-field"/>
-                            <field name="branch_id" readonly="1" class="input-field"/>
+                            <field name="datetime" readonly="1" />
+                            <field name="branch_id" readonly="1" />
                         </group>
                     </group>
                     <group>
-                        <button name="action_set_started" string="Submit" type="object" class="btn-primary" invisible="status != 'not_started'"/>
-                        <button name="action_set_done" string="Submit" type="object" class="btn-success" invisible="status != 'started'"/>
+                        <button name="action_set_started" string="Submit" type="object" class="btn-primary" invisible="status != 'not_started'" />
                     </group>
                 </sheet>
             </form>

@@ -1,8 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from datetime import datetime
-from time import time
-from time import time
 import pytz
 import re
 
@@ -13,15 +11,22 @@ class ProblemSolution(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "name asc"
 
+    # Helper method
+    def _get_ksa_time_float(self):
+        """Get current time in float format for KSA timezone"""
+        tz = pytz.timezone("Asia/Riyadh")
+        now = datetime.now(tz)
+        return now.hour + now.minute / 60.0
+
+    # Fields definition
     vehicle_record_id = fields.Many2one(
         "customer.record",
-        string="Search Record",
+        string="Car Plate Number",
         domain=[("status", "=", "done")],
     )
     invoice_number = fields.Char(
         related="vehicle_record_id.invoice_number",
         store=True,
-        readonly=False,
         string="Inv No",
     )
     employee_id = fields.Many2one("hr.employee", string="Employee Name")
@@ -35,13 +40,11 @@ class ProblemSolution(models.Model):
         string="Customer Name",
         related="vehicle_record_id.name",
         store=True,
-        readonly=False,
     )
     phone = fields.Char(
         string="Mobile Number",
         related="vehicle_record_id.phone",
         store=True,
-        readonly=False,
     )
     vehicle_brand = fields.Many2one("vehicle.brand", string="Car Brand")
     vehicle_model = fields.Many2one("vehicle.model", string="Car Name")
@@ -49,29 +52,18 @@ class ProblemSolution(models.Model):
     vehicle_display = fields.Char(
         string="Vehicle Info",
         compute="_compute_vehicle_display",
+        store=True,
     )
-
     vehicle_number = fields.Char(
         string="Car Registration Number",
         related="vehicle_record_id.vehicle_number",
         store=True,
-        readonly=False,
     )
-
     datetime = fields.Datetime(string="Date & Time", default=fields.Datetime.now)
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
-
-    def action_set_done(self):
-        """Set status to done and record end_time"""
-        for record in self:
-            record.status = "done"
-            record.end_time = self._get_ksa_time_float()
-
     problem = fields.Many2one("what.problem", string="Problem", required=True)
-
     solution = fields.Many2one("what.solution", string="Solution")
-
     workplace = fields.Selection(
         [
             ("inside", "Workshop"),
@@ -79,7 +71,6 @@ class ProblemSolution(models.Model):
         ],
         string="Workplace",
     )
-
     status = fields.Selection(
         [
             ("not_started", "Not Started"),
@@ -92,58 +83,41 @@ class ProblemSolution(models.Model):
     )
     glass_destination = fields.Many2one("vehicle.glass", string="Glass Destination")
 
+    # Onchange methods
     @api.onchange("vehicle_record_id")
-    def _onchange_customer_record(self):
-        for rec in self:
-            if rec.vehicle_record_id:
-                cr = rec.vehicle_record_id
-                # rec.assistant_staff = cr.assistant_staff
-                rec.vehicle_brand = cr.vehicle_brand
-                rec.vehicle_model = cr.vehicle_model
-                rec.manufactured_year_id = cr.manufactured_year_id
-                rec.vehicle_number = cr.vehicle_number
-                rec.employee_id = cr.employee_id
-                rec.name = cr.name
-                rec.phone = cr.phone
-                rec.glass_destination = cr.glass_destination
+    def _onchange_vehicle_record(self):
+        """Update fields when vehicle record is selected"""
+        if self.vehicle_record_id:
+            cr = self.vehicle_record_id
 
-    @api.depends("vehicle_model")
-    def _compute_available_years(self):
-        for rec in self:
-            rec.available_year_ids = rec.vehicle_model.manufactured_year_id
+            update_fields = {
+                "vehicle_brand": cr.vehicle_brand.id,
+                "vehicle_model": cr.vehicle_model.id,
+                "manufactured_year_id": cr.manufactured_year_id.id,
+                "employee_id": cr.employee_id.id,
+                "name": cr.name,
+                "phone": cr.phone,
+                "glass_destination": cr.glass_destination.id,
+            }
+            self.update(update_fields)
 
+    # Computed methods
     @api.depends("vehicle_brand", "vehicle_model", "manufactured_year_id")
     def _compute_vehicle_display(self):
+        """Compute vehicle display info by concatenating related fields"""
         for rec in self:
-            rec.vehicle_display = " ".join(
-                filter(
-                    None,
-                    [
-                        rec.vehicle_brand.name,
-                        rec.vehicle_model.name,
-                        rec.manufactured_year_id.name,
-                    ],
-                )
-            )
+            parts = [
+                rec.vehicle_brand.name,
+                rec.vehicle_model.name,
+                rec.manufactured_year_id.name,
+            ]
+            rec.vehicle_display = " ".join(filter(None, parts))
 
-    # Button Actions
+    # Button action methods
+    def action_set_done(self):
+        """Set status to done for all selected records"""
+        self.write({"status": "done"})
+
     def action_set_started(self):
-        self.status = "started"
-
-    def action_set_on_progress(self):
-        """⚠️ Note: 'on_progress' is not in your selection.
-        Either add it in `status` field or this will raise a ValueError."""
-        self.status = "on_progress"
-
-    # Constraints
-    # @api.constrains("phone")
-    # def _check_phone(self):
-    #     for record in self:
-    #         if record.phone and not re.fullmatch(r"\d{10}", record.phone):
-    #             raise ValidationError(_("Phone number must be exactly 10 digits."))
-
-    # available_year_ids = fields.Many2many(
-    #     "manufactured.year",
-    #     string="Available Years",
-    #     compute="_compute_available_years",
-    # )
+        """Set status to started for all selected records"""
+        self.write({"status": "started"})

@@ -1,9 +1,8 @@
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
-from datetime import datetime
+from odoo.exceptions import ValidationError, UserError
+from datetime import datetime, date
 import pytz
 import re
-from odoo.exceptions import UserError
 
 
 class ClientRecord(models.Model):
@@ -13,6 +12,14 @@ class ClientRecord(models.Model):
     _order = "start_time desc"
     _rec_name = "vehicle_number"
 
+    # Helper methods
+    def _get_current_time_float(self):
+        """Get current time in float format for Riyadh timezone"""
+        tz = pytz.timezone("Asia/Riyadh")
+        now = datetime.now(tz)
+        return now.hour + now.minute / 60.0
+
+    # Fields definition
     employee_id = fields.Many2one("hr.employee", string="Employee Name")
     assistant_staff = fields.Many2one("hr.employee", string="Secondary Technician")
     branch_id = fields.Many2one(
@@ -21,19 +28,18 @@ class ClientRecord(models.Model):
         default=lambda self: self.env.company,
     )
     name = fields.Char(string="Customer Name", required=True)
-    phone = fields.Char(string="Mobile Number", required=True)
-    vehicle_brand = fields.Many2one("vehicle.brand", string="Car Brand", required=True)
-    vehicle_model = fields.Many2one("vehicle.model", string="Car Name", required=True)
+    phone = fields.Char(string="Mobile Number", required=True, size=10)
+    vehicle_brand = fields.Many2one("vehicle.brand", string="Vehicle Brand", required=True)
+    vehicle_model = fields.Many2one("vehicle.model", string="Vehicle Name", required=True)
     manufactured_year_id = fields.Many2one(
-        "manufactured.year", string="Car Model", required=True
+        "manufactured.year", string="Vehicle Model", required=True
     )
-
     vehicle_display = fields.Char(
         string="Vehicle Info",
         compute="_compute_vehicle_display",
+        store=True,  # Added store=True for potential performance improvement
     )
-
-    vehicle_number = fields.Char(string="Car Registration Number", required=True)
+    vehicle_number = fields.Char(string="Vehicle Number", required=True)
     date = fields.Date(
         string="Date",
         default=fields.Date.context_today,
@@ -41,23 +47,10 @@ class ClientRecord(models.Model):
     )
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
-
-    def _get_current_time_float(self):
-        tz = pytz.timezone("Asia/Riyadh")
-        now = datetime.now(tz)
-        return now.hour + now.minute / 60.0
-
     start_time = fields.Float(
-        string=" WO Start Time", readonly=True, default=_get_current_time_float
+        string="WO Start Time", readonly=True, default=_get_current_time_float
     )
     end_time = fields.Float(string="WO Finishing Time", readonly=True)
-
-    def action_set_done(self):
-        """Set status to done and record end_time"""
-        for record in self:
-            record.status = "done"
-            record.end_time = self._get_current_time_float()
-
     workplace = fields.Selection(
         [
             ("inside", "Workshop"),
@@ -85,29 +78,39 @@ class ClientRecord(models.Model):
         ],
         string="Service Complexity",
     )
-
     service_type = fields.Selection(
-        [("service", "Service"), ("glass_sale", "Glass Sale and Installation")],
+        [("service", "Service"), ("glass_sale", "Glass Installation")],
         string="Service Type",
     )
-
     service_option = fields.Many2one("service.option", string="Service Option")
-
     glass_option = fields.Selection(
-        [("our_glass", "Our Glass"), ("retailer_glass", "Retailer Glass")],
-        string="Glass Sale Options",
+        [("our_glass", "Sale & installation"), ("retailer_glass", "Installation only")],
+        string="Glass installation Options",
     )
-
     retailer_type = fields.Selection(
-        [("oem", "OEM"), ("aftermarket", "Aftermarket")], string="Retailer Glass Type"
+        [("oem", "OEM"), ("aftermarket", "Aftermarket")], string="Installation Type"
     )
     glass_destination = fields.Many2one(
         "vehicle.glass", string="Glass Position", required=True
     )
     invoice_number = fields.Char(string="Invoice Number", required=True)
 
+    # Computed methods
+    @api.depends("vehicle_brand", "vehicle_model", "manufactured_year_id")
+    def _compute_vehicle_display(self):
+        """Compute vehicle display info by concatenating related fields"""
+        for rec in self:
+            parts = [
+                rec.vehicle_brand.name,
+                rec.vehicle_model.name,
+                rec.manufactured_year_id.name,
+            ]
+            rec.vehicle_display = " ".join(filter(None, parts))
+
+    # Onchange methods
     @api.onchange("service_type")
     def _onchange_service_type(self):
+        """Reset related fields when service type changes"""
         for rec in self:
             if rec.service_type == "service":
                 rec.glass_option = False
@@ -115,71 +118,56 @@ class ClientRecord(models.Model):
             elif rec.service_type == "glass_sale":
                 rec.service_option = False
                 rec.retailer_type = False
-            else:
-                rec.service_option = False
-                rec.glass_option = False
-                rec.retailer_type = False
 
     @api.onchange("glass_option")
     def _onchange_glass_option(self):
+        """Reset retailer type when glass option changes"""
         for rec in self:
             if rec.glass_option != "retailer_glass":
                 rec.retailer_type = False
 
-    @api.depends("vehicle_brand", "vehicle_model", "manufactured_year_id")
-    def _compute_vehicle_display(self):
-        for rec in self:
-            rec.vehicle_display = " ".join(
-                filter(
-                    None,
-                    [
-                        rec.vehicle_brand.name,
-                        rec.vehicle_model.name,
-                        rec.manufactured_year_id.name,
-                    ],
-                )
-            )
-
+    # Action methods
     def action_set_started(self):
-        self.status = "started"
+        """Set status to started and return filtered view"""
+        self.write({"status": "started"})  # Use write for better performance
         return {
             "type": "ir.actions.act_window",
-            "res_model": "customer.record",
+            "res_model": self._name,
             "view_mode": "list,form",
             "domain": [("status", "=", "started")],
             "target": "current",
         }
 
-    def action_set_on_progress(self):
-        """⚠️ Note: 'on_progress' is not in your selection.
-        Either add it in `status` field or this will raise a ValueError."""
-        self.status = "on_progress"
-
     def action_set_done(self):
-        """Set status to done and record end_time"""
-        for record in self:
-            record.status = "done"
-            record.end_time = self._get_current_time_float()
+        """Set status to done, record end time, and return filtered view"""
+        current_time = self._get_current_time_float()
+        self.write(
+            {  # Use single write operation
+                "status": "done",
+                "end_time": current_time,
+            }
+        )
         return {
             "type": "ir.actions.act_window",
-            "res_model": "customer.record",
+            "res_model": self._name,
             "view_mode": "list,form",
             "domain": [("status", "=", "done")],
             "target": "current",
         }
 
+    # Constraint methods
     @api.constrains("phone")
     def _check_phone(self):
+        """Validate phone number format"""
         for record in self:
             if record.phone and not re.fullmatch(r"\d{10}", record.phone):
                 raise ValidationError(_("Phone number must be exactly 10 digits."))
 
+    # Override methods
     def write(self, vals):
-        """Block editing if status = done, except for Admins."""
-        for rec in self:
-            if rec.status == "done" and not self.env.user.has_group(
-                "base.group_system"
-            ):
+        """Block editing if status is done, except for Admins"""
+        if any(rec.status == "done" for rec in self):
+            if not self.env.user.has_group("base.group_system"):
                 raise UserError(
                     _(
                         "You cannot edit a completed record. Please contact the administrator."
@@ -188,40 +176,12 @@ class ClientRecord(models.Model):
         return super().write(vals)
 
     def unlink(self):
-        """Block deleting if status = done, except for Admins."""
-        for rec in self:
-            if rec.status == "done" and not self.env.user.has_group(
-                "base.group_system"
-            ):
+        """Block deleting if status is done, except for Admins"""
+        if any(rec.status == "done" for rec in self):
+            if not self.env.user.has_group("base.group_system"):
                 raise UserError(
                     _(
                         "You cannot delete a completed record. Please contact the administrator."
                     )
                 )
         return super().unlink()
-
-    @api.constrains("manufactured_year_id")
-    def _check_manufactured_year_id(self):
-        current_year = datetime.now().year
-        for record in self:
-            if record.manufactured_year_id:
-                try:
-                    year = int(record.manufactured_year_id.name)
-                except ValueError:
-                    raise ValidationError("Invalid year format in master data.")
-
-                if year > current_year:
-                    raise ValidationError(
-                        "The model you entered is not manufactured yet. Please enter a valid year."
-                    )
-
-    # available_year_ids = fields.Many2many(
-    #     "manufactured.year",
-    #     string="Available Years",
-    #     compute="_compute_available_years",
-    # )
-
-    # @api.depends("vehicle_model")
-    # def _compute_available_years(self):
-    #     for rec in self:
-    #         rec.available_year_ids = rec.vehicle_model.manufactured_year_id
