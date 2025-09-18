@@ -45,8 +45,9 @@
                         </group>
                     </group>
                     <group>
-                        <button name="action_set_started" string="Submit" type="object" class="btn-primary" invisible="status != 'not_started'" />
-                    </group>
+                    <button name="action_submit" string="Submit" type="object" class="btn-primary"
+                                            invisible="submitted"/>  
+                                                          </group>
                 </sheet>
             </form>
         </field>

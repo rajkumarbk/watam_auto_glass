@@ -1,9 +1,8 @@
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from datetime import datetime
 import pytz
 import re
-
 
 class ProblemSolution(models.Model):
     _name = "problem.solution"
@@ -71,17 +70,42 @@ class ProblemSolution(models.Model):
         ],
         string="Workplace",
     )
-    status = fields.Selection(
-        [
-            ("not_started", "Not Started"),
-            ("started", "Started"),
-            ("done", "Finished"),
-        ],
-        string="Status",
-        default="not_started",
-        tracking=True,
-    )
     glass_destination = fields.Many2one("vehicle.glass", string="Glass Destination")
+    submitted = fields.Boolean(string="Submitted", default=False, readonly=True)
+
+    # Security methods
+    def write(self, vals):
+        """Prevent editing records after submission for non-admin users"""
+        for record in self:
+            if record.submitted and not self.env.user.has_group("base.group_system"):
+                raise UserError(
+                    _("You cannot edit a submitted record. Please contact the administrator.")
+                )
+        return super().write(vals)
+
+    def unlink(self):
+        """Block deleting submitted records, except for Admins"""
+        for record in self:
+            if record.submitted and not self.env.user.has_group("base.group_system"):
+                raise UserError(
+                    _("You cannot delete a submitted record. Please contact the administrator.")
+                )
+        return super().unlink()
+
+    def action_submit(self):
+        """Mark the record as submitted (makes it non-editable)"""
+        self.write({'submitted': True})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Success'),
+                'message': _('Record has been submitted and is now read-only.'),
+                'type': 'success',
+                'sticky': False,
+                "target": "current",
+            }
+        }
 
     # Onchange methods
     @api.onchange("vehicle_record_id")
@@ -107,17 +131,8 @@ class ProblemSolution(models.Model):
         """Compute vehicle display info by concatenating related fields"""
         for rec in self:
             parts = [
-                rec.vehicle_brand.name,
-                rec.vehicle_model.name,
-                rec.manufactured_year_id.name,
+                rec.vehicle_brand.name if rec.vehicle_brand else "",
+                rec.vehicle_model.name if rec.vehicle_model else "",
+                rec.manufactured_year_id.name if rec.manufactured_year_id else "",
             ]
             rec.vehicle_display = " ".join(filter(None, parts))
-
-    # Button action methods
-    def action_set_done(self):
-        """Set status to done for all selected records"""
-        self.write({'status': 'done'})  
-
-    def action_set_started(self):
-        """Set status to started for all selected records"""
-        self.write({'status': 'started'})  
