@@ -1,6 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
-from datetime import datetime, date
+from datetime import datetime
 import pytz
 import re
 
@@ -29,8 +29,12 @@ class ClientRecord(models.Model):
     )
     name = fields.Char(string="Customer Name", required=True)
     phone = fields.Char(string="Mobile Number", required=True, size=10)
-    vehicle_brand = fields.Many2one("vehicle.brand", string="Vehicle Brand", required=True)
-    vehicle_model = fields.Many2one("vehicle.model", string="Vehicle Name", required=True)
+    vehicle_brand = fields.Many2one(
+        "vehicle.brand", string="Vehicle Brand", required=True
+    )
+    vehicle_model = fields.Many2one(
+        "vehicle.model", string="Vehicle Name", required=True
+    )
     manufactured_year_id = fields.Many2one(
         "manufactured.year", string="Vehicle Model", required=True
     )
@@ -39,7 +43,7 @@ class ClientRecord(models.Model):
         compute="_compute_vehicle_display",
         store=True,  # Added store=True for potential performance improvement
     )
-    vehicle_number = fields.Char(string="Vehicle Number", required=True)
+    vehicle_number = fields.Char(string="Vehicle Registration Number", required=True)
     date = fields.Date(
         string="Date",
         default=fields.Date.context_today,
@@ -85,7 +89,7 @@ class ClientRecord(models.Model):
     service_option = fields.Many2one("service.option", string="Service Option")
     glass_option = fields.Selection(
         [("our_glass", "Sale & installation"), ("retailer_glass", "Installation only")],
-        string="Glass installation Options",
+        string="Glass Installation Options",
     )
     retailer_type = fields.Selection(
         [("oem", "OEM"), ("aftermarket", "Aftermarket")], string="Installation Type"
