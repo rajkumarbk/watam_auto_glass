@@ -41,9 +41,11 @@ class ClientRecord(models.Model):
     vehicle_display = fields.Char(
         string="Vehicle Info",
         compute="_compute_vehicle_display",
-        store=True,  # Added store=True for potential performance improvement
+        store=True,
     )
-    vehicle_number = fields.Char(string="Vehicle Registration Number", required=True)
+    vehicle_number = fields.Char(
+        string="Vehicle Registration Number", size=10, required=True
+    )
     date = fields.Date(
         string="Date",
         default=fields.Date.context_today,
@@ -133,7 +135,7 @@ class ClientRecord(models.Model):
     # Action methods
     def action_set_started(self):
         """Set status to started and return filtered view"""
-        self.write({"status": "started"})  # Use write for better performance
+        self.write({"status": "started"})
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,
@@ -146,7 +148,7 @@ class ClientRecord(models.Model):
         """Set status to done, record end time, and return filtered view"""
         current_time = self._get_current_time_float()
         self.write(
-            {  # Use single write operation
+            {  
                 "status": "done",
                 "end_time": current_time,
             }
