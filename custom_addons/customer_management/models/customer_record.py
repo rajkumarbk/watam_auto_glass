@@ -29,17 +29,21 @@ class ClientRecord(models.Model):
     )
     name = fields.Char(string="Customer Name", required=True)
     phone = fields.Char(string="Mobile Number", required=True, size=10)
-    vehicle_brand = fields.Many2one("vehicle.brand", string="Car Brand", required=True)
-    vehicle_model = fields.Many2one("vehicle.model", string="Car Name", required=True)
+    vehicle_brand = fields.Many2one(
+        "vehicle.brand", string="Vehicle Brand", required=True
+    )
+    vehicle_model = fields.Many2one(
+        "vehicle.model", string="Vehicle Name", required=True
+    )
     manufactured_year_id = fields.Many2one(
-        "manufactured.year", string="Car Model", required=True
+        "manufactured.year", string="Vehicle Model", required=True
     )
     vehicle_display = fields.Char(
         string="Vehicle Info",
         compute="_compute_vehicle_display",
         store=True,  # Added store=True for potential performance improvement
     )
-    vehicle_number = fields.Char(string="Car Registration Number", required=True)
+    vehicle_number = fields.Char(string="Vehicle Registration Number", required=True)
     date = fields.Date(
         string="Date",
         default=fields.Date.context_today,
@@ -48,9 +52,7 @@ class ClientRecord(models.Model):
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
     start_time = fields.Float(
-        string="WO Start Time", 
-        readonly=True, 
-        default=_get_current_time_float
+        string="WO Start Time", readonly=True, default=_get_current_time_float
     )
     end_time = fields.Float(string="WO Finishing Time", readonly=True)
     workplace = fields.Selection(
@@ -81,26 +83,16 @@ class ClientRecord(models.Model):
         string="Service Complexity",
     )
     service_type = fields.Selection(
-        [
-            ("service", "Service"), 
-            ("glass_sale", "Glass Sale and Installation")
-        ],
+        [("service", "Service"), ("glass_sale", "Glass Installation")],
         string="Service Type",
     )
     service_option = fields.Many2one("service.option", string="Service Option")
     glass_option = fields.Selection(
-        [
-            ("our_glass", "Our Glass"), 
-            ("retailer_glass", "Retailer Glass")
-        ],
-        string="Glass Sale Options",
+        [("our_glass", "Sale & installation"), ("retailer_glass", "Installation only")],
+        string="Glass Installation Options",
     )
     retailer_type = fields.Selection(
-        [
-            ("oem", "OEM"), 
-            ("aftermarket", "Aftermarket")
-        ], 
-        string="Retailer Glass Type"
+        [("oem", "OEM"), ("aftermarket", "Aftermarket")], string="Installation Type"
     )
     glass_destination = fields.Many2one(
         "vehicle.glass", string="Glass Position", required=True
@@ -153,10 +145,12 @@ class ClientRecord(models.Model):
     def action_set_done(self):
         """Set status to done, record end time, and return filtered view"""
         current_time = self._get_current_time_float()
-        self.write({  # Use single write operation
-            "status": "done",
-            "end_time": current_time,
-        })
+        self.write(
+            {  # Use single write operation
+                "status": "done",
+                "end_time": current_time,
+            }
+        )
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,
@@ -179,7 +173,9 @@ class ClientRecord(models.Model):
         if any(rec.status == "done" for rec in self):
             if not self.env.user.has_group("base.group_system"):
                 raise UserError(
-                    _("You cannot edit a completed record. Please contact the administrator.")
+                    _(
+                        "You cannot edit a completed record. Please contact the administrator."
+                    )
                 )
         return super().write(vals)
 
@@ -188,6 +184,8 @@ class ClientRecord(models.Model):
         if any(rec.status == "done" for rec in self):
             if not self.env.user.has_group("base.group_system"):
                 raise UserError(
-                    _("You cannot delete a completed record. Please contact the administrator.")
+                    _(
+                        "You cannot delete a completed record. Please contact the administrator."
+                    )
                 )
         return super().unlink()

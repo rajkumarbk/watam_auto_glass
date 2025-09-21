@@ -1,0 +1,59 @@
+/* Form Background */
+.custom-form-sheet {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+/* Section Headers */
+.section-before-work .o_group_title,
+.section-after-work .o_group_title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #4a4a4a;
+    margin-bottom: 10px;
+}
+
+/* Input Fields */
+.input-field .o_input {
+    border: 1.5px solid #8e44ad;
+    /* purple border */
+    border-radius: 5px;
+    padding: 5px 8px;
+    background-color: #fff;
+    transition: 0.3s;
+}
+
+.input-field .o_input:focus {
+    border-color: #5e2ea0;
+    box-shadow: 0 0 5px rgba(94, 46, 160, 0.3);
+}
+
+/* Notes Field */
+.notes-field .o_input {
+    min-height: 100px;
+}
+
+/* Buttons */
+.btn-primary.btn-lg,
+.btn-success.btn-lg {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 20px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+/* Image Upload */
+.oe_avatar {
+    border: 2px dashed #8e44ad;
+    padding: 5px;
+    border-radius: 10px;
+    max-width: 150px;
+    max-height: 150px;
+}
+
+/* Group Spacing */
+.o_group {
+    margin-bottom: 15px;
+}

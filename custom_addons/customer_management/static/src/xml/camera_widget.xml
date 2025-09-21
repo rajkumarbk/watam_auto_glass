@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="camera_widget_template" owl="1">
+        <div>
+            <video t-ref="video" autoplay="true" style="max-width:300px; border:1px solid #ccc;"/>
+            <canvas t-ref="canvas" style="display:none;"/>
+            <div class="mt-2">
+                <button type="button" class="btn btn-primary" t-on-click="startCamera">Start Camera</button>
+                <button type="button" class="btn btn-success" t-on-click="capture">Capture</button>
+                <button type="button" class="btn btn-danger" t-on-click="stopCamera">Stop</button>
+            </div>
+            <div class="mt-2" t-if="props.value">
+                <img t-att-src="'data:image/png;base64,' + props.value" style="max-width:300px;"/>
+            </div>
+        </div>
+    </t>
+</templates>

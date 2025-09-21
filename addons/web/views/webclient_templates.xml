@@ -274,7 +274,7 @@
         <t t-call="web.layout">
             <t t-set="head_web">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-                <meta name="theme-color" content="#71639e"/>
+                <meta name="theme-color" content="#26234c"/>
                 <link rel="manifest" href="/web/manifest.webmanifest" crossorigin="use-credentials"/>
                 <link rel="apple-touch-icon" href="/web/static/img/odoo-icon-ios.png"/>
                 <script type="text/javascript">
