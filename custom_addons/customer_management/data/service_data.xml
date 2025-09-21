@@ -6,7 +6,7 @@
         <field name="name">Mirror</field>
     </record>
     <record id="option3" model="service.option">
-        <field name="name">Silicon</field>
+        <field name="name">Silicone</field>
     </record>
     <record id="option4" model="service.option">
         <field name="name">Rubber</field>
