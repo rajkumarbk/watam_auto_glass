@@ -1,6 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import re
 
@@ -11,13 +11,6 @@ class ClientRecord(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "start_time desc"
     _rec_name = "vehicle_number"
-
-    # Helper methods
-    def _get_current_time_float(self):
-        """Get current time in float format for Riyadh timezone"""
-        tz = pytz.timezone("Asia/Riyadh")
-        now = datetime.now(tz)
-        return now.hour + now.minute / 60.0
 
     # Fields definition
     employee_id = fields.Many2one("hr.employee", string="Employee Name")
@@ -53,10 +46,6 @@ class ClientRecord(models.Model):
     )
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
-    start_time = fields.Float(
-        string="WO Start Time", readonly=True, default=_get_current_time_float
-    )
-    end_time = fields.Float(string="WO Finishing Time", readonly=True)
     workplace = fields.Selection(
         [
             ("inside", "Workshop"),
@@ -101,7 +90,18 @@ class ClientRecord(models.Model):
     )
     invoice_number = fields.Char(string="Invoice Number", required=True)
 
-    # Computed methods
+    start_time = fields.Char(
+        string="WO Start Time",
+        readonly=True,
+        default=lambda self: datetime.now(pytz.timezone("Asia/Riyadh")).strftime(
+            "%I:%M %p"
+        ),
+    )
+    end_time = fields.Char(
+        string="WO Finishing Time",
+        readonly=True,
+    )
+
     @api.depends("vehicle_brand", "vehicle_model", "manufactured_year_id")
     def _compute_vehicle_display(self):
         """Compute vehicle display info by concatenating related fields"""
@@ -113,7 +113,6 @@ class ClientRecord(models.Model):
             ]
             rec.vehicle_display = " ".join(filter(None, parts))
 
-    # Onchange methods
     @api.onchange("service_type")
     def _onchange_service_type(self):
         """Reset related fields when service type changes"""
@@ -132,7 +131,6 @@ class ClientRecord(models.Model):
             if rec.glass_option != "retailer_glass":
                 rec.retailer_type = False
 
-    # Action methods
     def action_set_started(self):
         """Set status to started and return filtered view"""
         self.write({"status": "started"})
@@ -145,14 +143,11 @@ class ClientRecord(models.Model):
         }
 
     def action_set_done(self):
-        """Set status to done, record end time, and return filtered view"""
-        current_time = self._get_current_time_float()
-        self.write(
-            {  
-                "status": "done",
-                "end_time": current_time,
-            }
-        )
+        tz = pytz.timezone("Asia/Riyadh")
+        now = datetime.now(tz)
+        for record in self:
+            record.status = "done"
+            record.end_time = now.strftime("%I:%M %p")
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,
@@ -161,7 +156,6 @@ class ClientRecord(models.Model):
             "target": "current",
         }
 
-    # Constraint methods
     @api.constrains("phone")
     def _check_phone(self):
         """Validate phone number format"""
@@ -169,7 +163,6 @@ class ClientRecord(models.Model):
             if record.phone and not re.fullmatch(r"\d{10}", record.phone):
                 raise ValidationError(_("Phone number must be exactly 10 digits."))
 
-    # Override methods
     def write(self, vals):
         """Block editing if status is done, except for Admins"""
         if any(rec.status == "done" for rec in self):
