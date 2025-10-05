@@ -10,7 +10,7 @@ Long description of module's purpose
     "version": "0.1",
     "sequence": 1,
     # any module necessary for this one to work correctly
-    "depends": ["base", "easy_timepicker_widget", "hr", "hide_menu_user","web"],
+    "depends": ["base", "hr", "hide_menu_user", "web"],
     # always loaded
     "data": [
         "security/security_group.xml",
@@ -33,14 +33,13 @@ Long description of module's purpose
         "views/views.xml",
         "views/templates.xml",
     ],
-    'assets': {
-    'web.assets_backend': [
-        'customer_management/static/src/css/style.css',
-        # 'customer_management/static/srcjs/camera_widget.js',
-        # 'customer_management/static/src/xml/camera_widget.xml',
-    ],
-},
-
+    "assets": {
+        "web.assets_backend": [
+            "customer_management/static/src/css/style.css",
+            # 'customer_management/static/srcjs/camera_widget.js',
+            # 'customer_management/static/src/xml/camera_widget.xml',
+        ],
+    },
     # only loaded in demonstration mode
     "demo": [
         "demo/demo.xml",

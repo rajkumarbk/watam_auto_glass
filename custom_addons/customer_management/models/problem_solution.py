@@ -5,6 +5,7 @@ from datetime import datetime
 import pytz
 import re
 
+
 class ProblemSolution(models.Model):
     _name = "problem.solution"
     _description = "Problem and Solution"
@@ -100,7 +101,9 @@ class ProblemSolution(models.Model):
         for record in self:
             if record.submitted and not self.env.user.has_group("base.group_system"):
                 raise UserError(
-                    _("You cannot edit a submitted record. Please contact the administrator.")
+                    _(
+                        "You cannot edit a submitted record. Please contact the administrator."
+                    )
                 )
         return super().write(vals)
 
@@ -109,23 +112,25 @@ class ProblemSolution(models.Model):
         for record in self:
             if record.submitted and not self.env.user.has_group("base.group_system"):
                 raise UserError(
-                    _("You cannot delete a submitted record. Please contact the administrator.")
+                    _(
+                        "You cannot delete a submitted record. Please contact the administrator."
+                    )
                 )
         return super().unlink()
 
     def action_submit(self):
         """Mark the record as submitted (makes it non-editable)"""
-        self.write({'submitted': True})
+        self.write({"submitted": True})
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Success'),
-                'message': _('Record has been submitted and is now read-only.'),
-                'type': 'success',
-                'sticky': False,
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Success"),
+                "message": _("Record has been submitted and is now read-only."),
+                "type": "success",
+                "sticky": False,
                 "target": "current",
-            }
+            },
         }
 
     # Onchange methods
