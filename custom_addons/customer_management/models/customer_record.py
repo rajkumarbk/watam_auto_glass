@@ -12,13 +12,8 @@ class ClientRecord(models.Model):
     _order = "start_time desc"
     _rec_name = "vehicle_number"
 
-    # Helper methods
-    def _get_current_time_float(self):
-        """Get current time in float format for Riyadh timezone"""
-        tz = pytz.timezone("Asia/Riyadh")
-        now = datetime.now(tz)
-        return now.hour + now.minute / 60.0
-
+    
+    
     # Fields definition
     employee_id = fields.Many2one("hr.employee", string="Employee Name")
     assistant_staff = fields.Many2one("hr.employee", string="Secondary Technician")
@@ -53,10 +48,23 @@ class ClientRecord(models.Model):
     )
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
-    start_time = fields.Float(
-        string="WO Start Time", readonly=True, default=_get_current_time_float
+    
+    def _get_current_time_string(self):
+        utc_now = datetime.now(pytz.UTC)
+        local_tz = pytz.timezone('Asia/Riyadh')
+        local_time = utc_now.astimezone(local_tz)
+        return local_time.strftime('%I:%M %p')
+
+    start_time = fields.Char(
+        string="WO Start Time", 
+        readonly=True, 
+        default=_get_current_time_string
     )
-    end_time = fields.Float(string="WO Finishing Time", readonly=True)
+    end_time = fields.Char(
+        string="WO Finishing Time", 
+        readonly=True, 
+        default=False  # No default, will be set when button is pressed
+    )
     workplace = fields.Selection(
         [
             ("inside", "Workshop"),
@@ -146,13 +154,12 @@ class ClientRecord(models.Model):
 
     def action_set_done(self):
         """Set status to done, record end time, and return filtered view"""
-        current_time = self._get_current_time_float()
-        self.write(
-            {  
-                "status": "done",
-                "end_time": current_time,
-            }
-        )
+        # Get the current time in 12-hour format when button is pressed
+        current_time = self._get_current_time_string()
+        self.write({
+            "status": "done",
+            "end_time": current_time,  # Record the current time when button is pressed
+        })
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,

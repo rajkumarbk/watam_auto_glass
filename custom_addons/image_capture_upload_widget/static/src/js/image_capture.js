@@ -1,5 +1,3 @@
-
-
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -9,28 +7,32 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { rpc } from "@web/core/network/rpc";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component, useState, onWillUpdateProps,useRef} from "@odoo/owl";
+import { Component, useState, onWillUpdateProps, useRef } from "@odoo/owl";
 const { DateTime } = luxon;
+
 export const fileTypeMagicWordMap = {
-    "/": "jpg",
-    R: "gif",
-    i: "png",
-    P: "svg+xml",
+    '/': 'jpg',
+    R: 'gif',
+    i: 'png',
+    P: 'svg+xml',
 };
 
 const placeholder = "/web/static/img/placeholder.png";
+
 export function imageCacheKey(value) {
     if (value instanceof DateTime) {
         return value.ts;
     }
     return "";
 }
-class imageCapture extends Component {
- static template = "CaptureImage";
+
+class ImageCapture extends Component {
+    static template = "CaptureImage";
     static components = {
-       FileUploader,};
+        FileUploader,
+    };
     static props = {
-         ...standardFieldProps,
+        ...standardFieldProps,
         enableZoom: { type: Boolean, optional: true },
         zoomDelay: { type: Number, optional: true },
         previewImage: { type: String, optional: true },
@@ -40,22 +42,27 @@ class imageCapture extends Component {
         reload: { type: Boolean, optional: true },
     };
     static defaultProps = {
-             acceptedFileExtensions: "image/*",
+        acceptedFileExtensions: "image/*",
         reload: true,
     };
+
     setup() {
         this.notification = useService("notification");
-          this.orm = useService("orm")
+        this.orm = useService("orm");
         this.isMobile = isMobileOS();
         this.state = useState({
             isValid: true,
             stream: null,
+            imageData: null,
         });
-         this.player = useRef("player");
-         this.capture = useRef("capture");
-         this.camera = useRef("camera");
-         this.save_image = useRef("save_image");
-       this.rawCacheKey = this.props.record.data.write_date;
+        this.player = useRef("player");
+        this.capture = useRef("capture");
+        this.camera = useRef("camera");
+        this.save_image = useRef("save_image");
+        this.snapshotCanvas = useRef("snapshot");
+        this.imageInput = useRef("image");
+        this.rawCacheKey = this.props.record.data.write_date;
+        
         onWillUpdateProps((nextProps) => {
             const { record } = this.props;
             const { record: nextRecord } = nextProps;
@@ -66,7 +73,6 @@ class imageCapture extends Component {
     }
 
     get sizeStyle() {
-       
         let style = "";
         if (this.props.width) {
             style += `max-width: ${this.props.width}px;`;
@@ -76,13 +82,14 @@ class imageCapture extends Component {
         }
         return style;
     }
+
     get hasTooltip() {
-    return (
+        return (
             this.props.enableZoom && this.props.readonly && this.props.record.data[this.props.name]
         );
     }
+
     getUrl(previewFieldName) {
-        
         if (!this.props.reload && this.lastURL) {
             return this.lastURL;
         }
@@ -98,33 +105,24 @@ class imageCapture extends Component {
                     unique: imageCacheKey(this.rawCacheKey),
                 });
             } else {
-               
-                 const magic =
+                const magic =
                     fileTypeMagicWordMap[this.props.record.data[this.props.name][0]] || "png";
-                this.lastURL = `data:image/${magic};base64,${
-                    this.props.record.data[this.props.name]
-                }`;
+                this.lastURL = `data:image/${magic};base64,${this.props.record.data[this.props.name]}`;
             }
             return this.lastURL;
         }
         return placeholder;
     }
+
     onFileRemove() {
-       
         this.state.isValid = true;
-           this.props.record.update({ [this.props.name]: false });
+        this.props.record.update({ [this.props.name]: false });
     }
-     async onFileUploaded(info) {
-    
+
+    async onFileUploaded(info) {
         this.state.isValid = true;
         this.rawCacheKey = null;
         this.props.record.update({ [this.props.name]: info.data });
-    }
-    onFileCaptureImage() {
-        
-        var field = this.props.name;
-        var id = this.props.record.data.id;
-        var model = this.props.record.resModel;
     }
 
     async checkCameraPermission() {
@@ -132,7 +130,7 @@ class imageCapture extends Component {
             const permissionStatus = await navigator.permissions.query({ name: 'camera' });
             console.log("Camera permission state:", permissionStatus.state);
             if (permissionStatus.state === "granted") {
-                return true;  // Permission is granted
+                return true;
             } else if (permissionStatus.state === "prompt") {
                 console.warn("Camera permission needs to be granted by the user.");
             } else if (permissionStatus.state === "denied") {
@@ -146,7 +144,6 @@ class imageCapture extends Component {
     }
 
     async OnClickOpenCamera() {
-       
         try {
             const hasPermission = await this.checkCameraPermission();
             if (!hasPermission) {
@@ -163,54 +160,69 @@ class imageCapture extends Component {
             alert("Error accessing camera: " + error.message);
         }
     }
+
     stopTracksOnMediaStream(mediaStream) {
         for (const track of mediaStream.getTracks()) {
             track.stop();
         }
     }
+
     async OnClickCaptureImage() {
-       
-        var context = snapshot.getContext('2d');
-        var canvas = document.getElementById('snapshot')
-        var image = document.getElementById('image');
+        // FIXED: Use refs instead of direct DOM queries
+        const context = this.snapshotCanvas.el.getContext('2d');
+        context.drawImage(this.player.el, 0, 0, 320, 240);
+        
+        const imageData = context.canvas.toDataURL();
+        this.state.imageData = imageData;
+        
+        this.imageInput.el.value = imageData;
         this.save_image.el.classList.remove('d-none');
-        context.drawImage(player, 0, 0, 320, 240);
-        image.value = context.canvas.toDataURL();
-        canvas.classList.remove('d-none');
-        this.url = context.canvas.toDataURL();
+        this.snapshotCanvas.el.classList.remove('d-none');
     }
-    async OnClickSaveImage(){
-       
-        var self = this
-         await rpc('/web/dataset/call_kw', {
-            model: 'image.capture',
-            method: 'action_save_image',
-            args: [[], this.url],
-            kwargs: {}
-        }).then(function(results){
-            self.props.value = results
-            var data = {
-                    data:  results,
-                    name : "ImageFile.png",
-                    objectUrl: null,
-                    size : 106252,
-                    type: "image/png"
-                }
-            self.onFileUploaded(data)
-        })
-        this.player.el.classList.add('d-none');
-        var snapshot = document.getElementById('snapshot')
-        snapshot.classList.add('d-none');
-        this.capture.el.classList.add('d-none');
-        this.save_image.el.classList.add('d-none');
-        this.camera.el.classList.remove('d-none');
-         this.player.el.srcObject = null;
-        if (!this.state.stream) {
+
+    async OnClickSaveImage() {
+        if (!this.state.imageData) {
+            console.error("No image data to save");
             return;
         }
-        this.stopTracksOnMediaStream(this.state.stream);
-        this.state.stream = null;
+
+        try {
+            const results = await rpc('/web/dataset/call_kw', {
+                model: 'image.capture',
+                method: 'action_save_image',
+                args: [[], this.state.imageData],
+                kwargs: {}
+            });
+
+            const data = {
+                data: results,
+                name: "ImageFile.png",
+                objectUrl: null,
+                size: 106252,
+                type: "image/png"
+            };
+            
+            this.onFileUploaded(data);
+            
+            // Clean up
+            this.player.el.classList.add('d-none');
+            this.snapshotCanvas.el.classList.add('d-none');
+            this.capture.el.classList.add('d-none');
+            this.save_image.el.classList.add('d-none');
+            this.camera.el.classList.remove('d-none');
+            
+            this.player.el.srcObject = null;
+            if (this.state.stream) {
+                this.stopTracksOnMediaStream(this.state.stream);
+                this.state.stream = null;
+            }
+            
+        } catch (error) {
+            console.error("Error saving image:", error);
+            this.notification.add(_t("Error saving image"), { type: "danger" });
+        }
     }
+
     onLoadFailed() {
         this.state.isValid = false;
         this.notification.add(this.env._t("Could not display the selected image"), {
@@ -218,10 +230,11 @@ class imageCapture extends Component {
         });
     }
 }
-export const ImageCapture = {
-    component: imageCapture,
-     displayName: _t("Image"),
-      supportedOptions: [
+
+export const imageCapture = {
+    component: ImageCapture,
+    displayName: _t("Image"),
+    supportedOptions: [
         {
             label: _t("Reload"),
             name: "reload",
@@ -261,7 +274,7 @@ export const ImageCapture = {
             availableTypes: ["binary"],
         },
     ],
-supportedTypes: ["binary"],
+    supportedTypes: ["binary"],
     fieldDependencies: [{ name: "write_date", type: "datetime" }],
     isEmpty: () => false,
     extractProps: ({ attrs, options }) => ({
@@ -274,4 +287,5 @@ supportedTypes: ["binary"],
         reload: "reload" in options ? Boolean(options.reload) : true,
     }),
 };
-registry.category("fields").add("capture_image", ImageCapture);
+
+registry.category("fields").add("capture_image", imageCapture);

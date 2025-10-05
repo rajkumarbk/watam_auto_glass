@@ -15,8 +15,8 @@
                 <field name="service_type" />
                 <field name="workplace" />
                 <field name="employee_id" />
-                <field name="start_time" widget="easy_timepicker" />
-                <field name="end_time" widget="easy_timepicker" />
+                <field name="start_time"  />
+                <field name="end_time" />
                 <!-- <field name="photo" widget="image" /> -->
                 <field name="status" widget="badge" decoration-success="status == 'done'" decoration-info="status == 'started'"/>
             </list>
@@ -52,14 +52,14 @@
                             <field name="vehicle_number" placeholder="Enter Vehicle Number" class="input-field"/>
                             <field name="invoice_number" placeholder="Enter Invoice Number" class="input-field"/>
                             <field name="date" class="input-field"/>
-                            <field name="start_time" widget="easy_timepicker" class="input-field"/>
+                            <field name="start_time" class="input-field"/>
                         </group>
 
                         <!-- After Work -->
                         <group invisible="status not in ('started','done')">
-                            <field name="end_time" widget="easy_timepicker" class="input-field"/>
-                            <field name="assistant_staff" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Assistant Staff" class="input-field"/>
-                            <field name="photo"   widget="capture_image"/>  
+                            <field name="end_time" class="input-field"/>
+                            <field name="assistant_staff" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Assistant Staff" class="input-field" required="status in ['started']"/>
+                            <field name="photo"   widget="capture_image" />  
                             <field name="notes" placeholder="Type your notes here..." />
                         </group>
                     </group>
