@@ -35,9 +35,9 @@ class ProblemSolution(models.Model):
         string="Mobile Number",
         store=True,
     )
-    vehicle_brand = fields.Many2one("vehicle.brand", string="Car Brand")
-    vehicle_model = fields.Many2one("vehicle.model", string="Car Name")
-    manufactured_year_id = fields.Many2one("manufactured.year", string="Car Model")
+    vehicle_brand = fields.Many2one("vehicle.brand", string="Vehicle Brand")
+    vehicle_model = fields.Many2one("vehicle.model", string="Vehicle Name")
+    manufactured_year_id = fields.Many2one("manufactured.year", string="Vehicle Model")
     vehicle_display = fields.Char(
         string="Vehicle Info",
         compute="_compute_vehicle_display",
@@ -166,5 +166,5 @@ class ProblemSolution(models.Model):
                 rec.vehicle_brand.name if rec.vehicle_brand else "",
                 rec.vehicle_model.name if rec.vehicle_model else "",
                 rec.manufactured_year_id.name if rec.manufactured_year_id else "",
-                ]
+            ]
             rec.vehicle_display = " ".join(filter(None, parts))

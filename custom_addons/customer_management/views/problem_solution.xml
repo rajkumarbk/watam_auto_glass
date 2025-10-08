@@ -36,45 +36,45 @@
                             <group invisible="vehicle_record_id == False">
                                 <field name="branch_id" readonly="1" />
                                 <field name="workplace" placeholder="Select workplace"
-                                    />
-                                <field name="employee_id" 
+                                />
+                                <field name="employee_id"
                                     options="{'no_create': True, 'no_create_edit': True}"
                                     placeholder="Select Employee" />
-                                <field name="vehicle_brand" 
+                                <field name="vehicle_brand"
                                     placeholder="Select Vehicle Brand" />
-                                <field name="vehicle_model" 
+                                <field name="vehicle_model"
                                     domain="[('brand_id', '=', vehicle_brand)]"
                                     placeholder="Select Vehicle Model" />
-                                <field name="manufactured_year_id" 
+                                <field name="manufactured_year_id"
                                     placeholder="Select Manufactured Year"
                                     options="{'no_create': True, 'no_create_edit': True}"
-                                    />
-                                <field name="service_type"  required="1"
-                                    />
-                                <field name="service_option" 
+                                />
+                                <field name="service_type" required="1"
+                                />
+                                <field name="service_option"
                                     invisible="service_type != 'service'" required="1"
-                                    />
-                                <field name="glass_option" 
+                                />
+                                <field name="glass_option"
                                     invisible="service_type != 'glass_sale'" required="1"
-                                    />
-                                <field name="retailer_type" 
+                                />
+                                <field name="retailer_type"
                                     invisible="glass_option != 'retailer_glass'" required="1"
-                                    />
-                                <field name="glass_destination" 
+                                />
+                                <field name="glass_destination"
                                     placeholder="Select Glass Destination" />
-                                <field name="name"  placeholder="Enter Customer's Name"
-                                    />
-                                <field name="phone" 
+                                <field name="name" placeholder="Enter Customer's Name"
+                                />
+                                <field name="phone"
                                     placeholder="Enter Customer's Contact Number"
-                                    />
-                                <field name="service_complexity"  required="1"
-                                    />
+                                />
+                                <field name="service_complexity" required="1"
+                                />
                                 <field name="vehicle_number" placeholder="Enter Vehicle Number"
-                                    />
+                                />
                                 <field name="invoice_number" placeholder="Enter Invoice Number"
-                                    />
+                                />
                                 <field name="problem" placeholder="Select the problem"
-                                    />
+                                />
                                 <field name="solution" placeholder="Select the Solution"
                                     domain="[('problem_id', '=', problem)]" />
                             </group>
