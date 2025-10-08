@@ -5,7 +5,7 @@
         <field name="model">problem.solution</field>
         <field name="arch" type="xml">
             <list decoration-warning="solution != False">
-                <field name="datetime" />
+                <field name="date" />
                 <field name="branch_id" />
                 <field name="employee_id" />
                 <field name="vehicle_display" />
@@ -31,52 +31,52 @@
                             <label for="vehicle_record_id" />
                             <field name="vehicle_record_id" string="Vehicle Number"
                                 options="{'no_create': True, 'no_open': True}"
-                                placeholder="Search vehicle number here..." class="input-field" />
+                                placeholder="Search vehicle number here..." />
 
                             <group invisible="vehicle_record_id == False">
-                                <field name="branch_id" readonly="1" class="input-field" />
-                                <field name="workplace" readonly="1" placeholder="Select workplace"
-                                    class="input-field" />
-                                <field name="employee_id" readonly="1"
+                                <field name="branch_id" readonly="1" />
+                                <field name="workplace" placeholder="Select workplace"
+                                    />
+                                <field name="employee_id" 
                                     options="{'no_create': True, 'no_create_edit': True}"
-                                    placeholder="Select Employee" class="input-field" />
-                                <field name="vehicle_brand" readonly="1"
-                                    placeholder="Select Vehicle Brand" class="input-field" />
-                                <field name="vehicle_model" readonly="1"
+                                    placeholder="Select Employee" />
+                                <field name="vehicle_brand" 
+                                    placeholder="Select Vehicle Brand" />
+                                <field name="vehicle_model" 
                                     domain="[('brand_id', '=', vehicle_brand)]"
-                                    placeholder="Select Vehicle Model" class="input-field" />
-                                <field name="manufactured_year_id" readonly="1"
+                                    placeholder="Select Vehicle Model" />
+                                <field name="manufactured_year_id" 
                                     placeholder="Select Manufactured Year"
                                     options="{'no_create': True, 'no_create_edit': True}"
-                                    class="input-field" />
-                                <field name="service_type" readonly="1" required="1"
-                                    class="input-field" />
-                                <field name="service_option" readonly="1"
+                                    />
+                                <field name="service_type"  required="1"
+                                    />
+                                <field name="service_option" 
                                     invisible="service_type != 'service'" required="1"
-                                    class="input-field" />
-                                <field name="glass_option" readonly="1"
+                                    />
+                                <field name="glass_option" 
                                     invisible="service_type != 'glass_sale'" required="1"
-                                    class="input-field" />
-                                <field name="retailer_type" readonly="1"
+                                    />
+                                <field name="retailer_type" 
                                     invisible="glass_option != 'retailer_glass'" required="1"
-                                    class="input-field" />
-                                <field name="glass_destination" readonly="1"
-                                    placeholder="Select Glass Destination" class="input-field" />
-                                <field name="name" readonly="1" placeholder="Enter Customer's Name"
-                                    class="input-field" />
-                                <field name="phone" readonly="1"
+                                    />
+                                <field name="glass_destination" 
+                                    placeholder="Select Glass Destination" />
+                                <field name="name"  placeholder="Enter Customer's Name"
+                                    />
+                                <field name="phone" 
                                     placeholder="Enter Customer's Contact Number"
-                                    class="input-field" />
-                                <field name="service_complexity" readonly="1" required="1"
-                                    class="input-field" />
+                                    />
+                                <field name="service_complexity"  required="1"
+                                    />
                                 <field name="vehicle_number" placeholder="Enter Vehicle Number"
-                                    class="input-field" />
+                                    />
                                 <field name="invoice_number" placeholder="Enter Invoice Number"
-                                    class="input-field" />
+                                    />
                                 <field name="problem" placeholder="Select the problem"
-                                    class="input-field" />
+                                    />
                                 <field name="solution" placeholder="Select the Solution"
-                                    domain="[('problem_id', '=', problem)]" class="input-field" />
+                                    domain="[('problem_id', '=', problem)]" />
                             </group>
                         </group>
 
