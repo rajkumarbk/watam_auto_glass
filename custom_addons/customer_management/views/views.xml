@@ -6,12 +6,14 @@
       action="action_customer_record" sequence="1" />
     <menuitem id="menu_client_record_finished" name="Completed Operations" parent="menu_record_root"
       action="action_customer_record_finished" sequence="2" />
-    <menuitem id="menu_prob_soln" name="Complaints Registration" parent="menu_record_root"
+    <menuitem id="menu_prob_soln" name="Problem Order" parent="menu_record_root"
       action="action_problem_solution" sequence="3" />
+      <menuitem id="menu_solved_problems" name="Solved Problems" parent="menu_record_root"
+      action="action_problem_solution" sequence="4" />
 
     <!--Master
     DATA-->
-    <menuitem id="menu_master_data" name="Master Data" parent="menu_record_root" sequence="4" />
+    <menuitem id="menu_master_data" name="Master Data" parent="menu_record_root" sequence="5" />
     <!-- Master Data Submenus -->
     <menuitem id="menu_vehicle_brand" name="Vehicle Brands" parent="menu_master_data"
       action="action_vehicle_brand" />

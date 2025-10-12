@@ -31,7 +31,7 @@
                             <label for="vehicle_record_id" />
                             <field name="vehicle_record_id" string="Vehicle Number"
                                 options="{'no_create': True, 'no_open': True}"
-                                placeholder="Search vehicle number here..." />
+                                placeholder="Search records here..." />
 
                             <group invisible="vehicle_record_id == False">
                                 <field name="branch_id" readonly="1" />
@@ -98,7 +98,7 @@
 
     <!-- Action: Active Records -->
     <record id="action_problem_solution" model="ir.actions.act_window">
-        <field name="name">Complaints Registration</field>
+        <field name="name">Problem Order</field>
         <field name="res_model">problem.solution</field>
         <field name="view_mode">list,form</field>
     </record>

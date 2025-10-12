@@ -119,6 +119,8 @@
         <field name="arch" type="xml">
             <search string="Customer Records">
                 <field name="vehicle_number" string="Vehicle Number" />
+                <field name="phone" string="Mobile Number" />
+                <field name="invoice_number" string="Invoice Number" />
             </search>
         </field>
     </record>
