@@ -9,7 +9,7 @@ class ProblemSolution(models.Model):
     _name = "problem.solution"
     _description = "Problem and Solution"
     _inherit = ["mail.thread", "mail.activity.mixin"]
-    _order = "name asc"
+    _order = "date desc"
 
     vehicle_record_id = fields.Many2one(
         "customer.record",
@@ -87,6 +87,16 @@ class ProblemSolution(models.Model):
     )
     glass_destination = fields.Many2one("vehicle.glass", string="Glass Destination")
     submitted = fields.Boolean(string="Submitted", default=False, readonly=True)
+    status = fields.Selection(
+        [
+            ("not_started", "Not Started"),
+            ("started", "Started"),
+            ("done", "Finished"),
+        ],
+        string="Status",
+        default="not_started",
+        tracking=True,
+    )
 
     # Security methods
     def write(self, vals):
@@ -168,3 +178,32 @@ class ProblemSolution(models.Model):
                 rec.manufactured_year_id.name if rec.manufactured_year_id else "",
             ]
             rec.vehicle_display = " ".join(filter(None, parts))
+    # Action methods
+    def action_set_started(self):
+        """Set status to started and return filtered view"""
+        self.write({"status": "started"})
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "view_mode": "list,form",
+            "domain": [("status", "=", "started")],
+            "target": "current",
+        }
+
+    def action_set_done(self):
+        """Set status to done, record end time, and return filtered view"""
+
+        current_time = self._get_current_time_string()
+        self.write(
+            {
+                "status": "done",
+                "end_time": current_time,
+            }
+        )
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "view_mode": "list,form",
+            "domain": [("status", "=", "done")],
+            "target": "current",
+        }

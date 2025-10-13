@@ -39,7 +39,7 @@
                                 />
                                 <field name="employee_id"
                                     options="{'no_create': True, 'no_create_edit': True}"
-                                    placeholder="Select Employee" />
+                                    placeholder="Previous Employee" />
                                 <field name="vehicle_brand"
                                     placeholder="Select Vehicle Brand" />
                                 <field name="vehicle_model"
@@ -77,13 +77,21 @@
                                 />
                                 <field name="solution" placeholder="Select the Solution"
                                     domain="[('problem_id', '=', problem)]" />
+                                <field name="branch_id" readonly="1" class="input-field" />
+                                <field name="employee_id"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                    placeholder="Current Employee" class="input-field" />
+                            </group>
+                            <!-- After Work -->
+                            <group invisible="status not in ('started','done')">
+                                <field name="assistant_staff"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                    placeholder="Select Assistant Staff" class="input-field"
+                                    required="status in ['started']" />
+                                <field name="photo" widget="capture_image" />
+                                <field name="notes" placeholder="Type your notes here..." />
                             </group>
                         </group>
-
-                        <!-- <group invisible="vehicle_record_id == False">
-                <field name="datetime" readonly="1"/>
-                <field name="branch_id" readonly="1"/>
-            </group> -->
                     </group>
 
                     <group invisible="vehicle_record_id == False">
@@ -96,10 +104,21 @@
         </field>
     </record>
 
-    <!-- Action: Active Records -->
-    <record id="action_problem_solution" model="ir.actions.act_window">
-        <field name="name">Problem Order</field>
+    <!-- Action: Problem Order -->
+    <record id="action_problem_order" model="ir.actions.act_window">
+        <field name="name">Problem Order </field>
         <field name="res_model">problem.solution</field>
         <field name="view_mode">list,form</field>
+        <field name="domain">[('status', '=', 'started')]</field>
+    </record>
+
+    <!-- Action: Solved Problems -->
+    <record id="action_solved_problems" model="ir.actions.act_window">
+        <field name="name">Solved Problems</field>
+        <field name="res_model">problem.solution</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_problem_solution_list" />
+        <field name="domain">[('status', '=', 'done')]</field>
+        <field name="context">{'create': False}</field>
     </record>
 </odoo>

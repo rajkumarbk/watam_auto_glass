@@ -7,9 +7,9 @@
     <menuitem id="menu_client_record_finished" name="Completed Operations" parent="menu_record_root"
       action="action_customer_record_finished" sequence="2" />
     <menuitem id="menu_prob_soln" name="Problem Order" parent="menu_record_root"
-      action="action_problem_solution" sequence="3" />
+      action="action_problem_order" sequence="3" />
       <menuitem id="menu_solved_problems" name="Solved Problems" parent="menu_record_root"
-      action="action_problem_solution" sequence="4" />
+      action="action_solved_problems" sequence="4" />
 
     <!--Master
     DATA-->
