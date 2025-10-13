@@ -25,52 +25,75 @@
         <field name="model">problem.solution</field>
         <field name="arch" type="xml">
             <form>
-    <sheet>
-        <group>
-            <!-- Vehicle selection first -->
-            <group invisible="status != 'not_started'">
-                <field name="vehicle_record_id" string="Vehicle Number"
-                       options="{'no_create': True, 'no_open': True}"
-                       placeholder="Search records here..." />
-            </group>
+                <sheet>
+                    <group>
+                        <!-- Vehicle selection first -->
+                        <group invisible="status != 'not_started'">
+                            <field name="vehicle_record_id" string="Vehicle Number"
+                                options="{'no_create': True, 'no_open': True}"
+                                placeholder="Search records here..." />
+                        </group>
 
-            <!-- Before Work: visible only if vehicle selected and status not started -->
-            <group invisible="vehicle_record_id == False or status not in ('not_started','done')">
-                <field name="branch_id" readonly="1" class="input-field"/>
-                <field name="workplace" placeholder="Select workplace" class="input-field"/>
-                <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Previous Employee" class="input-field"/>
-                <field name="vehicle_brand" placeholder="Select Vehicle Brand" class="input-field"/>
-                <field name="vehicle_model" domain="[('brand_id','=',vehicle_brand)]" placeholder="Select Vehicle Model" class="input-field"/>
-                <field name="manufactured_year_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Manufactured Year" class="input-field"/>
-                <field name="service_type" required="1" class="input-field"/>
-                <field name="service_option" invisible="service_type != 'service'" required="1" class="input-field"/>
-                <field name="glass_option" invisible="service_type != 'glass_sale'" required="1" class="input-field"/>
-                <field name="retailer_type" invisible="glass_option != 'retailer_glass'" required="1" class="input-field"/>
-                <field name="glass_destination" placeholder="Select Glass Destination" class="input-field"/>
-                <field name="name" placeholder="Enter Customer's Name" class="input-field"/>
-                <field name="phone" placeholder="Enter Customer's Contact Number" class="input-field"/>
-                <field name="service_complexity" required="1" class="input-field"/>
-                <field name="vehicle_number" placeholder="Enter Vehicle Number" class="input-field"/>
-                <field name="invoice_number" placeholder="Enter Invoice Number" class="input-field"/>
-                <field name="problem" placeholder="Select the problem" class="input-field"/>
-                <field name="solution" placeholder="Select the Solution" domain="[('problem_id','=',problem)]" class="input-field"/>
-            </group>
+                        <!-- Before Work: visible only if vehicle selected and status not started -->
+                        <group
+                            invisible="vehicle_record_id == False or status not in ('not_started','done')">
+                            <field name="branch_id" readonly="1" class="input-field" />
+                            <field name="workplace" placeholder="Select workplace"
+                                class="input-field" />
+                            <field name="employee_id"
+                                options="{'no_create': True, 'no_create_edit': True}"
+                                placeholder="Previous Employee" class="input-field" />
+                            <field name="vehicle_brand" placeholder="Select Vehicle Brand"
+                                class="input-field" />
+                            <field name="vehicle_model" domain="[('brand_id','=',vehicle_brand)]"
+                                placeholder="Select Vehicle Model" class="input-field" />
+                            <field name="manufactured_year_id"
+                                options="{'no_create': True, 'no_create_edit': True}"
+                                placeholder="Select Manufactured Year" class="input-field" />
+                            <field name="service_type" required="1" class="input-field" />
+                            <field name="service_option" invisible="service_type != 'service'"
+                                required="1" class="input-field" />
+                            <field name="glass_option" invisible="service_type != 'glass_sale'"
+                                required="1" class="input-field" />
+                            <field name="retailer_type" invisible="glass_option != 'retailer_glass'"
+                                required="1" class="input-field" />
+                            <field name="glass_destination" placeholder="Select Glass Destination"
+                                class="input-field" />
+                            <field name="name" placeholder="Enter Customer's Name"
+                                class="input-field" />
+                            <field name="phone" placeholder="Enter Customer's Contact Number"
+                                class="input-field" />
+                            <field name="service_complexity" required="1" class="input-field" />
+                            <field name="vehicle_number" placeholder="Enter Vehicle Number"
+                                class="input-field" />
+                            <field name="invoice_number" placeholder="Enter Invoice Number"
+                                class="input-field" />
+                            <field name="problem" placeholder="Select the problem"
+                                class="input-field" />
+                            <field name="solution" placeholder="Select the Solution"
+                                domain="[('problem_id','=',problem)]" class="input-field" />
+                        </group>
 
-            <!-- After Work -->
-            <group invisible="status not in ('started','done')">
-                <field name="assistant_staff" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Assistant Staff" class="input-field" required="status in ['started']"/>
-                <field name="photo" widget="capture_image"/>
-                <field name="notes" placeholder="Type your notes here..."/>
-            </group>
-        </group>
+                        <!-- After Work -->
+                        <group invisible="status not in ('started','done')">
+                            <field name="assistant_staff"
+                                options="{'no_create': True, 'no_create_edit': True}"
+                                placeholder="Select Assistant Staff" class="input-field"
+                                required="status in ['started']" />
+                            <field name="photo" widget="capture_image" />
+                            <field name="notes" placeholder="Type your notes here..." />
+                        </group>
+                    </group>
 
-        <!-- Submit Buttons -->
-        <group>
-            <button name="action_set_started" string="Submit" type="object" class="btn-primary" invisible="status != 'not_started'"/>
-            <button name="action_set_done" string="Submit" type="object" class="btn-success" invisible="status != 'started'"/>
-        </group>
-    </sheet>
-</form>
+                    <!-- Submit Buttons -->
+                    <group>
+                        <button name="action_set_started" string="Submit" type="object"
+                            class="btn-primary" invisible="status != 'not_started'" />
+                        <button name="action_set_done" string="Submit" type="object"
+                            class="btn-success" invisible="status != 'started'" />
+                    </group>
+                </sheet>
+            </form>
 
 
         </field>

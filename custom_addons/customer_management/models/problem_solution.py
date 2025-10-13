@@ -178,6 +178,7 @@ class ProblemSolution(models.Model):
                 rec.manufactured_year_id.name if rec.manufactured_year_id else "",
             ]
             rec.vehicle_display = " ".join(filter(None, parts))
+
     # Action methods
     def action_set_started(self):
         """Set status to started and return filtered view"""
