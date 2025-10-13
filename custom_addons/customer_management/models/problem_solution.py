@@ -193,11 +193,11 @@ class ProblemSolution(models.Model):
     def action_set_done(self):
         """Set status to done, record end time, and return filtered view"""
 
-        current_time = self._get_current_time_string()
+        # current_time = self._get_current_time_string()
         self.write(
             {
                 "status": "done",
-                "end_time": current_time,
+                # "end_time": current_time,
             }
         )
         return {
