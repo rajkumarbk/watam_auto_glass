@@ -30,13 +30,11 @@
         <field name="model">customer.record</field>
         <field name="arch" type="xml">
             <form>
-
-
                 <sheet>
                     <group>
                         <!-- Before Work -->
                         <group invisible="status not in ('not_started','done')">
-                            <field name="branch_id" readonly="1" class="input-field" />
+                            <field name="branch_id" class="input-field" />
                             <field name="workplace" placeholder="Select workplace"
                                 class="input-field" />
                             <field name="employee_id"

@@ -20,11 +20,16 @@ class ProblemSolution(models.Model):
         store=True,
         string="Invoice number",
     )
-    employee_id = fields.Many2one("hr.employee", string="Employee Name")
+    employee_id = fields.Many2one("hr.employee", string="Previous Employee")
+    new_employee_id = fields.Many2one("hr.employee", string="Employee Name")
     assistant_staff = fields.Many2one("hr.employee", string="Secondary Technician")
     branch_id = fields.Many2one(
         "res.company",
-        string="Branch Name",
+        string="Previous branch",
+    )
+    new_branch_id = fields.Many2one(
+        "res.company",
+        string="Current branch",
         default=lambda self: self.env.company,
     )
     name = fields.Char(
@@ -56,8 +61,8 @@ class ProblemSolution(models.Model):
     )
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
-    problem = fields.Many2one("what.problem", string="Problem", required=True)
-    solution = fields.Many2one("what.solution", string="Solution")
+    problem = fields.Many2one("what.problem", string="Type of complaint", required=True)
+    solution = fields.Many2one("what.solution", string="Solution", required=True)
     workplace = fields.Selection(
         [
             ("inside", "Workshop"),
@@ -178,6 +183,7 @@ class ProblemSolution(models.Model):
                 rec.manufactured_year_id.name if rec.manufactured_year_id else "",
             ]
             rec.vehicle_display = " ".join(filter(None, parts))
+
     # Action methods
     def action_set_started(self):
         """Set status to started and return filtered view"""
