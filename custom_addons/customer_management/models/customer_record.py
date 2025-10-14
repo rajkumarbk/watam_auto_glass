@@ -9,7 +9,7 @@ class ClientRecord(models.Model):
     _name = "customer.record"
     _description = "Customer Records"
     _inherit = ["mail.thread", "mail.activity.mixin"]
-    _order = "start_time desc"
+    _order = "date desc"
     _rec_name = "vehicle_number"
 
     
@@ -48,6 +48,15 @@ class ClientRecord(models.Model):
     )
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
+
+    def _get_current_time_string(self):
+        utc_now = datetime.now(pytz.UTC)
+        local_tz = pytz.timezone("Asia/Riyadh")
+        local_time = utc_now.astimezone(local_tz)
+        return local_time.strftime("%I:%M %p")
+
+    start_time = fields.Char(
+        string="WO Start Time", readonly=True, default=_get_current_time_string)
     
     def _get_current_time_string(self):
         utc_now = datetime.now(pytz.UTC)

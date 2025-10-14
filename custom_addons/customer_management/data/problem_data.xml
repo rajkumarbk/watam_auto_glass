@@ -1,32 +1,26 @@
 <odoo>
     <record id="prob1" model="what.problem">
-        <field name="name">Silicone not adjusted properly</field>
+        <field name="name">Water or air leakage</field>
     </record>
     <record id="prob2" model="what.problem">
-        <field name="name">Glass cracked during installation</field>
+        <field name="name">Wind whistling sound</field>
     </record>
     <record id="prob3" model="what.problem">
-        <field name="name">Rubber seal not fitted correctly</field>
+        <field name="name">Rubber </field>
     </record>
     <record id="prob4" model="what.problem">
-        <field name="name">Improper alignment of glass</field>
+        <field name="name">Mirror or sensor</field>
     </record>
     <record id="prob5" model="what.problem">
-        <field name="name">Excess adhesive used</field>
+        <field name="name">Glass machine</field>
     </record>
     <record id="prob6" model="what.problem">
-        <field name="name">Insufficient adhesive bonding</field>
+        <field name="name">Glass door holder</field>
     </record>
     <record id="prob7" model="what.problem">
-        <field name="name">Scratches on glass surface</field>
+        <field name="name">Door programming</field>
     </record>
     <record id="prob8" model="what.problem">
-        <field name="name">Water leakage after installation</field>
-    </record>
-    <record id="prob9" model="what.problem">
-        <field name="name">Dust or dirt trapped inside</field>
-    </record>
-    <record id="prob10" model="what.problem">
-        <field name="name">Incorrect glass size used</field>
+        <field name="name">Brake light decoration</field>
     </record>
 </odoo>

@@ -1,31 +1,22 @@
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError
 from datetime import datetime
 import pytz
 import re
+
 
 class ProblemSolution(models.Model):
     _name = "problem.solution"
     _description = "Problem and Solution"
     _inherit = ["mail.thread", "mail.activity.mixin"]
-    _order = "name asc"
+    _order = "date desc"
 
-    # Helper method
-    def _get_ksa_time_float(self):
-        """Get current time in float format for KSA timezone"""
-        tz = pytz.timezone("Asia/Riyadh")
-        now = datetime.now(tz)
-        return now.hour + now.minute / 60.0
-
-    # Fields definition
     vehicle_record_id = fields.Many2one(
         "customer.record",
         string="Search Record: ",
         domain=[("status", "=", "done")],
     )
     invoice_number = fields.Char(
-        related="vehicle_record_id.invoice_number",
         store=True,
         string="Invoice number",
     )
@@ -38,17 +29,15 @@ class ProblemSolution(models.Model):
     )
     name = fields.Char(
         string="Customer Name",
-        related="vehicle_record_id.name",
         store=True,
     )
     phone = fields.Char(
         string="Mobile Number",
-        related="vehicle_record_id.phone",
         store=True,
     )
-    vehicle_brand = fields.Many2one("vehicle.brand", string="Car Brand")
-    vehicle_model = fields.Many2one("vehicle.model", string="Car Name")
-    manufactured_year_id = fields.Many2one("manufactured.year", string="Car Model")
+    vehicle_brand = fields.Many2one("vehicle.brand", string="Vehicle Brand")
+    vehicle_model = fields.Many2one("vehicle.model", string="Vehicle Name")
+    manufactured_year_id = fields.Many2one("manufactured.year", string="Vehicle Model")
     vehicle_display = fields.Char(
         string="Vehicle Info",
         compute="_compute_vehicle_display",
@@ -60,6 +49,11 @@ class ProblemSolution(models.Model):
         store=True,
     )
     datetime = fields.Datetime(string="Date & Time", default=fields.Datetime.now)
+    date = fields.Date(
+        string="Date",
+        default=fields.Date.context_today,
+        readonly=True,
+    )
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
     problem = fields.Many2one("what.problem", string="Problem", required=True)
@@ -93,6 +87,16 @@ class ProblemSolution(models.Model):
     )
     glass_destination = fields.Many2one("vehicle.glass", string="Glass Destination")
     submitted = fields.Boolean(string="Submitted", default=False, readonly=True)
+    status = fields.Selection(
+        [
+            ("not_started", "Not Started"),
+            ("started", "Started"),
+            ("done", "Finished"),
+        ],
+        string="Status",
+        default="not_started",
+        tracking=True,
+    )
 
     # Security methods
     def write(self, vals):
@@ -100,7 +104,9 @@ class ProblemSolution(models.Model):
         for record in self:
             if record.submitted and not self.env.user.has_group("base.group_system"):
                 raise UserError(
-                    _("You cannot edit a submitted record. Please contact the administrator.")
+                    _(
+                        "You cannot edit a submitted record. Please contact the administrator."
+                    )
                 )
         return super().write(vals)
 
@@ -109,23 +115,27 @@ class ProblemSolution(models.Model):
         for record in self:
             if record.submitted and not self.env.user.has_group("base.group_system"):
                 raise UserError(
-                    _("You cannot delete a submitted record. Please contact the administrator.")
+                    _(
+                        "You cannot delete a submitted record. Please contact the administrator."
+                    )
                 )
         return super().unlink()
 
     def action_submit(self):
         """Mark the record as submitted (makes it non-editable)"""
-        self.write({'submitted': True})
+        self.write({"submitted": True})
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Success'),
-                'message': _('Record has been submitted and is now read-only.'),
-                'type': 'success',
-                'sticky': False,
-                "target": "current",
-            }
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "view_mode": "list,form",
+            "target": "current",
+            # "params": {
+            #     "title": _("Success"),
+            #     "message": _("Record has been submitted and is now read-only."),
+            #     "type": "success",
+            #     "sticky": False,
+            #     "target": "current",
+            # },
         }
 
     # Onchange methods
@@ -139,7 +149,11 @@ class ProblemSolution(models.Model):
                 "vehicle_brand": cr.vehicle_brand.id,
                 "vehicle_model": cr.vehicle_model.id,
                 "manufactured_year_id": cr.manufactured_year_id.id,
+                "vehicle_display": cr.vehicle_display,
+                "photo": cr.photo,
                 "employee_id": cr.employee_id.id,
+                "branch_id": cr.branch_id.id,
+                "assistant_staff": cr.assistant_staff.id,
                 "name": cr.name,
                 "phone": cr.phone,
                 "glass_destination": cr.glass_destination.id,
@@ -149,6 +163,7 @@ class ProblemSolution(models.Model):
                 "service_option": cr.service_option,
                 "glass_option": cr.glass_option,
                 "retailer_type": cr.retailer_type,
+                "invoice_number": cr.invoice_number,
             }
             self.update(update_fields)
 
@@ -161,8 +176,34 @@ class ProblemSolution(models.Model):
                 rec.vehicle_brand.name if rec.vehicle_brand else "",
                 rec.vehicle_model.name if rec.vehicle_model else "",
                 rec.manufactured_year_id.name if rec.manufactured_year_id else "",
-                rec.vehicle_brand.name if rec.vehicle_brand else "",
-                rec.vehicle_model.name if rec.vehicle_model else "",
-                rec.manufactured_year_id.name if rec.manufactured_year_id else "",
             ]
             rec.vehicle_display = " ".join(filter(None, parts))
+    # Action methods
+    def action_set_started(self):
+        """Set status to started and return filtered view"""
+        self.write({"status": "started"})
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "view_mode": "list,form",
+            "domain": [("status", "=", "started")],
+            "target": "current",
+        }
+
+    def action_set_done(self):
+        """Set status to done, record end time, and return filtered view"""
+
+        # current_time = self._get_current_time_string()
+        self.write(
+            {
+                "status": "done",
+                # "end_time": current_time,
+            }
+        )
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "view_mode": "list,form",
+            "domain": [("status", "=", "done")],
+            "target": "current",
+        }
