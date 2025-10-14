@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <list decoration-warning="solution != False">
                 <field name="date" />
-                <field name="branch_id" />
+                <field name="new_branch_id" />
                 <field name="employee_id" />
                 <field name="vehicle_display" />
                 <field name="vehicle_number" />
@@ -14,7 +14,6 @@
                 <field name="phone" />
                 <field name="problem" />
                 <field name="solution" />
-
             </list>
         </field>
     </record>
@@ -26,14 +25,13 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <!-- Vehicle selection first -->
+                    <group invisible="status != 'not_started'">
+                        <field name="vehicle_record_id" string="Vehicle Number"
+                            options="{'no_create': True, 'no_open': True}"
+                            placeholder="Search records here..." />
+                    </group>
                     <group>
-                        <!-- Vehicle selection first -->
-                        <group invisible="status != 'not_started'">
-                            <field name="vehicle_record_id" string="Vehicle Number"
-                                options="{'no_create': True, 'no_open': True}"
-                                placeholder="Search records here..." />
-                        </group>
-
                         <!-- Before Work: visible only if vehicle selected and status not started -->
                         <group
                             invisible="vehicle_record_id == False or status not in ('not_started','done')">
@@ -68,11 +66,17 @@
                                 class="input-field" />
                             <field name="invoice_number" placeholder="Enter Invoice Number"
                                 class="input-field" />
+                            <field name="new_branch_id" readonly="1" class="input-field" />
+                            <field name="new_employee_id"
+                                options="{'no_create': True, 'no_create_edit': True}"
+                                placeholder="Current Employee" class="input-field" />
                             <field name="problem" placeholder="Select the problem"
                                 class="input-field" />
                             <field name="solution" placeholder="Select the Solution"
                                 domain="[('problem_id','=',problem)]" class="input-field" />
                         </group>
+                    </group>
+                    <group>
 
                         <!-- After Work -->
                         <group invisible="status not in ('started','done')">
@@ -85,8 +89,8 @@
                         </group>
                     </group>
 
-                    <!-- Submit Buttons -->
                     <group>
+                        <!-- Submit Buttons -->
                         <button name="action_set_started" string="Submit" type="object"
                             class="btn-primary" invisible="status != 'not_started'" />
                         <button name="action_set_done" string="Submit" type="object"
@@ -94,14 +98,12 @@
                     </group>
                 </sheet>
             </form>
-
-
         </field>
     </record>
 
     <!-- Action: Problem Order -->
     <record id="action_problem_order" model="ir.actions.act_window">
-        <field name="name">Problem Order </field>
+        <field name="name">Complaints Registration</field>
         <field name="res_model">problem.solution</field>
         <field name="view_mode">list,form</field>
         <field name="domain">[('status', '=', 'started')]</field>
@@ -109,11 +111,12 @@
 
     <!-- Action: Solved Problems -->
     <record id="action_solved_problems" model="ir.actions.act_window">
-        <field name="name">Solved Problems</field>
+        <field name="name">Completed Complaints</field>
         <field name="res_model">problem.solution</field>
         <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_problem_solution_list" />
         <field name="domain">[('status', '=', 'done')]</field>
         <field name="context">{'create': False}</field>
     </record>
+
 </odoo>
