@@ -21,24 +21,44 @@
         <field name="users" eval="[(4, ref('base.user_admin'))]" />
     </record>
 
-    <!-- Customer Records: only status='done' -->
-    <record id="rule_client_record_done_only" model="ir.rule">
-        <field name="name">Client Record: Only Done</field>
-        <field name="model_id" ref="model_customer_record" />
+    <!-- ========== CUSTOMER RECORDS RULES ========== -->
+
+    <!-- Smart Rule for Customer Records -->
+    <record id="rule_client_record_smart_access" model="ir.rule">
+        <field name="name">Client Record: Smart Access</field>
+        <field name="model_id" ref="model_customer_record"/>
         <field name="domain_force">
-            [('status', '=', 'done'), ('branch_id', 'in', user.company_ids.ids)]
+            ['|',
+                '&amp;', ('status', '!=', 'done'), ('branch_id', '=', user.company_id.id),
+                '&amp;', ('status', '=', 'done'), ('branch_id', 'in', user.company_id.parent_id.child_ids.ids)
+            ]
         </field>
-        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]" />
+        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]"/>
     </record>
 
-    <!-- Problem Solutions: only status='done' -->
-    <record id="rule_problem_solution_done_only" model="ir.rule">
-        <field name="name">Problem Solution: Only Done</field>
-        <field name="model_id" ref="model_problem_solution" />
+    <!-- ========== PROBLEM SOLUTIONS RULES ========== -->
+
+    <!-- Smart Rule for Problem Solutions -->
+    <record id="rule_problem_solution_smart_access" model="ir.rule">
+        <field name="name">Problem Solution: Smart Access</field>
+        <field name="model_id" ref="model_problem_solution"/>
         <field name="domain_force">
-            [('status', '=', 'done'), ('new_branch_id', 'in', user.company_ids.ids)]
+            ['|',
+                '&amp;', ('status', '!=', 'done'), ('new_branch_id', '=', user.company_id.id),
+                '&amp;', ('status', '=', 'done'), ('new_branch_id', 'in', user.company_id.parent_id.child_ids.ids)
+            ]
         </field>
-        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]" />
+        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]"/>
+    </record>
+
+    <!-- ========== EVALUATION CRITERIA RULES ========== -->
+    <record id="rule_evaluation_criteria_branch_access" model="ir.rule">
+        <field name="name">Evaluation Criteria: Branch Access</field>
+        <field name="model_id" ref="model_evaluation_criteria"/>
+        <field name="domain_force">
+            [('branch_id', 'in', user.company_ids.ids)]
+        </field>
+        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]"/>
     </record>
 
 </odoo>

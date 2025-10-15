@@ -10,6 +10,7 @@ class ProblemSolution(models.Model):
     _description = "Problem and Solution"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "date desc"
+    _rec_name="invoice_number"
 
     vehicle_record_id = fields.Many2one(
         "customer.record",
