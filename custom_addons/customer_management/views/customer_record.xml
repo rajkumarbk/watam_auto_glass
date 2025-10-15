@@ -15,7 +15,7 @@
                 <field name="service_type" />
                 <field name="workplace" />
                 <field name="employee_id" />
-                <field name="start_time"  />
+                <field name="start_time" />
                 <field name="end_time" />
                 <!-- <field name="photo" widget="image" /> -->
                 <field name="status" widget="badge" decoration-success="status == 'done'"

@@ -12,8 +12,6 @@ class ClientRecord(models.Model):
     _order = "date desc"
     _rec_name = "vehicle_number"
 
-    
-    
     # Fields definition
     employee_id = fields.Many2one("hr.employee", string="Employee Name")
     assistant_staff = fields.Many2one("hr.employee", string="Secondary Technician")
@@ -56,23 +54,22 @@ class ClientRecord(models.Model):
         return local_time.strftime("%I:%M %p")
 
     start_time = fields.Char(
-        string="WO Start Time", readonly=True, default=_get_current_time_string)
-    
+        string="WO Start Time", readonly=True, default=_get_current_time_string
+    )
+
     def _get_current_time_string(self):
         utc_now = datetime.now(pytz.UTC)
-        local_tz = pytz.timezone('Asia/Riyadh')
+        local_tz = pytz.timezone("Asia/Riyadh")
         local_time = utc_now.astimezone(local_tz)
-        return local_time.strftime('%I:%M %p')
+        return local_time.strftime("%I:%M %p")
 
     start_time = fields.Char(
-        string="WO Start Time", 
-        readonly=True, 
-        default=_get_current_time_string
+        string="WO Start Time", readonly=True, default=_get_current_time_string
     )
     end_time = fields.Char(
-        string="WO Finishing Time", 
-        readonly=True, 
-        default=False  # No default, will be set when button is pressed
+        string="WO Finishing Time",
+        readonly=True,
+        default=False,
     )
     workplace = fields.Selection(
         [
@@ -163,12 +160,13 @@ class ClientRecord(models.Model):
 
     def action_set_done(self):
         """Set status to done, record end time, and return filtered view"""
-        # Get the current time in 12-hour format when button is pressed
         current_time = self._get_current_time_string()
-        self.write({
-            "status": "done",
-            "end_time": current_time,  # Record the current time when button is pressed
-        })
+        self.write(
+            {
+                "status": "done",
+                "end_time": current_time,
+            }
+        )
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,
@@ -177,7 +175,6 @@ class ClientRecord(models.Model):
             "target": "current",
         }
 
-    # Constraint methods
     @api.constrains("phone")
     def _check_phone(self):
         """Validate phone number format"""
@@ -185,7 +182,6 @@ class ClientRecord(models.Model):
             if record.phone and not re.fullmatch(r"\d{10}", record.phone):
                 raise ValidationError(_("Phone number must be exactly 10 digits."))
 
-    # Override methods
     def write(self, vals):
         """Block editing if status is done, except for Admins"""
         if any(rec.status == "done" for rec in self):
@@ -207,11 +203,10 @@ class ClientRecord(models.Model):
                     )
                 )
         return super().unlink()
-    
+
     def name_get(self):
         result = []
         for rec in self:
-            # Display all three fields in the dropdown
             name = f"{rec.vehicle_number or ''} / {rec.invoice_number or ''} / {rec.phone or ''}"
             result.append((rec.id, name))
         return result
@@ -220,7 +215,8 @@ class ClientRecord(models.Model):
     def name_search(self, name, args=None, operator="ilike", limit=100):
         args = args or []
         domain = args + [
-            "|", "|",
+            "|",
+            "|",
             ("vehicle_number", operator, name),
             ("invoice_number", operator, name),
             ("phone", operator, name),

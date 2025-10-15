@@ -6,15 +6,19 @@ from datetime import datetime, timedelta
 class EvaluationCriteria(models.Model):
     _name = "evaluation.criteria"
     _description = "Evaluation Criteria"
-    _rec_name="date"
+    _rec_name = "date"
     _order = "date desc"
 
-    branch_id = fields.Many2one("res.company", string="Branch", default=lambda self: self.env.company,)
+    branch_id = fields.Many2one(
+        "res.company",
+        string="Branch",
+        default=lambda self: self.env.company,
+    )
     employee_id = fields.Many2one(
-        "hr.employee", 
-        string="Employee", 
+        "hr.employee",
+        string="Employee",
         required=True,
-        domain="[('company_id', '=', branch_id)]"
+        domain="[('company_id', '=', branch_id)]",
     )
     date = fields.Date(string="Date", default=fields.Date.context_today)
     attendance_punctuality = fields.Float(
@@ -90,22 +94,26 @@ class EvaluationCriteria(models.Model):
                     "Reporting Observations and Malfunctions cannot exceed 10 points."
                 )
 
-    @api.constrains('employee_id', 'date', 'branch_id')
+    @api.constrains("employee_id", "date", "branch_id")
     def _check_evaluation_frequency(self):
         for record in self:
             if not record.employee_id or not record.date:
                 return
-                
-            previous_evaluation = self.search([
-                ('employee_id', '=', record.employee_id.id),
-                ('branch_id', '=', record.branch_id.id),
-                ('id', '!=', record.id), 
-                ('date', '!=', False)
-            ], order='date desc', limit=1)
-            
+
+            previous_evaluation = self.search(
+                [
+                    ("employee_id", "=", record.employee_id.id),
+                    ("branch_id", "=", record.branch_id.id),
+                    ("id", "!=", record.id),
+                    ("date", "!=", False),
+                ],
+                order="date desc",
+                limit=1,
+            )
+
             if previous_evaluation:
                 min_allowed_date = previous_evaluation.date + timedelta(days=30)
-                
+
                 if record.date <= min_allowed_date:
                     raise ValidationError(
                         f"Evaluation for employee {record.employee_id.name} cannot be done before {min_allowed_date.strftime('%d %B %Y')}. "
@@ -114,28 +122,21 @@ class EvaluationCriteria(models.Model):
 
     @api.model
     def create(self, vals):
-      
+
         record = super().create(vals)
         record._check_evaluation_frequency()
         return record
 
-    @api.onchange('branch_id')
+    @api.onchange("branch_id")
     def _onchange_branch_id(self):
         """
         Clear employee when branch changes and reset domain
         """
         if self.branch_id:
-            return {
-                'domain': {
-                    'employee_id': [('company_id', '=', self.branch_id.id)]
-                }
-            }
+            return {"domain": {"employee_id": [("company_id", "=", self.branch_id.id)]}}
         else:
-            return {
-                'domain': {
-                    'employee_id': []
-                }
-            }
+            return {"domain": {"employee_id": []}}
+
     def write(self, vals):
         """Block editing after creation, only Admin can edit"""
         if any(not rec._origin.id is None for rec in self):
@@ -150,6 +151,8 @@ class EvaluationCriteria(models.Model):
         if any(not rec._origin.id is None for rec in self):
             if not self.env.user.has_group("base.group_system"):
                 raise UserError(
-                    _("You cannot delete this record. Please contact the administrator.")
+                    _(
+                        "You cannot delete this record. Please contact the administrator."
+                    )
                 )
         return super().unlink()
