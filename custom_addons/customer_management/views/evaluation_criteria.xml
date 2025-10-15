@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="view_evaluation_criteria_list" model="ir.ui.view">
+        <field name="name">evaluation.criteria.list</field>
+        <field name="model">evaluation.criteria</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="branch_id" />
+                <field name="employee_id" />
+                <field name="date" />
+                <field name="attendance_punctuality" />
+                <field name="work_quality" />
+                <field name="customer_interaction" />
+                <field name="proactivity_initiative" />
+                <field name="uniform_safety" />
+                <field name="reporting" />
+                <field name="total_score" widget="badge" decoration-success="total_score" />
+            </list>
+        </field>
+    </record>
     <record id="view_evaluation_criteria_form" model="ir.ui.view">
         <field name="name">evaluation.criteria.form</field>
         <field name="model">evaluation.criteria</field>
@@ -7,8 +25,15 @@
             <form string="Evaluation Criteria">
                 <sheet>
                     <group>
-                        <field name="branch_id" />
-                        <field name="employee_id" />
+                        <group>
+                            <field name="branch_id" />
+                            <field name="employee_id"
+                                context="{'search_default_current_company': 1}"
+                                options="{'no_create': True, 'no_create_edit': True}" />
+                        </group>
+                        <group>
+                            <field name="date" />
+                        </group>
                     </group>
 
                     <notebook>
@@ -32,24 +57,6 @@
         </field>
     </record>
 
-    <!-- list view (optional) -->
-    <record id="view_evaluation_criteria_list" model="ir.ui.view">
-        <field name="name">evaluation.criteria.list</field>
-        <field name="model">evaluation.criteria</field>
-        <field name="arch" type="xml">
-            <list>
-                <field name="branch_id" />
-                <field name="employee_id" />
-                <field name="attendance_punctuality" />
-                <field name="work_quality" />
-                <field name="customer_interaction" />
-                <field name="proactivity_initiative" />
-                <field name="uniform_safety" />
-                <field name="reporting" />
-                <field name="total_score" widget="badge" decoration-success="total_score" />
-            </list>
-        </field>
-    </record>
 
     <!-- Action -->
     <record id="action_evaluation_criteria" model="ir.actions.act_window">
