@@ -16,6 +16,49 @@ class ProblemSolution(models.Model):
         string="Search Record: ",
         domain=[("status", "=", "done")],
     )
+    vehicle_number = fields.Char(
+        string="Car Registration Number",
+        related="vehicle_record_id.vehicle_number",
+        store=True,
+    )
+
+    @api.model
+    def name_search(self, name, args=None, operator="ilike", limit=100):
+        args = args or []
+        domain = args + [
+            "|", "|",
+            ("vehicle_number", operator, name),
+            ("invoice_number", operator, name),
+            ("phone", operator, name),
+        ]
+        records = self.env["customer.record"].search(domain, limit=limit)
+        return records.name_get()
+
+    @api.onchange("vehicle_record_id")
+    def _onchange_vehicle_record(self):
+        if self.vehicle_record_id:
+            cr = self.vehicle_record_id
+            update_fields = {
+                "vehicle_brand": cr.vehicle_brand.id,
+                "vehicle_model": cr.vehicle_model.id,
+                "manufactured_year_id": cr.manufactured_year_id.id,
+                "vehicle_display": cr.vehicle_display,
+                "photo": cr.photo,
+                "employee_id": cr.employee_id.id,
+                "branch_id": cr.branch_id.id,
+                "assistant_staff": cr.assistant_staff.id,
+                "name": cr.name,
+                "phone": cr.phone,
+                "glass_destination": cr.glass_destination.id,
+                "workplace": cr.workplace,
+                "service_complexity": cr.service_complexity,
+                "service_type": cr.service_type,
+                "service_option": cr.service_option,
+                "glass_option": cr.glass_option,
+                "retailer_type": cr.retailer_type,
+                "invoice_number": cr.invoice_number,
+            }
+            self.update(update_fields)
     invoice_number = fields.Char(
         store=True,
         string="Invoice number",
@@ -48,11 +91,11 @@ class ProblemSolution(models.Model):
         compute="_compute_vehicle_display",
         store=True,
     )
-    vehicle_number = fields.Char(
-        string="Car Registration Number",
-        related="vehicle_record_id.vehicle_number",
-        store=True,
-    )
+    # vehicle_number = fields.Char(
+    #     string="Car Registration Number",
+    #     related="vehicle_record_id.vehicle_number",
+    #     store=True,
+    # )
     datetime = fields.Datetime(string="Date & Time", default=fields.Datetime.now)
     date = fields.Date(
         string="Date",
@@ -144,33 +187,33 @@ class ProblemSolution(models.Model):
         }
 
     # Onchange methods
-    @api.onchange("vehicle_record_id")
-    def _onchange_vehicle_record(self):
-        """Update fields when vehicle record is selected"""
-        if self.vehicle_record_id:
-            cr = self.vehicle_record_id
+    # @api.onchange("vehicle_record_id")
+    # def _onchange_vehicle_record(self):
+    #     """Update fields when vehicle record is selected"""
+    #     if self.vehicle_record_id:
+    #         cr = self.vehicle_record_id
 
-            update_fields = {
-                "vehicle_brand": cr.vehicle_brand.id,
-                "vehicle_model": cr.vehicle_model.id,
-                "manufactured_year_id": cr.manufactured_year_id.id,
-                "vehicle_display": cr.vehicle_display,
-                "photo": cr.photo,
-                "employee_id": cr.employee_id.id,
-                "branch_id": cr.branch_id.id,
-                "assistant_staff": cr.assistant_staff.id,
-                "name": cr.name,
-                "phone": cr.phone,
-                "glass_destination": cr.glass_destination.id,
-                "workplace": cr.workplace,
-                "service_complexity": cr.service_complexity,
-                "service_type": cr.service_type,
-                "service_option": cr.service_option,
-                "glass_option": cr.glass_option,
-                "retailer_type": cr.retailer_type,
-                "invoice_number": cr.invoice_number,
-            }
-            self.update(update_fields)
+    #         update_fields = {
+    #             "vehicle_brand": cr.vehicle_brand.id,
+    #             "vehicle_model": cr.vehicle_model.id,
+    #             "manufactured_year_id": cr.manufactured_year_id.id,
+    #             "vehicle_display": cr.vehicle_display,
+    #             "photo": cr.photo,
+    #             "employee_id": cr.employee_id.id,
+    #             "branch_id": cr.branch_id.id,
+    #             "assistant_staff": cr.assistant_staff.id,
+    #             "name": cr.name,
+    #             "phone": cr.phone,
+    #             "glass_destination": cr.glass_destination.id,
+    #             "workplace": cr.workplace,
+    #             "service_complexity": cr.service_complexity,
+    #             "service_type": cr.service_type,
+    #             "service_option": cr.service_option,
+    #             "glass_option": cr.glass_option,
+    #             "retailer_type": cr.retailer_type,
+    #             "invoice_number": cr.invoice_number,
+    #         }
+    #         self.update(update_fields)
 
     # Computed methods
     @api.depends("vehicle_brand", "vehicle_model", "manufactured_year_id")

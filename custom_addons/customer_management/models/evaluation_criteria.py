@@ -1,5 +1,5 @@
-from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError, UserError
 from datetime import datetime, timedelta
 
 
@@ -7,8 +7,9 @@ class EvaluationCriteria(models.Model):
     _name = "evaluation.criteria"
     _description = "Evaluation Criteria"
     _rec_name="date"
+    _order = "date desc"
 
-    branch_id = fields.Many2one("res.company", string="Branch", required=True)
+    branch_id = fields.Many2one("res.company", string="Branch", default=lambda self: self.env.company,)
     employee_id = fields.Many2one(
         "hr.employee", 
         string="Employee", 
@@ -135,3 +136,20 @@ class EvaluationCriteria(models.Model):
                     'employee_id': []
                 }
             }
+    def write(self, vals):
+        """Block editing after creation, only Admin can edit"""
+        if any(not rec._origin.id is None for rec in self):
+            if not self.env.user.has_group("base.group_system"):
+                raise UserError(
+                    _("You cannot edit this record. Please contact the administrator.")
+                )
+        return super().write(vals)
+
+    def unlink(self):
+        """Block deleting after creation, only Admin can delete"""
+        if any(not rec._origin.id is None for rec in self):
+            if not self.env.user.has_group("base.group_system"):
+                raise UserError(
+                    _("You cannot delete this record. Please contact the administrator.")
+                )
+        return super().unlink()

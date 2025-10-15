@@ -5,9 +5,9 @@
         <field name="model">evaluation.criteria</field>
         <field name="arch" type="xml">
             <list>
+                <field name="date" />
                 <field name="branch_id" />
                 <field name="employee_id" />
-                <field name="date" />
                 <field name="attendance_punctuality" />
                 <field name="work_quality" />
                 <field name="customer_interaction" />

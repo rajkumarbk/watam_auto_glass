@@ -21,19 +21,24 @@
         <field name="users" eval="[(4, ref('base.user_admin'))]" />
     </record>
 
-    <!-- Record Rule: Supervisor sees customer records from same company branches -->
-    <record id="rule_client_record_company_supervisor" model="ir.rule">
-        <field name="name">Client Record: Company Restriction</field>
-        <field name="model_id" ref="model_customer_record" />
-        <field name="domain_force">[('branch_id','in', user.company_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]" />
-    </record>
+    <!-- Customer Records: only status='done' -->
+<record id="rule_client_record_done_only" model="ir.rule">
+    <field name="name">Client Record: Only Done</field>
+    <field name="model_id" ref="model_customer_record"/>
+    <field name="domain_force">
+        [('status', '=', 'done'), ('branch_id', 'in', user.company_ids.ids)]
+    </field>
+    <field name="groups" eval="[(4, ref('group_customer_supervisor'))]"/>
+</record>
 
-    <!-- Record Rule: Supervisor sees problem solutions from same company branches -->
-    <record id="rule_problem_solution_company_supervisor" model="ir.rule">
-        <field name="name">Problem Solution: Company Restriction</field>
-        <field name="model_id" ref="model_problem_solution" />
-        <field name="domain_force">[('branch_id','in', user.company_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]" />
-    </record>
+<!-- Problem Solutions: only status='done' -->
+<record id="rule_problem_solution_done_only" model="ir.rule">
+    <field name="name">Problem Solution: Only Done</field>
+    <field name="model_id" ref="model_problem_solution"/>
+    <field name="domain_force">
+        [('status', '=', 'done'), ('new_branch_id', 'in', user.company_ids.ids)]
+    </field>
+    <field name="groups" eval="[(4, ref('group_customer_supervisor'))]"/>
+</record>
+
 </odoo>

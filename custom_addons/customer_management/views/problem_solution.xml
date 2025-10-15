@@ -27,9 +27,9 @@
                 <sheet>
                     <!-- Vehicle selection first -->
                     <group invisible="status != 'not_started'">
-                        <field name="vehicle_record_id" string="Vehicle Number"
+                        <field name="vehicle_record_id" string="Search Record"
                             options="{'no_create': True, 'no_open': True}"
-                            placeholder="Search records here..." />
+                            placeholder="Type Vehicle number, Invoice number or Phone number to search..." />
                     </group>
                     <group>
                         <!-- Before Work: visible only if vehicle selected and status not started -->
@@ -69,8 +69,8 @@
                             <field name="new_branch_id" readonly="1" class="input-field" />
                             <field name="new_employee_id"
                                 options="{'no_create': True, 'no_create_edit': True}"
-                                placeholder="Current Employee" class="input-field" />
-                            <field name="problem" placeholder="Select the problem"
+                                placeholder="Select Employee" class="input-field" />
+                            <field name="problem" placeholder="Select the type of complaint"
                                 class="input-field" />
                             <field name="solution" placeholder="Select the Solution"
                                 domain="[('problem_id','=',problem)]" class="input-field" />

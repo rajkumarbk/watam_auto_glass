@@ -207,3 +207,23 @@ class ClientRecord(models.Model):
                     )
                 )
         return super().unlink()
+    
+    def name_get(self):
+        result = []
+        for rec in self:
+            # Display all three fields in the dropdown
+            name = f"{rec.vehicle_number or ''} / {rec.invoice_number or ''} / {rec.phone or ''}"
+            result.append((rec.id, name))
+        return result
+
+    @api.model
+    def name_search(self, name, args=None, operator="ilike", limit=100):
+        args = args or []
+        domain = args + [
+            "|", "|",
+            ("vehicle_number", operator, name),
+            ("invoice_number", operator, name),
+            ("phone", operator, name),
+        ]
+        records = self.search(domain, limit=limit)
+        return records.name_get()
