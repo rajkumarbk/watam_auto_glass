@@ -51,8 +51,8 @@
         <field name="model_id" ref="model_problem_solution"/>
         <field name="domain_force">
             ['|',
-                '&amp;', ('status', '!=', 'done'), ('new_branch_id', '=', user.company_id.id),
-                '&amp;', ('status', '=', 'done'), ('new_branch_id', 'in', user.company_id.parent_id.child_ids.ids)
+                '&amp;', ('status', '!=', 'done'), ('new_branch_id', 'in', user.company_id.parent_id.child_ids.ids),
+                '&amp;', ('status', '=', 'done'), ('new_branch_id', '=', user.company_id.id)
             ]
         </field>
         <field name="groups" eval="[(4, ref('group_customer_supervisor'))]"/>
