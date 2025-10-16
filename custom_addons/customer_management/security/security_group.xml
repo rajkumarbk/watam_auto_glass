@@ -45,14 +45,14 @@
 
     <!-- ========== PROBLEM SOLUTIONS RULES ========== -->
 
-    <!-- Rule for Supervisors ONLY -->
+    <!-- Rule for Supervisors ONLY - FIXED -->
     <record id="rule_problem_solution_supervisor" model="ir.rule">
         <field name="name">Problem Solution: Supervisor Access</field>
         <field name="model_id" ref="model_problem_solution"/>
         <field name="domain_force">
             ['|',
-                '&amp;', ('status', '!=', 'done'), ('new_branch_id', 'in', user.company_id.parent_id.child_ids.ids),
-                '&amp;', ('status', '=', 'done'), ('new_branch_id', '=', user.company_id.id)
+                '&amp;', ('status', '!=', 'done'), ('create_uid.company_id', '=', user.company_id.id),
+                '&amp;', ('status', '=', 'done'), ('create_uid.company_id', '=', user.company_id.id)
             ]
         </field>
         <field name="groups" eval="[(4, ref('group_customer_supervisor'))]"/>
