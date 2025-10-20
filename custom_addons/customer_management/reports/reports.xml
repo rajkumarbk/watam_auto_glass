@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_customer_record" model="ir.actions.report">
+        <field name="name">Print Selected Records</field>
+        <field name="model">customer.record</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">customer_record.reports</field>
+        <field name="binding_model_id" ref="model_customer_record"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h3>Service Record</h3>
+                        <table class="table">
+                            <tr><td><strong>Invoice:</strong></td><td><span t-field="doc.invoice_number"/></td></tr>
+                            <tr><td><strong>Customer:</strong></td><td><span t-field="doc.name"/></td></tr>
+                            <tr><td><strong>Phone:</strong></td><td><span t-field="doc.phone"/></td></tr>
+                            <tr><td><strong>Vehicle:</strong></td><td><span t-field="doc.vehicle_display"/></td></tr>
+                            <tr><td><strong>Status:</strong></td><td><span t-field="doc.status"/></td></tr>
+                            <tr><td><strong>Type:</strong></td><td><span t-field="doc.service_type"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
