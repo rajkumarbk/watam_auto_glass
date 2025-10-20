@@ -3,6 +3,12 @@ from odoo.exceptions import ValidationError, UserError
 from datetime import datetime
 import pytz
 import re
+import requests
+import logging
+from odoo import models
+from collections import defaultdict
+
+_logger = logging.getLogger(__name__)
 
 
 class ClientRecord(models.Model):
@@ -223,3 +229,31 @@ class ClientRecord(models.Model):
         ]
         records = self.search(domain, limit=limit)
         return records.name_get()
+
+    def write(self, vals):
+        res = super(ClientRecord, self).write(vals)
+        if "status" in vals and vals["status"] == "done":
+            for record in self:
+                if record.phone:
+                    record._send_whatsapp_message(record.phone, record.name, record.vehicle_number, record.end_time)
+        return res
+
+    def _send_whatsapp_message(self, phone, customer_name, vehicle_number, end_time):
+        url = "https://graph.facebook.com/v17.0/914322438432607/messages"
+        headers = {
+            "Authorization": "Bearer EAA7fmfISZAhQBPhoESrhU4IyIsFNSiBSrGgAZB7ZCs7qCw9L2to2SbRMNeBJVrt2pYpImkqFJ5kbPpLZARYXoASRZC1jyclAMaNH648dElVlyvl3WECDKFf5ZC4tlxThfyyfXsZAPoMahmwEfOWwZAgg0gcmw2n2O47USHaWBqZCKkgRO0ZCLoL8fLGzsdibSKkv1rZAlboYSZB0ZBvyFsDDQEgJOlvNx9frG3ZCRpggH7oYtepZBfwjwZDZD",
+            "Content-Type": "application/json",
+        }
+        data = {
+            "messaging_product": "whatsapp",
+            "to": f"966{phone}",  # change 966 to your country code
+            "type": "text",
+            "text": {"body": f"Hello {customer_name}, your glass installation for vehicle {vehicle_number} has been successfully completed at {end_time}. Thank you for choosing us! We appreciate your trust and look forward to serving you again."},
+        }
+
+        try:
+            response = requests.post(url, headers=headers, json=data)
+            if response.status_code != 200:
+                _logger.error(f"WhatsApp error: {response.text}")
+        except Exception as e:
+            _logger.error(f"WhatsApp failed: {e}")
