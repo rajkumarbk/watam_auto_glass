@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_customer_record">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
+                    <div class="header" style="text-align: center; margin-bottom: 20px;">
+                        <h2>Watam Auto Glass</h2>
+                        <h3>Service Record</h3>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <td><strong>Invoice:</strong></td>
+                            <td><span t-field="doc.invoice_number"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Customer:</strong></td>
+                            <td><span t-field="doc.name"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phone:</strong></td>
+                            <td><span t-field="doc.phone"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vehicle:</strong></td>
+                            <td><span t-field="doc.vehicle_display"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Status:</strong></td>
+                            <td><span t-field="doc.status"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Type:</strong></td>
+                            <td><span t-field="doc.service_type"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+
+    <record id="action_report_customer_record" model="ir.actions.report">
+        <field name="name">Print Selected Records</field>
+        <field name="model">customer.record</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">customer_management.report_customer_record</field>
+        <field name="binding_model_id" ref="customer_management.model_customer_record"/>
+        <field name="binding_type">report</field>
+        <!-- <field name="print_report_name">'Service Record - %s' % (object.invoice_number or object.name)</field> -->
+    </record>
+</odoo>
