@@ -106,7 +106,8 @@
         <field name="res_model">customer.record</field>
         <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_customer_record_list" />
-        <field name="domain">[('status', '=', 'done')]</field>
+        <field name="domain">[('status', '=', 'done'), ('branch_id', 'in',
+            context.get('allowed_company_ids'))]</field>
         <field name="context">{'create': False}</field>
     </record>
 

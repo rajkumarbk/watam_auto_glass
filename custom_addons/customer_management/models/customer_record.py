@@ -6,7 +6,6 @@ import re
 import requests
 import logging
 from odoo import models
-from collections import defaultdict
 
 _logger = logging.getLogger(__name__)
 
@@ -235,7 +234,12 @@ class ClientRecord(models.Model):
         if "status" in vals and vals["status"] == "done":
             for record in self:
                 if record.phone:
-                    record._send_whatsapp_message(record.phone, record.name, record.vehicle_number, record.end_time)
+                    record._send_whatsapp_message(
+                        record.phone,
+                        record.name,
+                        record.vehicle_number,
+                        record.end_time,
+                    )
         return res
 
     def _send_whatsapp_message(self, phone, customer_name, vehicle_number, end_time):
@@ -248,7 +252,9 @@ class ClientRecord(models.Model):
             "messaging_product": "whatsapp",
             "to": f"966{phone}",  # change 966 to your country code
             "type": "text",
-            "text": {"body": f"Hello {customer_name}, your glass installation for vehicle {vehicle_number} has been successfully completed at {end_time}. Thank you for choosing us! We appreciate your trust and look forward to serving you again."},
+            "text": {
+                "body": f"Hello {customer_name}, your glass installation for vehicle {vehicle_number} has been successfully completed at {end_time}. Thank you for choosing us! We appreciate your trust and look forward to serving you again."
+            },
         }
 
         try:
