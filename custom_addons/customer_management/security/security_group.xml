@@ -25,22 +25,23 @@
     <!-- Rule for Supervisors ONLY -->
     <record id="rule_client_record_supervisor" model="ir.rule">
         <field name="name">Client Record: Supervisor Access</field>
-        <field name="model_id" ref="model_customer_record"/>
+        <field name="model_id" ref="model_customer_record" />
         <field name="domain_force">
             ['|',
-                '&amp;', ('status', '!=', 'done'), ('branch_id', '=', user.company_id.id),
-                '&amp;', ('status', '=', 'done'), ('branch_id', 'in', user.company_id.parent_id.child_ids.ids)
+            '&amp;', ('status', '!=', 'done'), ('branch_id', '=', user.company_id.id),
+            '&amp;', ('status', '=', 'done'), ('branch_id', 'in',
+            user.company_id.parent_id.child_ids.ids)
             ]
         </field>
-        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]"/>
+        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]" />
     </record>
 
     <!-- Rule for Admins - Full Access -->
     <record id="rule_client_record_admin" model="ir.rule">
         <field name="name">Client Record: Admin Access</field>
-        <field name="model_id" ref="model_customer_record"/>
+        <field name="model_id" ref="model_customer_record" />
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('group_customer_admin'))]"/>
+        <field name="groups" eval="[(4, ref('group_customer_admin'))]" />
     </record>
 
     <!-- ========== PROBLEM SOLUTIONS RULES ========== -->
@@ -48,22 +49,22 @@
     <!-- Rule for Supervisors ONLY - FIXED -->
     <record id="rule_problem_solution_supervisor" model="ir.rule">
         <field name="name">Problem Solution: Supervisor Access</field>
-        <field name="model_id" ref="model_problem_solution"/>
+        <field name="model_id" ref="model_problem_solution" />
         <field name="domain_force">
             ['|',
-                '&amp;', ('status', '!=', 'done'), ('create_uid.company_id', '=', user.company_id.id),
-                '&amp;', ('status', '=', 'done'), ('create_uid.company_id', '=', user.company_id.id)
+            '&amp;', ('status', '!=', 'done'), ('create_uid.company_id', '=', user.company_id.id),
+            '&amp;', ('status', '=', 'done'), ('create_uid.company_id', '=', user.company_id.id)
             ]
         </field>
-        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]"/>
+        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]" />
     </record>
 
     <!-- Rule for Admins - Full Access -->
     <record id="rule_problem_solution_admin" model="ir.rule">
         <field name="name">Problem Solution: Admin Access</field>
-        <field name="model_id" ref="model_problem_solution"/>
+        <field name="model_id" ref="model_problem_solution" />
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('group_customer_admin'))]"/>
+        <field name="groups" eval="[(4, ref('group_customer_admin'))]" />
     </record>
 
     <!-- ========== EVALUATION CRITERIA RULES ========== -->
@@ -71,19 +72,19 @@
     <!-- Rule for Supervisors ONLY -->
     <record id="rule_evaluation_criteria_supervisor" model="ir.rule">
         <field name="name">Evaluation Criteria: Supervisor Access</field>
-        <field name="model_id" ref="model_evaluation_criteria"/>
+        <field name="model_id" ref="model_evaluation_criteria" />
         <field name="domain_force">
             [('branch_id', 'in', user.company_ids.ids)]
         </field>
-        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]"/>
+        <field name="groups" eval="[(4, ref('group_customer_supervisor'))]" />
     </record>
 
     <!-- Rule for Admins - Full Access -->
     <record id="rule_evaluation_criteria_admin" model="ir.rule">
         <field name="name">Evaluation Criteria: Admin Access</field>
-        <field name="model_id" ref="model_evaluation_criteria"/>
+        <field name="model_id" ref="model_evaluation_criteria" />
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('group_customer_admin'))]"/>
+        <field name="groups" eval="[(4, ref('group_customer_admin'))]" />
     </record>
 
 </odoo>

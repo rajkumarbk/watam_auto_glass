@@ -20,7 +20,7 @@ class EvaluationCriteria(models.Model):
         required=True,
         domain="[('company_id', '=', branch_id)]",
     )
-    date = fields.Date(string="Date", default=fields.Date.context_today)
+    date = fields.Date(string="Date", default=fields.Date.context_today, readonly=True)
     attendance_punctuality = fields.Float(
         string="Attendance and Punctuality (20)", default=0.0
     )
