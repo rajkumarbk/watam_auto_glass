@@ -44,6 +44,8 @@
                                 <field name="proactivity_initiative" />
                                 <field name="uniform_safety" />
                                 <field name="reporting" />
+                                <separator string="Total Score" colspan="2"/>
+                                <field name="total_score" readonly="1" widget="progressbar"/>
                             </group>
                             <style>
                                 .o_form_label {
@@ -52,10 +54,6 @@
                             </style>
                         </page>
                     </notebook>
-
-                    <group>
-                        <field name="total_score" readonly="1" />
-                    </group>
                 </sheet>
             </form>
         </field>
