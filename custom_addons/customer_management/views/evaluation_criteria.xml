@@ -40,14 +40,19 @@
 
                     <notebook>
                         <page string="Evaluation Criteria">
-                            <group>
-                                <field name="attendance_punctuality" />
-                                <field name="work_quality" />
-                                <field name="customer_interaction" />
-                                <field name="proactivity_initiative" />
-                                <field name="uniform_safety" />
-                                <field name="reporting" />
+                            <group >
+                                    <field name="attendance_punctuality" />
+                                    <field name="work_quality" />
+                                    <field name="customer_interaction"  />
+                                    <field name="proactivity_initiative"  />
+                                    <field name="uniform_safety"  />
+                                    <field name="reporting" />
                             </group>
+                            <style>
+                                .o_form_label {
+                                    white-space: nowrap !important;
+                                }
+                            </style>
                         </page>
                     </notebook>
 
