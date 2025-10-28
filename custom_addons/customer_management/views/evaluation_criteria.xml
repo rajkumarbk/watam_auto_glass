@@ -20,6 +20,7 @@
             </list>
         </field>
     </record>
+
     <record id="view_evaluation_criteria_form" model="ir.ui.view">
         <field name="name">evaluation.criteria.form</field>
         <field name="model">evaluation.criteria</field>
@@ -27,15 +28,11 @@
             <form string="Evaluation Criteria">
                 <sheet>
                     <group>
-                        <group>
-                            <field name="branch_id" />
-                            <field name="employee_id" placeholder="Select Employee"
-                                context="{'search_default_current_company': 1}"
-                                options="{'no_create': True, 'no_create_edit': True}" />
-                        </group>
-                        <group>
-                            <field name="date" />
-                        </group>
+                        <field name="date" />
+                        <field name="branch_id" />
+                        <field name="employee_id" placeholder="Select Employee"
+                            context="{'search_default_current_company': 1}"
+                            options="{'no_create': True, 'no_create_edit': True}" />
                     </group>
 
                     <notebook>
@@ -48,6 +45,11 @@
                                 <field name="uniform_safety" />
                                 <field name="reporting" />
                             </group>
+                            <style>
+                                .o_form_label {
+                                white-space: nowrap !important;
+                                }
+                            </style>
                         </page>
                     </notebook>
 
@@ -58,7 +60,6 @@
             </form>
         </field>
     </record>
-
 
     <!-- Action -->
     <record id="action_evaluation_criteria" model="ir.actions.act_window">
