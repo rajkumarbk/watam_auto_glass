@@ -6,12 +6,13 @@ from datetime import datetime, timedelta
 class EvaluationCriteria(models.Model):
     _name = "evaluation.criteria"
     _description = "Evaluation Criteria"
-    _rec_name = "date"
+    _rec_name = "employee_id"
     _order = "date desc"
 
     branch_id = fields.Many2one(
         "res.company",
         string="Branch",
+        readonly=True,
         default=lambda self: self.env.company,
     )
     employee_id = fields.Many2one(
@@ -22,20 +23,22 @@ class EvaluationCriteria(models.Model):
     )
     date = fields.Date(string="Date", default=fields.Date.context_today, readonly=True)
     attendance_punctuality = fields.Float(
-        string="Attendance and Punctuality (20)", default=0.0
+        string="Attendance and Punctuality (20)", required=True
     )
     work_quality = fields.Float(
-        string="Work Quality and Installation Accuracy (30)", default=0.0
+        string="Work Quality and Installation Accuracy (30)", required=True
     )
-    customer_interaction = fields.Float(string="Customer Interaction (20)", default=0.0)
+    customer_interaction = fields.Float(
+        string="Customer Interaction (20)", required=True
+    )
     proactivity_initiative = fields.Float(
-        string="Proactivity and Initiative (10)", default=0.0
+        string="Proactivity and Initiative (10)", required=True
     )
     uniform_safety = fields.Float(
-        string="Adherence to Uniform and Safety Regulations (10)", default=0.0
+        string="Adherence to Uniform and Safety Regulations (10)", required=True
     )
     reporting = fields.Float(
-        string="Reporting Observations and Malfunctions (10)", default=0.0
+        string="Reporting Observations and Malfunctions (10)", required=True
     )
 
     total_score = fields.Float(
@@ -71,6 +74,32 @@ class EvaluationCriteria(models.Model):
     )
     def _check_max_points(self):
         for record in self:
+            # Check for zero/empty values
+            if record.attendance_punctuality <= 0:
+                raise ValidationError(
+                    "Attendance and Punctuality is required and must be greater than 0."
+                )
+            if record.work_quality <= 0:
+                raise ValidationError(
+                    "Work Quality and Installation Accuracy is required and must be greater than 0."
+                )
+            if record.customer_interaction <= 0:
+                raise ValidationError(
+                    "Customer Interaction is required and must be greater than 0."
+                )
+            if record.proactivity_initiative <= 0:
+                raise ValidationError(
+                    "Proactivity and Initiative is required and must be greater than 0."
+                )
+            if record.uniform_safety <= 0:
+                raise ValidationError(
+                    "Adherence to Uniform and Safety Regulations is required and must be greater than 0."
+                )
+            if record.reporting <= 0:
+                raise ValidationError(
+                    "Reporting Observations and Malfunctions is required and must be greater than 0."
+                )
+
             if record.attendance_punctuality > 20:
                 raise ValidationError(
                     "Attendance and Punctuality cannot exceed 20 points."
