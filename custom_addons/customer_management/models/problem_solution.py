@@ -35,7 +35,7 @@ class ProblemSolution(models.Model):
     )
     new_branch_id = fields.Many2one(
         "res.company",
-        string="Current branch",
+        string="Branch",
         default=lambda self: self.env.company,
     )
     name = fields.Char(
@@ -56,6 +56,10 @@ class ProblemSolution(models.Model):
     )
     datetime = fields.Datetime(string="Date & Time", default=fields.Datetime.now)
     date = fields.Date(
+        string="Previous Date",
+        readonly=True,
+    )
+    new_date = fields.Date(
         string="Date",
         default=fields.Date.context_today,
         readonly=True,
@@ -162,6 +166,7 @@ class ProblemSolution(models.Model):
                 "photo": cr.photo,
                 "employee_id": cr.employee_id.id,
                 "branch_id": cr.branch_id.id,
+                "date": cr.date,
                 "assistant_staff": cr.assistant_staff.id,
                 "name": cr.name,
                 "phone": cr.phone,

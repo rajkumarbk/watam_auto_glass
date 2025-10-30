@@ -5,9 +5,10 @@
         <field name="model">problem.solution</field>
         <field name="arch" type="xml">
             <list decoration-warning="solution != False">
-                <field name="date" />
+                <field name="new_date" />
                 <field name="new_branch_id" />
                 <field name="employee_id" />
+                <field name="new_employee_id" />
                 <field name="vehicle_display" />
                 <field name="vehicle_number" />
                 <field name="name" />
@@ -36,6 +37,7 @@
                         <group
                             invisible="vehicle_record_id == False or status not in ('not_started','done')">
                             <field name="branch_id" readonly="1" class="input-field" />
+                            <field name="date" readonly="1" class="input-field" />
                             <field name="workplace" placeholder="Select workplace"
                                 class="input-field" />
                             <field name="employee_id"
