@@ -36,8 +36,8 @@
                         <!-- Before Work: visible only if vehicle selected and status not started -->
                         <group
                             invisible="vehicle_record_id == False or status not in ('not_started','done')">
-                            <field name="branch_id" readonly="1" class="input-field" />
-                            <field name="date" readonly="1" class="input-field" />
+                            <field name="branch_id" class="input-field" />
+                            <field name="date" class="input-field" />
                             <field name="workplace" placeholder="Select workplace"
                                 class="input-field" />
                             <field name="employee_id"

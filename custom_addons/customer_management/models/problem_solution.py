@@ -31,6 +31,7 @@ class ProblemSolution(models.Model):
     assistant_staff = fields.Many2one("hr.employee", string="Secondary Technician")
     branch_id = fields.Many2one(
         "res.company",
+        store=True,
         string="Previous branch",
     )
     new_branch_id = fields.Many2one(
@@ -57,7 +58,7 @@ class ProblemSolution(models.Model):
     datetime = fields.Datetime(string="Date & Time", default=fields.Datetime.now)
     date = fields.Date(
         string="Previous Date",
-        readonly=True,
+        store=True,
     )
     new_date = fields.Date(
         string="Date",
@@ -167,7 +168,6 @@ class ProblemSolution(models.Model):
                 "employee_id": cr.employee_id.id,
                 "branch_id": cr.branch_id.id,
                 "date": cr.date,
-                "assistant_staff": cr.assistant_staff.id,
                 "name": cr.name,
                 "phone": cr.phone,
                 "glass_destination": cr.glass_destination.id,
