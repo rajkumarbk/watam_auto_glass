@@ -1,0 +1,69 @@
+<!-- Employee Report for Customer Management -->
+<odoo>
+    <report
+        id="employee_report"
+        model="customer.record"
+        string="Employee Report"
+        report_type="qweb-pdf"
+        name="customer_management.employee_report"
+        file="customer_management.employee_report"
+    />
+    <template id="employee_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="customer_management.external_layout">
+                    <div class="page" style="font-size: 15px;font-family:  Arial, sans-serif !important;margin-left: 10px;margin-right: 10px;">
+                        <main>
+                            <br/>
+                            <t t-set="discount" t-value="0.0"/>
+                            <t t-set="price_subtotal" t-value="0.0"/>
+                            <table class="o_has_total_table table o_main_table table-borderless">
+                                 <thead style="display:table-header-group!important;">
+                                    <tr style="border-bottom: 1px solid black;page-break-inside: avoid!important;">
+                                        <th scope="col" width="10%" style="text-align: left;">
+                                            <strong style="font-family: Arial!important;">Total</strong>
+                                        </th>
+                                        <th scope="col" width="13%" style="text-align: left;">
+                                            <strong style="font-family: Arial!important;">Th 1</strong>
+                                        </th>
+                                        <th scope="col" width="17%" style="text-align: left;">
+                                            <strong style="font-family: Arial!important;">Th2</strong>
+                                        </th>
+                                        <th scope="col" width="8%" style="text-align: left;">
+                                            <strong style="font-family: Arial!important;">TH3</strong>
+                                        </th>
+                                        <th scope="col" width="8%" style="text-align: right;">
+                                            <strong style="font-family: Arial!important;">TH4</strong>
+                                        </th>
+                                        <th scope="col" width="34%" t-if="not is_pro_forma" style="text-align: right;">
+                                            <strong style="font-family: Arial!important;">Service Location</strong>
+                                        </th>
+                                        <th scope="col" width="20%" t-if="is_pro_forma" style="text-align: right;">
+                                            <strong style="font-family: Arial!important;">Employee Name</strong>
+                                        </th>
+                                        <th scope="col"  t-if="not is_pro_forma" style="text-align: right; width:200px; white-space: nowrap!important; ">
+                                            <strong style="font-family: Arial!important;">Branch Name</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Table body content can be added here -->
+                                </tbody>
+                            </table>
+                        </main>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_employee_report" model="ir.actions.report">
+        <field name="name">Employee Report</field>
+        <field name="model">customer.record</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">customer_management.employee_report</field>
+        <field name="binding_model_id" ref="model_customer_record" />
+        <field name="paperformat_id" ref="customer_management.paperformat_a4_potrait"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

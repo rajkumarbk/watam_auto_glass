@@ -22,6 +22,8 @@ Long description of module's purpose
         "data/problem_data.xml",
         "data/solution_data.xml",
         "data/service_data.xml",
+        "report/report_external_layout.xml",
+        "report/crm_employee_report.xml",
         "views/master_data/vehicle_brand.xml",
         "views/master_data/vehicle_model.xml",
         "views/master_data/vehicle_manufactured_year.xml",
