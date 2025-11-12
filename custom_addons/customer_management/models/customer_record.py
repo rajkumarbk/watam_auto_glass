@@ -173,7 +173,7 @@ class ClientRecord(models.Model):
             }
         )
         return {
-            "type": "ir.actions.act_window",
+            #"type": "ir.actions.act_window",
             "res_model": self._name,
             "view_mode": "list,form",
             "domain": [("status", "=", "done")],
