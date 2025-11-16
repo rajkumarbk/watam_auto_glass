@@ -17,6 +17,9 @@
                         background-color: #f0f0f0;
                         font-weight: bold;
                         }
+                        td, th {
+                        text-align: center;
+                        }
                     </style>
 
                     <table class="o_has_total_table table o_main_table bordered-table"
@@ -45,73 +48,73 @@
                                 <th width="12%" style="text-align: left;">
                                     <strong style="font-family: Arial;">Employee Name</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">BDL</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">BDR</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">FDL</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">FDR</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">FQL</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">FQR</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">FVL</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">FVR</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">LFW</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">RDL</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">RDR</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">RQL</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">RQR</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">SWL</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">SWR</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">SQL</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">SQR</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">RWH</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">RWL</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">RWM</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">RWR</strong>
                                 </th>
-                                <th width="4%" style="text-align: center;">
+                                <th width="4%">
                                     <strong style="font-family: Arial;">ROOF</strong>
                                 </th>
-                                <th width="6%" style="text-align: center;">
+                                <th width="6%">
                                     <strong style="font-family: Arial;">Total</strong>
                                 </th>
                             </tr>
@@ -130,179 +133,178 @@
                                     <td style="text-align: left;">
                                         <span t-esc="employee_name" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('BDL', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('BDR', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('FDL', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('FDR', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('FQL', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('FQR', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('FVL', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('FVR', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('LFW', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('RDL', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('RDR', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('RQL', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('RQR', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('SWL', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('SWR', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('SQL', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('SQR', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('RWH', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('RWL', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('RWM', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('RWR', 0)" />
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td>
                                         <span t-esc="glass_data.get('ROOF', 0)" />
                                     </td>
-                                    <td style="text-align: center; font-weight: bold;">
+                                    <td style="font-weight: bold;">
                                         <span t-esc="row_total" />
                                     </td>
                                 </tr>
                             </t>
                             <tr>
-                                <td style="text-align: center;">
+                                <td>
                                     <strong>Total</strong>
                                 </td>
 
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('BDL', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('BDR', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('FDL', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('FDR', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('FQL', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('FQR', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('FVL', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('FVR', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('LFW', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('RDL', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('RDR', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('RQL', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('RQR', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('SWL', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('SWR', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('SQL', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('SQR', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('RWH', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('RWL', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('RWM', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('RWR', 0) for d in employee_data.items()))" />
                                 </td>
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <span
                                         t-esc="sum((d[1].get('ROOF', 0) for d in employee_data.items()))" />
                                 </td>
 
-                                <td style="text-align: center; font-weight: bold;">
+                                <td style="font-weight: bold;">
                                     <strong>
                                         <span
                                             t-esc="sum((sum(v.values()) for v in (d[1] for d in employee_data.items())))" />
                                     </strong>
                                 </td>
                             </tr>
-
                         </tbody>
                     </table>
                 </div>
