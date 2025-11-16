@@ -3,11 +3,7 @@ from odoo.exceptions import ValidationError, UserError
 from datetime import datetime
 import pytz
 import re
-import requests
-import logging
 from odoo import models
-
-_logger = logging.getLogger(__name__)
 
 
 class ClientRecord(models.Model):
@@ -120,6 +116,22 @@ class ClientRecord(models.Model):
     )
     invoice_number = fields.Char(string="Invoice Number", required=True)
 
+    # For testing####
+    def action_employee_report_wizard(self):
+        """Open the employee report wizard"""
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Employee Report",
+            "res_model": "employee.report.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_branch_id": self.env.company.id,
+            },
+        }
+
+    ################################
+
     # Computed methods
     @api.depends("vehicle_brand", "vehicle_model", "manufactured_year_id")
     def _compute_vehicle_display(self):
@@ -173,7 +185,7 @@ class ClientRecord(models.Model):
             }
         )
         return {
-            #"type": "ir.actions.act_window",
+            "type": "ir.actions.act_window",
             "res_model": self._name,
             "view_mode": "list,form",
             "domain": [("status", "=", "done")],

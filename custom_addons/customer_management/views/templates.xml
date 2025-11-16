@@ -1,24 +1,21 @@
 <odoo>
   <data>
-    <!--
-        <template id="listing">
-          <ul>
-            <li t-foreach="objects" t-as="object">
-              <a t-attf-href="#{ root }/objects/#{ object.id }">
-                <t t-esc="object.display_name"/>
-              </a>
-            </li>
-          </ul>
-        </template>
-        <template id="object">
-          <h1><t t-esc="object.display_name"/></h1>
-          <dl>
-            <t t-foreach="object._fields" t-as="field">
-              <dt><t t-esc="field"/></dt>
-              <dd><t t-esc="object[field]"/></dd>
-            </t>
-          </dl>
-        </template>
--->
+    <record id="view_customer_record_list_inherit" model="ir.ui.view">
+      <field name="name">customer.record.list.inherit.print.button</field>
+      <field name="model">customer.record</field>
+      <field name="inherit_id" ref="customer_management.view_customer_record_list" />
+      <field name="arch" type="xml">
+        <xpath expr="//list" position="inside">
+          <header>
+            <button name="action_employee_report_wizard"
+              string="Print"
+              type="object"
+              class="btn-primary"
+              icon="fa-print"
+              display="always" />
+          </header>
+        </xpath>
+      </field>
+    </record>
   </data>
 </odoo>

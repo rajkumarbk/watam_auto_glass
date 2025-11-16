@@ -23,7 +23,7 @@ class EvaluationCriteria(models.Model):
     )
     date = fields.Date(string="Date", default=fields.Date.context_today, readonly=True)
     attendance_punctuality = fields.Float(
-        string="Attendance and Punctuality (20)", required=True
+        string="Attendance and Punctuality (20)", required=True, style="width: 33%"
     )
     work_quality = fields.Float(
         string="Work Quality and Installation Accuracy (30)", required=True

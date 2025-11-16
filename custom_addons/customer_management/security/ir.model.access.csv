@@ -43,3 +43,7 @@ access_what_solution_admin,access.what.solution,model_what_solution,group_custom
 access_problem_solution_user,access.problem.solution,model_problem_solution,base.group_user,1,0,0,0
 access_problem_solution_supervisor,access.problem.solution,model_problem_solution,group_customer_supervisor,1,1,1,0
 access_problem_solution_admin,access.problem.solution,model_problem_solution,group_customer_admin,1,1,1,1
+
+
+access_employee_report_wizard_supervisor,access.employee.report.wizard,model_employee_report_wizard,group_customer_supervisor,1,1,1,0
+access_employee_report_wizard_admin,access.employee.report.wizard,model_employee_report_wizard,group_customer_admin,1,1,1,1

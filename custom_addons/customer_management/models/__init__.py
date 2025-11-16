@@ -11,3 +11,4 @@ from .master_data import service_option
 from . import evaluation_criteria
 from . import customer_record
 from . import problem_solution
+from . import wizard_employee_report
