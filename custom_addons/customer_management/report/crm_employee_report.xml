@@ -6,16 +6,17 @@
                 <div class="page"
                     style="font-size: 15px;font-family: Arial, sans-serif !important;margin-left: 10px;margin-right: 10px;">
 
-
                     <style>
                         .bordered-table, .bordered-table th, .bordered-table td {
                         border: 1px solid black;
                         border-collapse: collapse;
                         padding: 5px;
+                        text-align: center;
                         }
                         .bordered-table th {
                         background-color: #f0f0f0;
                         font-weight: bold;
+                        text-align: center;
                         }
                         td, th {
                         text-align: center;
@@ -23,9 +24,11 @@
                     </style>
 
                     <table class="o_has_total_table table o_main_table bordered-table"
-                        style="width: 100%;">
+                        style="width: 100%; text-align: center;">
                         <thead style="display: table-header-group!important;">
                             <tr>
+                                <br></br>
+
                                 <div style="margin-bottom: 20px;">
                                     <strong
                                         style="font-family: Arial!important; font-size: 18px;">
@@ -42,85 +45,28 @@
                                             <span t-esc="date_from" />
                                         </t>
                                     </strong>
+
                                 </div>
                             </tr>
                             <tr style="page-break-inside: avoid!important;">
-                                <th width="12%" style="text-align: left;">
+                                <th width="12%" style="text-align: center;">
                                     <strong style="font-family: Arial;">Employee Name</strong>
                                 </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">BDL</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">BDR</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">FDL</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">FDR</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">FQL</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">FQR</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">FVL</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">FVR</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">LFW</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">RDL</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">RDR</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">RQL</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">RQR</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">SWL</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">SWR</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">SQL</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">SQR</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">RWH</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">RWL</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">RWM</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">RWR</strong>
-                                </th>
-                                <th width="4%">
-                                    <strong style="font-family: Arial;">ROOF</strong>
-                                </th>
-                                <th width="6%">
+
+                                <!-- Dynamic headers for active glass positions only -->
+                                <t t-foreach="active_glass_positions" t-as="glass_pos">
+                                    <th width="4%" style="text-align: center;">
+                                        <strong style="font-family: Arial;" t-esc="glass_pos" />
+                                    </th>
+                                </t>
+
+                                <th width="6%" style="text-align: center;">
                                     <strong style="font-family: Arial;">Total</strong>
                                 </th>
                             </tr>
                         </thead>
 
-                        <tbody>
+                        <tbody style="text-align: center;">
                             <t t-foreach="employee_data.items()" t-as="employee_item">
                                 <t t-set="employee_name" t-value="employee_item[0]" />
                                 <t t-set="glass_data" t-value="employee_item[1]" />
@@ -130,75 +76,17 @@
 
                                 <!-- Only show row if employee has done work -->
                                 <tr t-if="row_total > 0">
-                                    <td style="text-align: left;">
+                                    <td style="text-align: center;">
                                         <span t-esc="employee_name" />
                                     </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('BDL', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('BDR', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('FDL', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('FDR', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('FQL', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('FQR', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('FVL', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('FVR', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('LFW', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('RDL', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('RDR', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('RQL', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('RQR', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('SWL', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('SWR', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('SQL', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('SQR', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('RWH', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('RWL', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('RWM', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('RWR', 0)" />
-                                    </td>
-                                    <td>
-                                        <span t-esc="glass_data.get('ROOF', 0)" />
-                                    </td>
+
+                                    <!-- Dynamic columns for active glass positions only -->
+                                    <t t-foreach="active_glass_positions" t-as="glass_pos">
+                                        <td>
+                                            <span t-esc="glass_data.get(glass_pos, 0)" />
+                                        </td>
+                                    </t>
+
                                     <td style="font-weight: bold;">
                                         <span t-esc="row_total" />
                                     </td>
@@ -209,94 +97,13 @@
                                     <strong>Total</strong>
                                 </td>
 
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('BDL', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('BDR', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('FDL', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('FDR', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('FQL', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('FQR', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('FVL', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('FVR', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('LFW', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('RDL', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('RDR', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('RQL', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('RQR', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('SWL', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('SWR', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('SQL', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('SQR', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('RWH', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('RWL', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('RWM', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('RWR', 0) for d in employee_data.items()))" />
-                                </td>
-                                <td style="font-weight: bold;">
-                                    <span
-                                        t-esc="sum((d[1].get('ROOF', 0) for d in employee_data.items()))" />
-                                </td>
+                                <!-- Dynamic total columns for active glass positions only -->
+                                <t t-foreach="active_glass_positions" t-as="glass_pos">
+                                    <td style="font-weight: bold;">
+                                        <span
+                                            t-esc="sum((d[1].get(glass_pos, 0) for d in employee_data.items()))" />
+                                    </td>
+                                </t>
 
                                 <td style="font-weight: bold;">
                                     <strong>

@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-12">
                     <!-- <img class="img-fluid h-130px"
-                    src="/customer_management/static/img/header.png"
+                        src="/customer_management/static/img/header.png"
                         alt="Logo" /> -->
                 </div>
             </div>
@@ -45,7 +45,7 @@
         <field name="page_height">0</field>
         <field name="page_width">0</field>
         <field name="orientation">Landscape</field>
-        <field name="margin_top">30</field>
+        <field name="margin_top">35</field>
         <field name="margin_bottom">30</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
@@ -53,6 +53,4 @@
         <field name="header_spacing">40</field>
         <field name="dpi">90</field>
     </record>
-
-
 </odoo>

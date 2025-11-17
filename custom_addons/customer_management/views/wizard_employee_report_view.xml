@@ -9,6 +9,12 @@
                     <group>
                         <group string="Filters">
                             <field name="branch_id" required="1" />
+                            <field name="employee_ids" string="Employees"
+                                widget="many2many_tags"
+                                placeholder="Select or leave empty for all employees" />
+                            <field name="glass_destination_ids" string="Glass Positions"
+                                widget="many2many_tags"
+                                placeholder="Select or leave empty for all positions" />
                             <field name="use_date_filter" string="Filter by Date Range" />
                             <field name="date_from" required="use_date_filter"
                                 invisible="not use_date_filter" />
@@ -16,10 +22,6 @@
                                 invisible="not use_date_filter" />
                         </group>
                     </group>
-                    <div class="alert alert-info" role="alert" style="margin: 10px;"
-                        invisible="use_date_filter">
-                        <strong>Note:</strong> Report will include ALL records from the selected
-                        branch (no date filtering). </div>
                 </sheet>
                 <footer>
                     <button name="action_print_report" string="Generate Report" type="object"
