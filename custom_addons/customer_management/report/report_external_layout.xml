@@ -2,12 +2,12 @@
 <odoo>
     <!-- External Header Layout -->
     <template id="header_external_layout">
-        <div class="header" style="font-size: 11px;font-family: Arial !important;">
+        <div class="header" style="font-size: 11px;font-family: Arial !important; float: right;">
             <div class="row">
                 <div class="col-12">
-                    <!-- <img class="img-fluid h-130px"
-                        src="/customer_management/static/img/header.png"
-                        alt="Logo" /> -->
+                    <img class="img-fluid h-130px"
+                        src="/customer_management/static/img/header_salem.png"
+                        alt="Logo" />
                 </div>
             </div>
         </div>
@@ -46,7 +46,7 @@
         <field name="page_width">0</field>
         <field name="orientation">Landscape</field>
         <field name="margin_top">35</field>
-        <field name="margin_bottom">30</field>
+        <field name="margin_bottom">0</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
         <field name="header_line" eval="False" />
