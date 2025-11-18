@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- External Header Layout -->
+    <!-- External Header Layout with dynamic image using t-if/t-else -->
     <template id="header_external_layout">
         <div class="header" style="font-size: 11px;font-family: Arial !important; float: right;">
             <div class="row">
                 <div class="col-12">
-                    <img class="img-fluid h-130px"
-                        src="/customer_management/static/img/header_salem.png"
-                        alt="Logo" />
+                    <!-- Use t-if and t-else to dynamically select header image -->
+                    <t
+                        t-if="branch_name and any(code in branch_name for code in ['101','102','103','104','105','106','107','108','109','110'])">
+                        <img class="img-fluid h-130px"
+                            src="/customer_management/static/img/header_salem.png"
+                            alt="Salem Logo" />
+                    </t>
+                    <t t-else="">
+                        <img class="img-fluid h-130px"
+                            src="/customer_management/static/img/header_watam.png"
+                            alt="Watam Logo" />
+                    </t>
                 </div>
             </div>
         </div>
     </template>
 
-    <!-- External Layout - Simplified without company logic -->
+    <!-- External Layout -->
     <template id="external_layout">
         <t t-if="not o" t-set="o" t-value="doc" />
 
