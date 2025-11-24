@@ -2204,6 +2204,10 @@
         <field name="name">ZEUS</field>
         <field name="brand_id" ref="customer_management.vehicle_brand_toyota"/>
     </record>
+    <record id="vehicle_model_toyota_supra" model="vehicle.model">
+        <field name="name">SUPRA</field>
+        <field name="brand_id" ref="customer_management.vehicle_brand_toyota"/>
+    </record>
     <!-- Volkswagen Models -->
     <record id="vehicle_model_volkswagen_amarok" model="vehicle.model">
         <field name="name">AMAROK</field>
