@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="daily_attendance_view_tree_inherit" model="ir.ui.view">
+            <field name="name">daily.attendance.view.tree.inherit</field>
+            <field name="model">daily.attendance</field>
+            <field name="inherit_id" ref="hr_biometric_attendance.daily_attendance_view_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="inside">
+                    <header>
+                        <button name="print_attendance_report"
+                            string="Print"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-print"
+                            display="always" />
+                    </header>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

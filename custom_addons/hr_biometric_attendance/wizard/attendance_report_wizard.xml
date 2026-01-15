@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action to open the report wizard -->
+    <record id="action_attendance_report_wizard" model="ir.actions.act_window">
+        <field name="name">Attendance Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">attendance.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <!-- Change this to daily.attendance model since your button is there -->
+        <field name="binding_model_id" ref="model_daily_attendance"/>
+        <field name="binding_type">action</field>
+    </record>
+
+    <!-- Wizard for selecting report parameters -->
+    <record id="view_attendance_report_wizard_form" model="ir.ui.view">
+        <field name="name">attendance.report.wizard.form</field>
+        <field name="model">attendance.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Attendance Report">
+                <sheet>
+                    <group>
+                        <field name="employee_ids" widget="many2many_tags" required="1" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}" placeholder="Select Employee"/>
+                        <field name="start_date" required="1"/>
+                        <field name="end_date" required="1"/>
+                    </group>
+
+                </sheet>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="btn-primary" icon="fa-print"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Model access rights -->
+    <record id="access_attendance_report_wizard" model="ir.model.access">
+        <field name="name">attendance.report.wizard.access</field>
+        <field name="model_id" ref="model_attendance_report_wizard"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_read">1</field>
+        <field name="perm_write">1</field>
+        <field name="perm_create">1</field>
+        <field name="perm_unlink">1</field>
+    </record>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="external_layout">
+        <t t-if="not o" t-set="o" t-value="doc" />
+        
+        <t t-call="web.html_container">
+            <main>
+                <t t-raw="0" />
+            </main>
+        </t>
+    </template>
+
+    <record id="paperformat_a4_with_invoice" model="report.paperformat">
+        <field name="name">Perfonec Invoice A4</field>
+        <field name="default" eval="False" />
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">5</field>
+        <field name="dpi">90</field>
+    </record>
+</odoo>

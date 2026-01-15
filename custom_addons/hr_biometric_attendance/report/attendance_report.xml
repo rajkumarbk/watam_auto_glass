@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_attendance" model="ir.actions.report">
+        <field name="name">Attendance Report</field>
+        <field name="model">attendance.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr_biometric_attendance.attendance_report_template</field>
+        <field name="report_file">hr_biometric_attendance.attendance_report_template</field>
+        <field name="print_report_name">
+    'Attendance - %s - %s to %s' % (
+        (', '.join(object.employee_ids.mapped('name')) or 'All Employees'),
+        (object.start_date or ''),
+        (object.end_date or '')
+    )
+        </field>
+        <field name="paperformat_id" ref="hr_biometric_attendance.paperformat_minimal_margins"/>
+        <field name="binding_model_id" ref="hr_biometric_attendance.model_attendance_report_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="paperformat_minimal_margins" model="report.paperformat">
+        <field name="name">Attendance Report Minimal Margins</field>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <template id="attendance_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <!-- FIX: compute once -->
+                    <t t-set="attendance_data" t-value="o.get_attendance_data()"/>
+                    <t t-set="summary_data" t-value="o.get_summary_data()"/>
+
+                    <div class="page" style="padding: 0; margin: 0;">
+                        <!-- Header Image - WORKING VERSION -->
+                        <div style="width:100%; text-align:center; margin-bottom:10px;">
+                            <img t-attf-src="/hr_biometric_attendance/static/img/header_salem.png" style="max-height:110px; width:auto;" alt="Salem Logo"/>
+                        </div>
+
+                        <div style="margin: 5px 0;">
+                            <h1 style="text-align: center; margin: 0 0 5px 0; font-size: 20px;">Attendance Report</h1>
+                            <hr></hr>
+                            <div style="width: 100%; overflow: hidden; margin-bottom: 8px;">
+                                <div style="float: left; width: 33%; text-align: left;">
+                                    <p style="margin: 2px 0;">
+                                        <strong>Employee Name : </strong>
+                                        <span t-esc="', '.join(o.employee_ids.mapped('name')) if o.employee_ids else ''"/>
+                                    </p>
+
+                                    <p style="margin: 2px 0;">
+                                        <strong>ID Number : </strong>
+                                        <t t-if="len(o.employee_ids) == 1">
+                                            <span t-field="o.employee_ids.identification_id"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span>-</span>
+                                        </t>
+                                    </p>
+
+                                    <p style="margin: 2px 0;">
+                                        <strong>Device ID : </strong>
+                                        <t t-if="len(o.employee_ids) == 1">
+                                            <span t-esc="o.employee_ids.device_id_num or ''"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span>-</span>
+                                        </t>
+                                    </p>
+                                </div>
+
+                                <div style="float: left; width: 34%; text-align: center;">
+                                    <p style="margin: 2px 0;">
+                                        <strong>Period : </strong>
+                                        <span t-field="o.start_date" t-options='{"widget": "date"}'/>
+ To
+                                        <span t-field="o.end_date" t-options='{"widget": "date"}'/>
+                                    </p>
+                                </div>
+
+                                <div style="float: right; width: 33%; text-align: right;">
+                                    <p style="margin: 2px 0;">
+                                        <strong>Worked Hours : </strong>
+                                        <span t-esc="summary_data[0].get('worked_hours', 0) if summary_data else 0"/>
+                                    </p>
+                                    <p style="margin: 2px 0;">
+                                        <strong>Worked Days : </strong>
+                                        <span t-esc="summary_data[0].get('worked_days', 0) if summary_data else 0"/>
+                                    </p>
+                                    <p style="margin: 2px 0;">
+                                        <strong>Absent Days : </strong>
+                                        <span t-esc="summary_data[0].get('absent_count', 0) if summary_data else 0"/>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <table class="table table-bordered table-sm" style="width: 100%; border-collapse: collapse; font-size: 15px; text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Date</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Day</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Check In</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Check Out</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Absent</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Worked Hours</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-if="attendance_data">
+                                        <t t-foreach="attendance_data" t-as="record">
+                                            <tr>
+                                                <td style="border: 1px solid #000; padding: 4px;">
+                                                    <span t-esc="record.get('date', '')"/>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 4px;">
+                                                    <span t-esc="record.get('day', '')"/>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 4px;">
+                                                    <span t-esc="record.get('check_in', '')"/>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 4px;">
+                                                    <span t-esc="record.get('check_out', '')"/>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 4px;">
+                                                    <t t-if="record.get('absent') == 'Yes'">ABS</t>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 4px;">
+                                                    <span t-esc="record.get('total_hours', '')"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+
+                                    <t t-else="">
+                                        <tr>
+                                            <td colspan="6" style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                                No attendance records found.
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <div style="display: table; width: 100%; margin-top: 20px;">
+                                <div style="display: table-cell; width: 50%; text-align: left;">
+                                    <br/>
+                                    <br/>
+                                    _________________________<br/>
+                                    Signature of Employee
+                                </div>
+                                <div style="display: table-cell; width: 50%; text-align: right;">
+                                    <br/>
+                                    <br/>
+                                    _________________________<br/>
+                                    Signature of HR
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

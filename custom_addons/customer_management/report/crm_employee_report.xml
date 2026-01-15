@@ -3,8 +3,7 @@
     <template id="employee_report">
         <t t-call="web.html_container">
             <t t-call="customer_management.external_layout">
-                <div class="page"
-                    style="font-size: 15px;font-family: Arial, sans-serif !important;margin-left: 10px;margin-right: 10px;">
+                <div class="page" style="font-size: 15px;font-family: Arial, sans-serif !important;margin-left: 10px;margin-right: 10px;">
 
                     <style>
                         .bordered-table, .bordered-table th, .bordered-table td {
@@ -23,108 +22,103 @@
                         }
                     </style>
 
-                    <table class="o_has_total_table table o_main_table bordered-table"
-                        style="width: 100%; text-align: center;">
+                    <table class="o_has_total_table table o_main_table bordered-table" style="width: 100%; text-align: center;">
                         <thead style="display: table-header-group!important;">
                             <tr>
                                 <br></br>
 
                                 <div style="margin-bottom: 20px;">
-                                    <strong
-                                        style="font-family: Arial!important; font-size: 18px;">
+                                    <strong style="font-family: Arial!important; font-size: 18px;">
                                         Branch: <span t-esc="branch_name" />
                                     </strong>
                                     <br />
-                                    <strong
-                                        style="font-family: Arial!important; font-size: 16px;">
+                                    <strong style="font-family: Arial!important; font-size: 16px;">
                                         Period: <t t-if="use_date_filter and date_to">
-                                            <span t-esc="date_from" /> to <span t-esc="date_to" />
-                                        </t>
-                                             <t
-                                            t-else="">
-                                            <span t-esc="date_from" />
-                                        </t>
-                                    </strong>
-
-                                </div>
-                            </tr>
-                            <tr style="page-break-inside: avoid!important;">
-                                <th width="12%" style="text-align: center;">
-                                    <strong style="font-family: Arial;">Employee Name</strong>
-                                </th>
-
-                                <!-- Dynamic headers for active glass positions only -->
-                                <t t-foreach="active_glass_positions" t-as="glass_pos">
-                                    <th width="4%" style="text-align: center;">
-                                        <strong style="font-family: Arial;" t-esc="glass_pos" />
-                                    </th>
-                                </t>
-
-                                <th width="6%" style="text-align: center;">
-                                    <strong style="font-family: Arial;">Total</strong>
-                                </th>
-                            </tr>
-                        </thead>
-
-                        <tbody style="text-align: center;">
-                            <t t-foreach="employee_data.items()" t-as="employee_item">
-                                <t t-set="employee_name" t-value="employee_item[0]" />
-                                <t t-set="glass_data" t-value="employee_item[1]" />
-
-                                <!-- Calculate row total -->
-                                <t t-set="row_total" t-value="sum(glass_data.values())" />
-
-                                <!-- Only show row if employee has done work -->
-                                <tr t-if="row_total > 0">
-                                    <td style="text-align: center;">
-                                        <span t-esc="employee_name" />
-                                    </td>
-
-                                    <!-- Dynamic columns for active glass positions only -->
-                                    <t t-foreach="active_glass_positions" t-as="glass_pos">
-                                        <td>
-                                            <span t-esc="glass_data.get(glass_pos, 0)" />
-                                        </td>
+                                        <span t-esc="date_from" />
+ to <span t-esc="date_to" />
                                     </t>
+                                    <t t-else="">
+                                        <span t-esc="date_from" />
+                                    </t>
+                                </strong>
 
-                                    <td style="font-weight: bold;">
-                                        <span t-esc="row_total" />
-                                    </td>
-                                </tr>
+                            </div>
+                        </tr>
+                        <tr style="page-break-inside: avoid!important;">
+                            <th width="12%" style="text-align: center;">
+                                <strong style="font-family: Arial;">Employee Name</strong>
+                            </th>
+
+                            <!-- Dynamic headers for active glass positions only -->
+                            <t t-foreach="active_glass_positions" t-as="glass_pos">
+                                <th width="4%" style="text-align: center;">
+                                    <strong style="font-family: Arial;" t-esc="glass_pos" />
+                                </th>
                             </t>
-                            <tr>
-                                <td>
-                                    <strong>Total</strong>
+
+                            <th width="6%" style="text-align: center;">
+                                <strong style="font-family: Arial;">Total</strong>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody style="text-align: center;">
+                        <t t-foreach="employee_data.items()" t-as="employee_item">
+                            <t t-set="employee_name" t-value="employee_item[0]" />
+                            <t t-set="glass_data" t-value="employee_item[1]" />
+
+                            <!-- Calculate row total -->
+                            <t t-set="row_total" t-value="sum(glass_data.values())" />
+
+                            <!-- Only show row if employee has done work -->
+                            <tr t-if="row_total > 0">
+                                <td style="text-align: center;">
+                                    <span t-esc="employee_name" />
                                 </td>
 
-                                <!-- Dynamic total columns for active glass positions only -->
+                                <!-- Dynamic columns for active glass positions only -->
                                 <t t-foreach="active_glass_positions" t-as="glass_pos">
-                                    <td style="font-weight: bold;">
-                                        <span
-                                            t-esc="sum((d[1].get(glass_pos, 0) for d in employee_data.items()))" />
+                                    <td>
+                                        <span t-esc="glass_data.get(glass_pos, 0)" />
                                     </td>
                                 </t>
 
                                 <td style="font-weight: bold;">
-                                    <strong>
-                                        <span
-                                            t-esc="sum((sum(v.values()) for v in (d[1] for d in employee_data.items())))" />
-                                    </strong>
+                                    <span t-esc="row_total" />
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </t>
-        </t>
-    </template>
+                        </t>
+                        <tr>
+                            <td>
+                                <strong>Total</strong>
+                            </td>
 
-    <record id="action_report_employee" model="ir.actions.report">
-        <field name="name">Employee Report</field>
-        <field name="model">employee.report.wizard</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="report_name">customer_management.employee_report</field>
-        <field name="paperformat_id" ref="customer_management.paperformat_a4_potrait" />
-        <field name="binding_type">report</field>
-    </record>
+                            <!-- Dynamic total columns for active glass positions only -->
+                            <t t-foreach="active_glass_positions" t-as="glass_pos">
+                                <td style="font-weight: bold;">
+                                    <span t-esc="sum((d[1].get(glass_pos, 0) for d in employee_data.items()))" />
+                                </td>
+                            </t>
+
+                            <td style="font-weight: bold;">
+                                <strong>
+                                    <span t-esc="sum((sum(v.values()) for v in (d[1] for d in employee_data.items())))" />
+                                </strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+
+<record id="action_report_employee" model="ir.actions.report">
+    <field name="name">Employee Report</field>
+    <field name="model">employee.report.wizard</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">customer_management.employee_report</field>
+    <field name="paperformat_id" ref="customer_management.paperformat_a4_potrait" />
+    <field name="binding_type">report</field>
+</record>
 </odoo>
