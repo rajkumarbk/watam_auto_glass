@@ -3,34 +3,55 @@ from odoo import fields, models, tools
 
 class DailyAttendance(models.Model):
     """Model to hold data from the biometric device"""
-    _name = 'daily.attendance'
-    _description = 'Daily Attendance Report'
-    _auto = False
-    _order = 'punching_time desc'
 
-    employee_id = fields.Many2one('hr.employee', string='Employee',
-                                  help='Employee Name')
-    punching_day = fields.Datetime(string='Date', help='Date of punching')
-    address_id = fields.Many2one('res.partner', string='Working Address',
-                                 help='Working address of the employee')
-    attendance_type = fields.Selection([('1', 'Finger'), ('15', 'Face'),
-                                        ('2', 'Type_2'), ('3', 'Password'),
-                                        ('4', 'Card')], string='Category',
-                                       help='Attendance detecting methods')
-    punch_type = fields.Selection([('0', 'Check In'), ('1', 'Check Out'),
-                                   ('2', 'Break Out'), ('3', 'Break In'),
-                                   ('4', 'Overtime In'), ('5', 'Overtime Out')],
-                                  string='Punching Type',
-                                  help='The Punching Type of attendance')
-    punching_time = fields.Datetime(string='Punching Time',
-                                    help='Punching time in the device')
-    company_id = fields.Many2one('res.company', string='Company',
-                                 help="Name of the Company",
-                                 default=lambda self: self.env.company)
+    _name = "daily.attendance"
+    _description = "Daily Attendance Report"
+    _auto = False
+    _order = "punching_time desc"
+
+    employee_id = fields.Many2one(
+        "hr.employee", string="Employee", help="Employee Name"
+    )
+    punching_day = fields.Datetime(string="Date", help="Date of punching")
+    address_id = fields.Many2one(
+        "res.partner", string="Working Address", help="Working address of the employee"
+    )
+    attendance_type = fields.Selection(
+        [
+            ("1", "Finger"),
+            ("15", "Face"),
+            ("2", "Type_2"),
+            ("3", "Password"),
+            ("4", "Card"),
+        ],
+        string="Category",
+        help="Attendance detecting methods",
+    )
+    punch_type = fields.Selection(
+        [
+            ("0", "Check In"),
+            ("1", "Check Out"),
+            ("2", "Break Out"),
+            ("3", "Break In"),
+            ("4", "Overtime In"),
+            ("5", "Overtime Out"),
+        ],
+        string="Status",
+        help="The Punching Type of attendance",
+    )
+    punching_time = fields.Datetime(
+        string="Punching Date & Time", help="Punching time in the device"
+    )
+    company_id = fields.Many2one(
+        "res.company",
+        string="Company",
+        help="Name of the Company",
+        default=lambda self: self.env.company,
+    )
 
     def init(self):
         """Retrieve the data's for attendance report"""
-        tools.drop_view_if_exists(self._cr, 'daily_attendance')
+        tools.drop_view_if_exists(self._cr, "daily_attendance")
         query = """
                 create or replace view daily_attendance as (
                     select

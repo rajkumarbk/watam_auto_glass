@@ -7,25 +7,21 @@
         <field name="arch" type="xml">
             <list string="Attendance" create="false" delete="false">
                 <header>
-                    <button name="print_attendance_report" 
-                            type="object" 
-                            string="Print Report" 
-                            class="btn-primary"
-                            icon="fa-print"/>
+                    <button name="print_attendance_report" type="object" string="Print Report" class="btn-primary" icon="fa-print"/>
                 </header>
-                <field name="punching_day"/>
-                <field name="employee_id"/>
-                <field name="punch_type"/>
-                <field name="attendance_type"/>
-                <field name="punching_time"/>
-                <field name="address_id"/>
                 <field name="company_id"/>
+                <field name="employee_id"/>
+                <field name="punching_time"/>
+                <field name="punch_type" widget="badge" decoration-success="punch_type == '0'" decoration-danger="punch_type == '1'"/>
+                <!-- <field name="punching_day"/> -->
+                <!-- <field name="attendance_type"/> -->
+                <!-- <field name="address_id"/> -->
             </list>
         </field>
     </record>
     <!--    Attendance analysis action-->
     <record id="daily_attendance_action" model="ir.actions.act_window">
-        <field name="name">Attendance Analysis</field>
+        <field name="name">Attendance History</field>
         <field name="res_model">daily.attendance</field>
         <field name="view_mode">list</field>
         <field name="context">{}</field>

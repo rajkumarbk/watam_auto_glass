@@ -7,12 +7,7 @@
       <field name="arch" type="xml">
         <xpath expr="//list" position="inside">
           <header>
-            <button name="action_employee_report_wizard"
-              string="Print"
-              type="object"
-              class="btn-primary"
-              icon="fa-print"
-              display="always" />
+            <button name="action_employee_report_wizard" string="Print" type="object" class="btn-primary" icon="fa-print" display="always" />
           </header>
         </xpath>
       </field>
