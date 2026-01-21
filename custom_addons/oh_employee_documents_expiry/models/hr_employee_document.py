@@ -31,22 +31,33 @@ class HrEmployeeDocument(models.Model):
     _name = 'hr.employee.document'
     _description = 'HR Employee Documents'
 
-    name = fields.Char(string='Document Number', required=True, copy=False,
+    name = fields.Char(string='ID Number', required=True, copy=False,
                        help='You can give your Document number.')
+    nationality = fields.Many2one(
+        "res.country",
+        string="Nationality"
+    )
+    job_position = fields.Many2one(
+        "hr.job",
+        string="Job Position"
+    )
+    crn = fields.Char(string='CRN', copy=False,
+                      help='You can give your CRN number.')
     description = fields.Text(string='Description', copy=False,
                               help="Description of the documents.")
     expiry_date = fields.Date(string='Expiry Date', copy=False,
                               help="Expiry date of the documents.")
     employee_ref_id = fields.Many2one('hr.employee', invisible=1,
                                       copy=False,
-                                      help='Specify the employee name.')
+                                      help='Specify the employee name.', string=
+                                      'Employee Name')
     doc_attachment_ids = fields.Many2many('ir.attachment',
                                           'doc_attach_rel',
                                           'doc_id', 'attach_id3',
                                           string="Attachment",
                                           help='You can attach the copy of your'
                                                ' document', copy=False)
-    issue_date = fields.Date(string='Issue Date', default=fields.datetime.now(),
+    issue_date = fields.Date(string='Issue Date',
                              help="Date of issued", copy=False)
     document_type_id = fields.Many2one('document.type',
                                        string="Document Type",

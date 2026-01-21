@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="zkteco_device.list">
+      <field name="name">zkteco_device list</field>
+      <field name="model">zkteco_device.zkteco_device</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="zkteco_device.action_window">
+      <field name="name">zkteco_device window</field>
+      <field name="res_model">zkteco_device.zkteco_device</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="zkteco_device.action_server">
+      <field name="name">zkteco_device server</field>
+      <field name="model_id" ref="model_zkteco_device_zkteco_device"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="zkteco_device" id="zkteco_device.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="zkteco_device.menu_1" parent="zkteco_device.menu_root"/>
+    <menuitem name="Menu 2" id="zkteco_device.menu_2" parent="zkteco_device.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="zkteco_device.menu_1_list" parent="zkteco_device.menu_1"
+              action="zkteco_device.action_window"/>
+    <menuitem name="Server to list" id="zkteco_device" parent="zkteco_device.menu_2"
+              action="zkteco_device.action_server"/>
+-->
+  </data>
+</odoo>

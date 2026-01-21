@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Employee Form: add field after passport_id -->
+    <record id="view_hr_employee_form_inherit_passport_expiry" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.passport.expiry</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <!-- <xpath expr="//field[@name='passport_id']" position="after">
+                <field name="passport_expiry"/>
+            </xpath> -->
+            <xpath expr="//field[@name='department_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
