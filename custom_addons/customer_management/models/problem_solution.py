@@ -61,7 +61,8 @@ class ProblemSolution(models.Model):
         readonly=True,
     )
     photo = fields.Binary(string="Photo")
-    notes = fields.Text(string="Notes")
+    notes = fields.Text(string="Previous Notes")
+    new_notes = fields.Text(string="New Notes")
     problem = fields.Many2one("what.problem", string="Type of complaint", required=True)
     solution = fields.Many2one("what.solution", string="Solution", required=True)
     workplace = fields.Selection(

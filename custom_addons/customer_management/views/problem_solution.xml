@@ -62,7 +62,7 @@
                         <group invisible="status not in ('started','done')">
                             <field name="assistant_staff" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Assistant Staff" class="input-field" required="status in ['started']" />
                             <field name="photo" widget="capture_image" />
-                            <field name="notes" placeholder="New Notes..." />
+                            <field name="new_notes" placeholder="New Notes..." />
                         </group>
                     </group>
 
