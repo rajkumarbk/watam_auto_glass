@@ -47,6 +47,7 @@
                             <field name="phone" placeholder="Enter Customer's Contact Number" class="input-field" />
                             <field name="service_complexity" required="1" class="input-field" />
                             <field name="vehicle_number" placeholder="Enter Vehicle Number" class="input-field" />
+                            <field name="photo" widget="image" placeholder="Previous Photo" />
                             <field name="invoice_number" placeholder="Enter Invoice Number" class="input-field" />
                             <field name="new_branch_id" readonly="1" class="input-field" />
                             <field name="new_employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee" class="input-field" />

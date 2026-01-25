@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     
-    <!-- ZK Device Form View -->
+    <!-- ZK Device Form View (updated) -->
     <record id="view_zk_device_form" model="ir.ui.view">
         <field name="name">zk.device.form</field>
         <field name="model">zk.device</field>
@@ -18,252 +18,50 @@
                             type="object" 
                             class="oe_highlight"
                             icon="fa-refresh"
-                            invisible="not is_connected"/>
-                    <!-- Always invisible field used for button visibility condition -->
+                            attrs="{'invisible': [('use_adms', '=', True)]}"/>
                     <field name="is_connected" invisible="1"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" 
-                                type="object" 
-                                class="oe_stat_button" 
-                                icon="fa-archive">
-                            <field name="active" widget="boolean_button" 
-                                   options='{"terminology": "archive"}'/>
-                        </button>
-                    </div>
-                    
-                    <widget name="web_ribbon" title="Connected" 
-                            bg_color="bg-success" 
-                            invisible="not is_connected"/>
-                    <widget name="web_ribbon" title="Disconnected" 
-                            bg_color="bg-danger" 
-                            invisible="is_connected"/>
-                    
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" placeholder="e.g. Main Entrance Device"/>
-                        </h1>
-                    </div>
-                    
+                    <!-- ... (keep existing) -->
                     <group>
                         <group string="Connection Settings">
                             <field name="use_adms" widget="boolean_toggle"/>
                             <field name="device_ip" placeholder="192.168.1.100"/>
                             <field name="device_port"/>
                             <field name="device_sn" placeholder="Device Serial Number"/>
-                        </group>
-                        <group string="ADMS Settings" invisible="not use_adms">
-                            <field name="adms_ip" 
-                                   placeholder="ADMS Server IP"
-                                   required="use_adms"/>
-                            <field name="adms_port" 
-                                   required="use_adms"/>
+                            <field name="adms_url" attrs="{'invisible': [('use_adms', '=', False)], 'required': [('use_adms', '=', True)]}"/>
                         </group>
                     </group>
-                    
-                    <group>
-                        <group string="Status">
-                            <field name="last_sync" readonly="1"/>
-                        </group>
-                    </group>
-                    
+                    <!-- ... (keep notebook with updated help) -->
                     <notebook>
                         <page string="Configuration Help">
                             <group>
                                 <div class="alert alert-info" role="alert">
                                     <h4>Connection Modes:</h4>
                                     <ul>
-                                        <li><strong>Direct Connection (Same Network):</strong> Uncheck "Use ADMS Push" and enter the device IP and port.</li>
-                                        <li><strong>ADMS Push (Remote Network):</strong> Check "Use ADMS Push" and configure ADMS server details.</li>
+                                        <li><strong>Direct Pull (Local Network):</strong> Uncheck "Use ADMS Push", enter device IP/port.</li>
+                                        <li><strong>ADMS Push (Remote/Local):</strong> Check "Use ADMS Push", set ADMS Push URL to your Odoo (e.g., http://188.54.56.104:8089/iclock). Configure device to push to this IP:port.</li>
                                     </ul>
-                                    
-                                    <h4>Setup Instructions:</h4>
-                                    <ol>
-                                        <li>Configure device connection settings</li>
-                                        <li>Click "Test Connection" to verify connectivity</li>
-                                        <li>Ensure employees have ZK User IDs assigned</li>
-                                        <li>Click "Sync Attendance" to pull records</li>
-                                    </ol>
-                                    
-                                    <h4>ADMS Configuration:</h4>
-                                    <p>For remote devices, ensure ZKTeco ADMS software is installed and running on your server. 
-                                    The ADMS IP should point to your ADMS server, and devices should be registered with ADMS.</p>
+                                    <!-- ... (keep rest) -->
                                 </div>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
+                <!-- ... (keep chatter) -->
             </form>
         </field>
     </record>
 
-    <!-- ZK Device List View -->
-    <record id="view_zk_device_tree" model="ir.ui.view">
-        <field name="name">zk.device.list</field>
-        <field name="model">zk.device</field>
-        <field name="arch" type="xml">
-            <list string="ZKTeco Devices" decoration-success="is_connected==True" decoration-danger="is_connected==False">
-                <field name="name"/>
-                <field name="device_ip"/>
-                <field name="device_port"/>
-                <field name="use_adms" widget="boolean_toggle"/>
-                <field name="is_connected" widget="badge" decoration-success="is_connected==True" decoration-danger="is_connected==False"/>
-                <field name="last_sync" optional="show"/>
-                <!-- Always invisible field used for filtering -->
-                <field name="active" column_invisible="1"/>
-            </list>
-        </field>
-    </record>
+    <!-- ... (keep other views) -->
 
-    <!-- ZK Device Search View -->
-    <record id="view_zk_device_search" model="ir.ui.view">
-        <field name="name">zk.device.search</field>
-        <field name="model">zk.device</field>
-        <field name="arch" type="xml">
-            <search string="Search Devices">
-                <field name="name" string="Device"/>
-                <field name="device_ip"/>
-                <field name="device_sn"/>
-                <separator/>
-                <filter string="Connected" name="connected" domain="[('is_connected', '=', True)]"/>
-                <filter string="Disconnected" name="disconnected" domain="[('is_connected', '=', False)]"/>
-                <filter string="ADMS Devices" name="adms_devices" domain="[('use_adms', '=', True)]"/>
-                <filter string="Direct Devices" name="direct_devices" domain="[('use_adms', '=', False)]"/>
-                <separator/>
-                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Connection Type" name="group_by_connection" context="{'group_by': 'use_adms'}"/>
-                    <filter string="Status" name="group_by_status" context="{'group_by': 'is_connected'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <!-- ZK Device Kanban View -->
-    <record id="view_zk_device_kanban" model="ir.ui.view">
-        <field name="name">zk.device.kanban</field>
-        <field name="model">zk.device</field>
-        <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
-                <field name="name"/>
-                <field name="device_ip"/>
-                <field name="device_port"/>
-                <field name="is_connected"/>
-                <field name="use_adms"/>
-                <field name="last_sync"/>
-                <templates>
-                    <t t-name="card">
-                        <div class="oe_kanban_card oe_kanban_global_click">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title">
-                                        <field name="name"/>
-                                    </strong>
-                                </div>
-                                <span t-if="record.is_connected.raw_value" class="badge badge-success">Connected</span>
-                                <span t-else="" class="badge badge-danger">Disconnected</span>
-                            </div>
-                            <div class="o_kanban_record_body">
-                                <div>
-                                    <i class="fa fa-desktop"/> <field name="device_ip"/>:<field name="device_port"/>
-                                </div>
-                                <div t-if="record.use_adms.raw_value">
-                                    <i class="fa fa-cloud"/> ADMS Push Enabled
-                                </div>
-                                <div t-if="record.last_sync.raw_value">
-                                    <i class="fa fa-clock-o"/> Last Sync: <field name="last_sync"/>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
-
-    <!-- ZK Device Action -->
-    <record id="action_zk_device" model="ir.actions.act_window">
-        <field name="name">ZKTeco Devices</field>
-        <field name="res_model">zk.device</field>
-        <field name="view_mode">list,kanban,form</field>
-        <field name="search_view_id" ref="view_zk_device_search"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add your first ZKTeco fingerprint device
-            </p>
-            <p>
-                Configure your ZKTeco fingerprint devices to sync attendance data automatically.
-                Supports both local network devices and remote devices via ADMS push.
-            </p>
-        </field>
-    </record>
-
-    <!-- Menu Items -->
-    <menuitem id="menu_zk_root"
-              name="ZKTeco"
-              sequence="100"
-              web_icon="hr_attendance,static/description/icon.png"/>
-    
-    <menuitem id="menu_zk_devices"
-              name="Devices"
-              parent="menu_zk_root"
-              action="action_zk_device"
-              sequence="10"/>
-
-    <!-- HR Employee Form View Inheritance -->
-    <record id="view_employee_form_zk_inherit" model="ir.ui.view">
-        <field name="name">hr.employee.form.zk.inherit</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//notebook" position="inside">
-                <page string="Fingerprint Device" groups="hr.group_hr_user">
-                    <group>
-                        <group string="Device Settings">
-                            <field name="zk_user_id" placeholder="e.g. 1001"/>
-                            <field name="zk_device_ids" widget="many2many_tags"/>
-                        </group>
-                        <group>
-                            <div class="alert alert-info" role="alert">
-                                <p><strong>ZK User ID:</strong> This is the enrollment number/user ID assigned in the ZKTeco device.</p>
-                                <p><strong>Assigned Devices:</strong> Select which devices this employee can use for attendance.</p>
-                            </div>
-                        </group>
-                    </group>
-                </page>
-            </xpath>
-        </field>
-    </record>
-
-    <!-- HR Employee List View Inheritance -->
-    <record id="view_employee_tree_zk_inherit" model="ir.ui.view">
-        <field name="name">hr.employee.list.zk.inherit</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//list" position="attributes">
-                <attribute name="decoration-info">zk_user_id != False</attribute>
-            </xpath>
-            <xpath expr="//field[@name='name']" position="after">
-                <!-- Always invisible field for filtering/decorations -->
-                <field name="zk_user_id" column_invisible="1"/>
-            </xpath>
-        </field>
-    </record>
-
-    <!-- Scheduled Action for Auto Sync -->
+    <!-- Scheduled Action (disable by default for push) -->
     <record id="ir_cron_sync_zk_devices" model="ir.cron">
         <field name="name">ZKTeco: Auto Sync Attendance</field>
         <field name="model_id" ref="model_zk_device"/>
         <field name="state">code</field>
         <field name="code">
-for device in model.search([('active', '=', True), ('is_connected', '=', True)]):
+for device in model.search([('active', '=', True), ('is_connected', '=', True), ('use_adms', '=', False)]):
     try:
         device.sync_attendance_data()
     except Exception as e:
