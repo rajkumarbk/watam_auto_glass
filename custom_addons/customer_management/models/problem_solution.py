@@ -164,6 +164,7 @@ class ProblemSolution(models.Model):
                 "branch_id": cr.branch_id.id,
                 "assistant_staff": cr.assistant_staff.id,
                 "name": cr.name,
+                "notes": cr.notes,
                 "phone": cr.phone,
                 "glass_destination": cr.glass_destination.id,
                 "workplace": cr.workplace,
