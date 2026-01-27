@@ -31,7 +31,7 @@ class HrEmployeeDocument(models.Model):
     _name = 'hr.employee.document'
     _description = 'HR Employee Documents'
 
-    name = fields.Char(string='ID Number', required=True, copy=False,
+    name = fields.Char(string='Document Number', required=True, copy=False,
                        help='You can give your Document number.')
     nationality = fields.Many2one(
         "res.country",
@@ -41,8 +41,12 @@ class HrEmployeeDocument(models.Model):
         "hr.job",
         string="Job Position"
     )
-    crn = fields.Char(string='CRN', copy=False,
-                      help='You can give your CRN number.')
+    crn_id = fields.Many2one(
+    'crn.master',
+    string='CRN',
+    help='Select or create CRN'
+)
+
     description = fields.Text(string='Description', copy=False,
                               help="Description of the documents.")
     expiry_date = fields.Date(string='Expiry Date', copy=False,

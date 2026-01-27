@@ -1,19 +1,23 @@
-# -*- coding: utf-8 -*-
+from odoo import models, fields
 
-# from odoo import models, fields, api
+class LaptopRecords(models.Model):
+    _name="laptop.records"
+    _description="Laptop Records"
 
+    employee_id = fields.Many2one('hr.employee', string="Employee")
+    brand = fields.Char(string="Brand")
+    model = fields.Char(string="Model")
+    serial_number = fields.Char(string="Serial Number")
+    issue_date = fields.Date(string="Issue Date")
+    
+    
+class CarRecords(models.Model):
+    _name="car.records"
+    _description="Car Records"
 
-# class watam_customizations(models.Model):
-#     _name = 'watam_customizations.watam_customizations'
-#     _description = 'watam_customizations.watam_customizations'
-
-#     name = fields.Char()
-#     value = fields.Integer()
-#     value2 = fields.Float(compute="_value_pc", store=True)
-#     description = fields.Text()
-#
-#     @api.depends('value')
-#     def _value_pc(self):
-#         for record in self:
-#             record.value2 = float(record.value) / 100
-
+    employee_id = fields.Many2one('hr.employee', string="Employee")
+    brand = fields.Char(string="Brand")
+    model = fields.Char(string="Model")
+    plate_number = fields.Char(string="Plate Number")
+    vin_number = fields.Char(string="VIN Number")
+    issue_date = fields.Date(string="Issue Date")

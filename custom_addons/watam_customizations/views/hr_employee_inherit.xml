@@ -2,22 +2,60 @@
 <odoo>
 
     <!-- Inherit Employee Form: add field after passport_id -->
-    <record id="view_hr_employee_form_inherit_passport_expiry" model="ir.ui.view">
-        <field name="name">hr.employee.form.inherit.passport.expiry</field>
+    <record id="view_hr_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
 
-            <!-- <xpath expr="//field[@name='passport_id']" position="after">
+            <xpath expr="//field[@name='passport_id']" position="after">
                 <field name="passport_expiry"/>
-            </xpath> -->
-            <xpath expr="//field[@name='department_id']" position="attributes">
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Equipment" name="equipment">
+                    <group>
+                            <field name="is_laptop" />
+                            <field name="laptop_records_ids" nolabel="1"
+                             options="{'no_create': True, 'no_edit': True, 'no_view': True}" invisible="is_laptop==False">
+                             <list editable="bottom">
+                                <field name="brand"/>
+                                <field name="model"/>
+                                <field name="serial_number"/>
+                                <field name="issue_date"/>
+                             </list>
+                            </field>
+                            <field name="is_car" />
+                        </group>
+                        <group>
+                            <field name="car_records_ids" nolabel="1"
+                             options="{'no_create': True, 'no_edit': True, 'no_view': True}" invisible="is_car==False">
+                             <list editable="bottom">
+                                <field name="brand"/>
+                                <field name="model"/>
+                                <field name="plate_number"/>
+                                <field name="vin_number"/>
+                                <field name="issue_date"/>
+                             </list>
+                           </field>
+                        </group>
+                </page>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Financial Information" name="financial_information">
+                    <group>
+                        <field name="bank_account_id"/>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='parent_id']" position="attributes">
+            <xpath expr="//group[@name='emergency']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-
+            <xpath expr="//field[@name='job_id']" position="attributes">
+                <attribute name="domain">[]</attribute>
+            </xpath>
         </field>
     </record>
 

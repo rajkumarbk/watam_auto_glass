@@ -22,8 +22,8 @@ Long description of module's purpose
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
-        # 'views/views.xml',
+        'security/ir.model.access.csv',
+        'views/views.xml',
         'views/hr_employee_inherit.xml',
         'views/hr_contract_inherit.xml',
         # 'views/templates.xml',

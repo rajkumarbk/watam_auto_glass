@@ -27,7 +27,7 @@
                             <field name="employee_ref_id" placeholder="Select Employee"/>
                             <field name="nationality" placeholder="Select Nationality" options="{'no_create': True, 'no_create_edit': True}"/>
                             <field name="job_position" placeholder="Select Job Position" options="{'no_create': True, 'no_create_edit': True}"/>
-                            <field name="crn" placeholder="Enter CRN"/>
+                            <field name="crn_id" placeholder="Enter CRN"/>
                             <field name="document_type_id" placeholder="Select Document Type"/>
                             <field name="name" placeholder="Enter id number"/>
                         </group>
