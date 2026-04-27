@@ -16,6 +16,8 @@
                 <field name="company_id" groups="base.group_multi_company"
                        options="{'no_create': True}"/>
                 <field name="payslip_run_id" invisible="1"/>
+                <!-- ADDED: Overtime hours field in tree view -->
+                <field name="overtime_hours" string="OT Hours"/>
             </list>
         </field>
     </record>
@@ -51,6 +53,12 @@
                                         <field name="name"/>
                                     </span>
                                 </div>
+                                <!-- ADDED: Overtime hours in kanban view -->
+                                <div class="col-12">
+                                    <span>
+                                        OT Hours: <field name="overtime_hours"/>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </t>
@@ -72,6 +80,8 @@
                         domain="[('state','=','done')]" help="Done Slip"/>
                 <field name="employee_id"/>
                 <field name="payslip_run_id"/>
+                <!-- ADDED: Overtime hours in search -->
+                <field name="overtime_hours" string="Overtime Hours"/>
                 <group expand="0" string="Group By">
                     <filter string="Employees" name="employee_id"
                             context="{'group_by':'employee_id'}"/>

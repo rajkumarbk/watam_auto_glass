@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Add Department field to Job Position form -->
+        <record id="view_hr_job_form_inherit_department" model="ir.ui.view">
+            <field name="name">hr.job.form.inherit.department</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="hr.view_hr_job_form"/>
+            <field name="arch" type="xml">
+                <!-- Add department field after company_id or at the top of the form -->
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="department_id" options="{'no_create': True}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

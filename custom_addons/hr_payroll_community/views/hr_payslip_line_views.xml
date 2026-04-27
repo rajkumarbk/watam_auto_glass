@@ -139,6 +139,9 @@
                         <field name="struct_id" readonly="state != 'draft'"/>
                         <field name="name" readonly="state != 'draft'"/>
                         <field name="credit_note" readonly="state != 'draft'"/>
+                        <!-- ADDED: Overtime hours field -->
+                        <field name="overtime_hours" string="Total Overtime Hours" 
+                               readonly="state != 'draft'"/>
                     </group>
                     <notebook>
                         <page string="Worked Days &amp; Inputs">

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_department_form_inherit_custom" model="ir.ui.view">
+        <field name="name">hr.department.form.inherit.custom</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="department_sequence" />
+                <style>
+                    .o_form_label {
+                    white-space: nowrap !important;
+                    }
+                </style>
+            </xpath>
+
+        </field>
+    </record>
+    <record id="view_hr_department_list_inherit_custom" model="ir.ui.view">
+        <field name="name">hr.department.list.inherit.custom</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="department_sequence" width="150%" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

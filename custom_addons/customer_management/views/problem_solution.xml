@@ -78,9 +78,9 @@
                             <field name="new_employee_id"
                                 options="{'no_create': True, 'no_create_edit': True}"
                                 placeholder="Select Employee" class="input-field" />
-                            <field name="problem" placeholder="Select the type of complaint"
+                            <field name="problem" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select the type of complaint"
                                 class="input-field" />
-                            <field name="solution" placeholder="Select the Solution"
+                            <field name="solution" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select the Solution"
                                 domain="[('problem_id','=',problem)]" class="input-field" />
                         </group>
                     </group>

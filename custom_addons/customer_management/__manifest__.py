@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
     "name": "CRM - Customer Management",
-    "summary": "Short (1 phrase/line) summary of the module's purpose",
+    "summary": "To store and manage customer information, including their vehicles, problems, solutions, and evaluations.",
     "description": """
 Long description of module's purpose
     """,
     "author": "Watam And Salem",
-    "category": "Human Resource",
+    "category": "Human Resources/Employees",
     "version": "0.1",
     "sequence": 1,
     # any module necessary for this one to work correctly
@@ -26,6 +26,7 @@ Long description of module's purpose
         "report/crm_employee_report.xml",
         "views/master_data/vehicle_brand.xml",
         "views/master_data/vehicle_model.xml",
+        "views/master_data/service_option.xml",
         "views/master_data/vehicle_manufactured_year.xml",
         "views/master_data/vehicle_glass.xml",
         "views/master_data/what_problem.xml",

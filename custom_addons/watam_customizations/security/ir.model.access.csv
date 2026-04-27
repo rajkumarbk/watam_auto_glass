@@ -1,3 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_laptop_records,laptop.records,model_laptop_records,base.group_user,1,1,1,1
 access_car_records,car.records,model_car_records,base.group_user,1,1,1,1
+access_other_records,other.records,model_other_records,base.group_user,1,1,1,1
+access_asset_details,asset.details,model_asset_details,base.group_user,1,1,1,1
+access_asset_return,asset.return,model_asset_return,base.group_user,1,1,1,1
+access_equipment_record,equipment.record,model_equipment_record,base.group_user,1,1,1,1
+access_crn_master_hr_manager,access.crn.master.hr.manager,model_crn_master,hr.group_hr_manager,1,1,1,1

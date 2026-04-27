@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <record id="hr_leave_refuse_reason_wizard_form" model="ir.ui.view">
+      <field name="name">hr.leave.refuse.reason.wizard.form</field>
+      <field name="model">hr.leave.refuse.reason.wizard</field>
+      <field name="arch" type="xml">
+        <form string="Refuse Leave Request">
+          <sheet>
+            <group>
+              <field name="leave_ids" invisible="1"/>
+              <field name="reason" placeholder="Please enter a reason for refusing this leave request..." nolabel="1" style="min-height: 100px;"/>
+            </group>
+          </sheet>
+          <footer>
+            <button name="action_confirm_refuse" string="Refuse" type="object" class="btn-danger" data-hotkey="v"/>
+            <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+  </data>
+</odoo>

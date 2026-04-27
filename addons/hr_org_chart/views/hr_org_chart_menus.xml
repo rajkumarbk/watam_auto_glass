@@ -6,7 +6,7 @@
         name="Org Chart"
         action="action_hr_employee_org_chart"
         groups="hr.group_hr_user"
-        parent="hr.menu_hr_employee_payroll"
+        parent="hr.menu_hr_root"
         sequence="5"
     />
 

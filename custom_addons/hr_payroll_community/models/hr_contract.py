@@ -20,7 +20,7 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HrContract(models.Model):
@@ -34,6 +34,8 @@ class HrContract(models.Model):
     struct_id = fields.Many2one('hr.payroll.structure',
                                 string='Salary Structure',
                                 help="Choose Payroll Structure")
+    payroll_type = fields.Selection([('fixed', 'Fixed'), ('attendances', 'Attendances'),('daily_wage', 'Daily Wage')], 
+                                    string="Payroll Type", default='daily_wage')
     schedule_pay = fields.Selection([
         ('monthly', 'Monthly'),
         ('quarterly', 'Quarterly'),
@@ -55,6 +57,97 @@ class HrContract(models.Model):
                                         help="Medical allowance")
     other_allowance = fields.Monetary(string="Other Allowance",
                                       help="Other allowances")
+    # ADDED: Hourly wage field for attendance-based payroll
+    hourly_wage = fields.Monetary(string="Hourly Wage", 
+                                  help="Hourly wage for attendance-based payroll",
+                                  compute='_compute_hourly_wage',
+                                  store=True)
+    daily_wage = fields.Monetary(string="Daily Wage", 
+                                 help="Daily wage for daily wage-based payroll",
+                                 compute='_compute_daily_wage',
+                                 store=True)
+    
+    @api.depends('wage', 'hra', 'da', 'travel_allowance', 
+                 'meal_allowance', 'medical_allowance', 'other_allowance',
+                 'payroll_type', 'resource_calendar_id')
+    def _compute_hourly_wage(self):
+        """Compute hourly wage based on total monthly compensation / (working_days_per_month * working_hours_per_day)"""
+        for contract in self:
+            if contract.payroll_type == 'attendances':
+                # Calculate total monthly compensation
+                total_monthly = contract.wage
+                total_monthly += contract.hra or 0
+                total_monthly += contract.da or 0
+                total_monthly += contract.travel_allowance or 0
+                total_monthly += contract.meal_allowance or 0
+                total_monthly += contract.medical_allowance or 0
+                total_monthly += contract.other_allowance or 0
+                
+                # Get working days per month
+                working_days_per_month = self._get_working_days_per_month(contract)
+                # Get working hours per day from calendar
+                working_hours_per_day = self._get_working_hours_per_day(contract)
+                
+                # Calculate hourly wage: monthly total / (working_days_per_month * working_hours_per_day)
+                if working_days_per_month > 0 and working_hours_per_day > 0:
+                    contract.hourly_wage = total_monthly / (working_days_per_month * working_hours_per_day) if total_monthly else 0.0
+                else:
+                    contract.hourly_wage = 0.0
+            else:
+                contract.hourly_wage = 0.0
+    
+    def _get_working_hours_per_day(self, contract):
+        """Get average working hours per day from the calendar"""
+        if contract.resource_calendar_id:
+            calendar = contract.resource_calendar_id
+            # Calculate average hours per day
+            total_weekly_hours = 0
+            for attendance in calendar.attendance_ids:
+                total_weekly_hours += attendance.hour_to - attendance.hour_from
+            
+            # Get number of working days per week
+            working_days_per_week = len(set(attendance.dayofweek for attendance in calendar.attendance_ids))
+            
+            if working_days_per_week > 0:
+                return total_weekly_hours / working_days_per_week
+        
+        # Default to 8 hours if no calendar or no attendances
+        return 8.0
+    
+    @api.depends('wage', 'hra', 'da', 'travel_allowance', 
+                 'meal_allowance', 'medical_allowance', 'other_allowance',
+                 'payroll_type')
+    def _compute_daily_wage(self):
+        """Compute daily wage based on total monthly compensation / 30 days"""
+        for contract in self:
+            if contract.payroll_type == 'daily_wage':
+                # Calculate total monthly compensation
+                total_monthly = contract.wage
+                total_monthly += contract.hra or 0
+                total_monthly += contract.da or 0
+                total_monthly += contract.travel_allowance or 0
+                total_monthly += contract.meal_allowance or 0
+                total_monthly += contract.medical_allowance or 0
+                total_monthly += contract.other_allowance or 0
+                
+                # FIXED: Daily wage = total monthly compensation / 30 days
+                # NOT divided by working days per month
+                contract.daily_wage = total_monthly / 30.0 if total_monthly else 0.0
+            else:
+                contract.daily_wage = 0.0
+    
+    def _get_working_days_per_month(self, contract):
+        """Get average working days per month from the calendar"""
+        if contract.resource_calendar_id:
+            calendar = contract.resource_calendar_id
+            # Get number of working days per week
+            working_days_per_week = len(set(attendance.dayofweek for attendance in calendar.attendance_ids))
+            
+            # Calculate average working days per month (approximately 4.33 weeks per month)
+            return working_days_per_week * 4.33
+        
+        # Default to 22 days per month (5 days/week * 4.33 weeks)
+        return 22.0
 
     def get_all_structures(self):
         """

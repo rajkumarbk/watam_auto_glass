@@ -20,8 +20,15 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="currency_id" invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='resource_calendar_id']"
+            <xpath expr="//field[@name='contract_type_id']"
                    position="after">
+                <field name="payroll_type" widget="radio"/>
+                <field name="hourly_wage" widget="monetary" 
+                       readonly="True"
+                       />
+                <field name="daily_wage" widget="monetary" 
+                       readonly="True"
+                      />
                 <field name="schedule_pay"/>
             </xpath>
             <xpath expr="//group[@name='salary']" position="after">
@@ -38,25 +45,21 @@
                     </div>
                     <label for="travel_allowance"/>
                     <div class="o_row">
-
                         <field name="travel_allowance" nolabel="1"/>
                         <span>/ month</span>
                     </div>
                     <label for="meal_allowance"/>
                     <div class="o_row">
-
                         <field name="meal_allowance" nolabel="1"/>
                         <span>/ month</span>
                     </div>
                     <label for="medical_allowance"/>
                     <div class="o_row">
-
                         <field name="medical_allowance" nolabel="1"/>
                         <span>/ month</span>
                     </div>
                     <label for="other_allowance"/>
                     <div class="o_row">
-
                         <field name="other_allowance" nolabel="1"/>
                         <span>/ month</span>
                     </div>

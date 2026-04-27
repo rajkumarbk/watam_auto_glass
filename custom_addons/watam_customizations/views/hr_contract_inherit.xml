@@ -9,7 +9,18 @@
 
             <xpath expr="//field[@name='employee_id']" position="after">
                 <field name="joined_date"/>
-                <field name="crn" />
+            </xpath>
+            <xpath expr="//field[@name='joined_date']" position="after">
+                <field name="employee_parent_id"/>
+            </xpath>
+            <xpath expr="//field[@name='date_end']" position="after">
+                <field name="probation_period"/>
+                <field name="reason_for_termination" />
+            </xpath>
+            <xpath expr="//field[@name='contract_type_id']" position="after">
+                <field name="contract_duration"/>
+                <field name="work_location"/>
+                <field name="write_date" string="Last Updated On" readonly="1"/>
             </xpath>
             <!-- <xpath expr="//field[@name='struct_id']" position="attributes">
                 <attribute name="invisible">1</attribute>

@@ -66,7 +66,7 @@ class HrEmployeeDocument(models.Model):
     document_type_id = fields.Many2one('document.type',
                                        string="Document Type",
                                        help="Type of the document.")
-    before_days = fields.Integer(string="Days",
+    before_days = fields.Integer(string="Days", default=60,
                                  help="How many number of days before to get "
                                       "the notification email.")
     notification_type = fields.Selection([
@@ -75,6 +75,7 @@ class HrEmployeeDocument(models.Model):
         ('everyday', 'Everyday till expiry date'),
         ('everyday_after', 'Notification on and after expiry')
     ], string='Notification Type',
+        default='multi',
         help="Select type of the documents expiry notification.")
 
     def mail_reminder(self):
@@ -108,20 +109,26 @@ class HrEmployeeDocument(models.Model):
                 employee_name = record.employee_ref_id.name
                 document_name = record.name
                 expiry_date_str = str(record.expiry_date)
+
                 mail_content = (
-                    f"Hello {employee_name},<br>Your Document {document_name} "
-                    f"is going to expire on {expiry_date_str}. "
-                    "Please renew it before the expiry date."
+                    f"Hello HR,<br>"
+                    f"The document <b>{document_name}</b> for employee "
+                    f"<b>{employee_name}</b> is going to expire on "
+                    f"<b>{expiry_date_str}</b>.<br>"
+                    "Please take the necessary action."
                 )
-                subject = _('Document-%s Expired On %s') % (
-                    document_name, expiry_date_str)
-                main_content = {
+
+                subject = _('Document Expiry Reminder: %s') % document_name
+
+                mail_values = {
                     'subject': subject,
                     'author_id': self.env.user.partner_id.id,
                     'body_html': mail_content,
-                    'email_to': record.employee_ref_id.work_email,
+                    'email_to': 'hr@ahmedalsalem.com',
                 }
-                self.env['mail.mail'].create(main_content).send()
+
+                self.env['mail.mail'].create(mail_values).send()
+
 
     @api.constrains('expiry_date')
     def _check_expiry_date(self):

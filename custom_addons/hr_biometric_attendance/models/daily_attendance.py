@@ -49,6 +49,14 @@ class DailyAttendance(models.Model):
         default=lambda self: self.env.company,
     )
 
+    def _search(self, domain, offset=0, limit=None, order=None):
+        if not (
+            self.env.user.has_group("base.group_system")
+            or self.env.user.has_group("hr_attendance.group_hr_attendance_manager")
+        ):
+            domain = [("employee_id.user_id", "=", self.env.uid)] + (domain or [])
+        return super()._search(domain, offset=offset, limit=limit, order=order)
+
     def init(self):
         """Retrieve the data's for attendance report"""
         tools.drop_view_if_exists(self._cr, "daily_attendance")

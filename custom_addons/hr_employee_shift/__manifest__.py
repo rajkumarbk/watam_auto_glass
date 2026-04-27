@@ -27,7 +27,7 @@
     'description': """It helps manage and track employee shifts and schedule 
         them according to their contracts and work requirements.""",
     'live_test_url': 'https://youtu.be/o580wqD9Nig',
-    'category': 'Human Resource',
+    'category': 'Human Resources',
     'author': 'Cybrosys Techno solutions,Open HRMS',
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',

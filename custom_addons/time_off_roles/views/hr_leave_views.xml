@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <record id="hr_leave_form_custom" model="ir.ui.view">
+      <field name="name">hr.leave.form.custom</field>
+      <field name="model">hr.leave</field>
+      <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+      <field name="priority">20</field>
+      <field name="arch" type="xml">
+
+        <!-- Hide the native Odoo state bar — we use approval_state instead -->
+        <xpath expr="//header//field[@name='state']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <!-- Hide native Reset button — replaced by our action_reset_to_draft -->
+        <xpath expr="//header//button[@name='action_reset_confirm']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <!-- Hide native Approve button — replaced by role-specific approval buttons -->
+        <xpath expr="//header//button[@name='action_approve']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <!-- Hide native Refuse button — replaced by wizard-based refusal -->
+        <xpath expr="//header//button[@name='action_refuse']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <!-- Fields become read-only after draft -->
+        <xpath expr="//field[@name='request_date_from']" position="attributes">
+          <attribute name="readonly">approval_state != 'draft'</attribute>
+        </xpath>
+        <xpath expr="//field[@name='request_date_to']" position="attributes">
+          <attribute name="readonly">approval_state != 'draft'</attribute>
+        </xpath>
+        <xpath expr="//field[@name='name']" position="attributes">
+          <attribute name="readonly">approval_state != 'draft'</attribute>
+        </xpath>
+        <xpath expr="//field[@name='supported_attachment_ids']" position="attributes">
+          <attribute name="invisible">approval_state != 'draft'</attribute>
+        </xpath>
+
+        <!-- ================================================================
+             Custom header: status bar + role-gated approval buttons
+
+             APPROVAL FLOWS (driven by requester_role stored at submit time):
+             ┌─────────────────┬──────────────────────────────────────────────────────┐
+             │ Requester       │ Flow                                                 │
+             ├─────────────────┼──────────────────────────────────────────────────────┤
+             │ Employee        │ submitted → branch_approved → manager_approved → HR  │
+             │ Officer         │ submitted → manager_approved (respective) → HR       │
+             │ Branch Manager  │ submitted → manager_approved → HR                    │
+             │ Manager         │ submitted → ceo_approved → HR                        │
+             │ HR              │ submitted → ceo_approved → HR (self-approves)        │
+             └─────────────────┴──────────────────────────────────────────────────────┘
+
+             BUTTON VISIBILITY RULES (each button has TWO guards):
+               1. approval_state must be exactly the state where this role acts
+               2. groups= restricts to the correct role group
+             → Button is invisible at every other state — the role cannot act
+               before their turn or after they have already approved.
+
+             REFUSE BUTTON:
+               Hidden once any approval step has occurred (state != 'submitted').
+               Exception: HR can refuse at any pending stage.
+        ================================================================ -->
+        <xpath expr="//header/field[@name='state']" position="after">
+
+          <!-- Status bar — all stages shown so progress is always visible -->
+          <field name="approval_state" widget="statusbar" statusbar_visible="draft,submitted,branch_approved,manager_approved,ceo_approved,hr_approved,approved"/>
+
+          <!-- ── SUBMIT ─────────────────────────────────────────────────── -->
+          <button name="action_submit" string="Submit" type="object" class="btn-primary" invisible="approval_state != 'draft'" confirm="Submit this time off request for approval?"/>
+
+          <!-- ── BRANCH MANAGER APPROVE ────────────────────────────────── -->
+          <!--
+            Visible only when:
+              • state = 'submitted'           (employee just submitted)
+              • requester_role = 'employee'   (BM step skipped for other roles)
+              • user is in branch_manager group
+          -->
+          <button name="action_approve_branch_manager" string="Approve" type="object" class="btn-primary" invisible="approval_state != 'submitted' or requester_role != 'employee'" groups="time_off_roles.group_timeoff_branch_manager" confirm="Approve this leave request as Branch Manager?"/>
+
+          <!-- ── MANAGER APPROVE (Employee flow) ───────────────────────── -->
+          <!--
+            Visible only when:
+              • state = 'branch_approved'     (Branch Manager already approved)
+              • requester_role = 'employee'
+              • user is in manager group
+          -->
+          <button name="action_approve_manager" string="Approve" type="object" class="btn-primary" invisible="approval_state != 'branch_approved' or requester_role != 'employee'" groups="time_off_roles.group_timeoff_manager" confirm="Approve this leave request as Manager?"/>
+
+          <!-- ── MANAGER APPROVE (Officer flow - RESPECTIVE MANAGER ONLY) ─ -->
+          <!--
+            Visible only when:
+              • state = 'submitted'              (Officer flow skips Branch Manager)
+              • requester_role = 'officer'
+              • user is in manager group
+              NOTE: Backend will verify user is the respective manager (parent_id)
+          -->
+          <button name="action_approve_manager" string="Approve" type="object" class="btn-primary" invisible="approval_state != 'submitted' or requester_role != 'officer'" groups="time_off_roles.group_timeoff_manager" confirm="Approve this leave request as Manager?"/>
+
+          <!-- ── MANAGER APPROVE (Branch Manager flow) ─────────────────── -->
+          <!--
+            Visible only when:
+              • state = 'submitted'              (BM step is skipped for this flow)
+              • requester_role = 'branch_manager'
+              • user is in manager group
+          -->
+          <button name="action_approve_manager" string="Approve" type="object" class="btn-primary" invisible="approval_state != 'submitted' or requester_role != 'branch_manager'" groups="time_off_roles.group_timeoff_manager" confirm="Approve this leave request as Manager?"/>
+
+          <!-- ── CEO APPROVE ────────────────────────────────────────────── -->
+          <!--
+            Visible only when:
+              • state = 'submitted'
+              • requester_role is 'manager' or 'hr'   (these roles skip BM & Manager)
+              • user is in CEO group
+          -->
+          <button name="action_approve_ceo" string="Approve" type="object" class="btn-primary" invisible="approval_state != 'submitted' or requester_role not in ('manager', 'hr')" groups="time_off_roles.group_timeoff_ceo" confirm="Approve this leave request as CEO?"/>
+
+          <!-- ── HR FINAL APPROVE ───────────────────────────────────────── -->
+          <!--
+            Visible only when:
+              • state = 'manager_approved'  (employee / officer / branch_manager flows)
+                OR
+                state = 'ceo_approved'      (manager / hr flows)
+              • user is in HR group
+            HR approves last in ALL flows, including their own leave requests.
+          -->
+          <button name="action_validate" string="Approve (Final)" type="object" class="btn-primary" invisible="approval_state not in ('manager_approved', 'ceo_approved')" groups="time_off_roles.group_timeoff_hr" confirm="Grant final HR approval for this leave request?"/>
+
+          <!-- ── REFUSE ─────────────────────────────────────────────────── -->
+          <!--
+            Each Refuse button mirrors its corresponding Approve button exactly:
+            same state condition + same group. This ensures Refuse is only visible
+            to the role whose turn it currently is, and disappears once they approve.
+
+            Branch Manager → only when state='submitted' AND requester='employee'
+            Manager        → when state='branch_approved' AND requester='employee'
+                             OR state='submitted'          AND requester='officer'
+                             OR state='submitted'          AND requester='branch_manager'
+            CEO            → only when state='submitted'  AND requester in ('manager','hr')
+            HR             → only when state in ('manager_approved','ceo_approved')
+          -->
+
+          <!-- Branch Manager: refuse only at their turn (employee requests at submitted) -->
+          <button name="action_refuse" string="Refuse" type="object" class="btn-danger" invisible="approval_state != 'submitted' or requester_role != 'employee'" groups="time_off_roles.group_timeoff_branch_manager" confirm="Are you sure you want to refuse this leave request?"/>
+
+          <!-- Manager: refuse at their turn — employee flow (branch_approved) -->
+          <button name="action_refuse" string="Refuse" type="object" class="btn-danger" invisible="approval_state != 'branch_approved' or requester_role != 'employee'" groups="time_off_roles.group_timeoff_manager" confirm="Are you sure you want to refuse this leave request?"/>
+
+          <!-- Manager: refuse at their turn — officer flow (submitted, respective manager only) -->
+          <button name="action_refuse" string="Refuse" type="object" class="btn-danger" invisible="approval_state != 'submitted' or requester_role != 'officer'" groups="time_off_roles.group_timeoff_manager" confirm="Are you sure you want to refuse this leave request?"/>
+
+          <!-- Manager: refuse at their turn — branch_manager flow (submitted) -->
+          <button name="action_refuse" string="Refuse" type="object" class="btn-danger" invisible="approval_state != 'submitted' or requester_role != 'branch_manager'" groups="time_off_roles.group_timeoff_manager" confirm="Are you sure you want to refuse this leave request?"/>
+
+          <!-- CEO: refuse only at their turn (manager/hr requests at submitted) -->
+          <button name="action_refuse" string="Refuse" type="object" class="btn-danger" invisible="approval_state != 'submitted' or requester_role not in ('manager', 'hr')" groups="time_off_roles.group_timeoff_ceo" confirm="Are you sure you want to refuse this leave request?"/>
+
+          <!-- HR: refuse only at their turn (final stage — manager_approved or ceo_approved) -->
+          <button name="action_refuse" string="Refuse" type="object" class="btn-danger" invisible="approval_state not in ('manager_approved', 'ceo_approved')" groups="time_off_roles.group_timeoff_hr" confirm="Are you sure you want to refuse this leave request?"/>
+
+          <!-- ── RESET TO DRAFT ─────────────────────────────────────────── -->
+          <button name="action_reset_to_draft" string="Reset to Draft" type="object" invisible="approval_state != 'refused'" groups="base.group_user"/>
+
+        </xpath>
+
+        <!-- Info banner: dynamic flow hint + current stage (hidden in draft) -->
+        <xpath expr="//sheet" position="before">
+          <div class="alert alert-info mb-0" invisible="approval_state == 'draft'">
+            <i class="fa fa-info-circle me-1"/>
+            <strong>Approval Flow: </strong>
+
+            <!-- Employee flow -->
+            <span invisible="requester_role != 'employee'">
+              Employee → Branch Manager → Manager → HR
+            </span>
+
+            <!-- Officer flow -->
+            <span invisible="requester_role != 'officer'">
+              Officer → Manager (Respective) → HR
+            </span>
+
+            <!-- Branch Manager flow -->
+            <span invisible="requester_role != 'branch_manager'">
+              Branch Manager → Manager → HR
+            </span>
+
+            <!-- Manager flow -->
+            <span invisible="requester_role != 'manager'">
+              Manager → CEO → HR
+            </span>
+
+            <!-- HR flow -->
+            <span invisible="requester_role != 'hr'">
+              HR → CEO → HR (Final)
+            </span>
+
+            <br/>
+            <strong>Current Stage: </strong>
+            <field name="approval_state" readonly="1" class="oe_inline"/>
+          </div>
+        </xpath>
+
+      </field>
+    </record>
+
+  </data>
+</odoo>

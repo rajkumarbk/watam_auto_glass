@@ -1,31 +1,13 @@
-# -*- coding: utf-8 -*-
-#############################################################################
-#    A part of Open HRMS Project <https://www.openhrms.com>
-#
-#    Cybrosys Technologies Pvt. Ltd.
-#
-#    Copyright (C) 2024-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
-#    Author: Cybrosys Techno Solutions(<https://www.cybrosys.com>)
-#
-#    You can modify it under the terms of the GNU LESSER
-#    GENERAL PUBLIC LICENSE (LGPL v3), Version 3.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU LESSER GENERAL PUBLIC LICENSE (LGPL v3) for more details.
-#
-#    You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
-#    (LGPL v3) along with this program.
-#    If not, see <http://www.gnu.org/licenses/>.
-#
-#############################################################################
 from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from pytz import timezone
 import babel
+from odoo.tools import float_round
+import logging
+
+_logger = logging.getLogger(__name__)
 
 # This will generate 16th of days
 ROUNDING_FACTOR = 16
@@ -111,6 +93,139 @@ class HrPayslip(models.Model):
     payslip_count = fields.Integer(compute='_compute_payslip_count',
                                    string="Payslip Computation Details",
                                    help="Set Payslip Count")
+    
+    contract_standard_hours = fields.Float(
+        string='Contract Standard Hours', 
+        compute='_compute_contract_standard_hours',
+        store=True,
+        help='Standard working hours based on contract calendar for the period')
+    
+    actual_working_hours = fields.Float(
+        string='Actual Working Hours', 
+        compute='_compute_actual_working_hours',
+        store=True,
+        help='Total hours worked from attendance records')
+    
+    overtime_hours = fields.Float(
+        string='Overtime Hours',
+        compute='_compute_overtime_hours',
+        store=True,
+        help="Total overtime hours from attendance records")
+
+    @api.depends('employee_id', 'date_from', 'date_to')
+    def _compute_actual_working_hours(self):
+        """从考勤记录计算实际工作小时数"""
+        for payslip in self:
+            if payslip.employee_id and payslip.date_from and payslip.date_to:
+                attendance_records = self.env['hr.attendance'].search([
+                    ('employee_id', '=', payslip.employee_id.id),
+                    ('check_in', '>=', payslip.date_from),
+                    ('check_in', '<=', payslip.date_to),
+                    ('check_out', '!=', False)
+                ])
+                
+                total_hours = sum(att.worked_hours for att in attendance_records)
+                payslip.actual_working_hours = float_round(total_hours, precision_digits=2)
+            else:
+                payslip.actual_working_hours = 0.0
+
+    @api.depends('contract_id', 'date_from', 'date_to')
+    def _compute_contract_standard_hours(self):
+        """从合同日历计算标准工作小时数"""
+        for payslip in self:
+            if payslip.contract_id and payslip.date_from and payslip.date_to:
+                contract = payslip.contract_id
+                
+                if contract.resource_calendar_id:
+                    calendar = contract.resource_calendar_id
+                    
+                    standard_hours = self._get_standard_hours_from_calendar(
+                        calendar, 
+                        payslip.date_from, 
+                        payslip.date_to
+                    )
+                    payslip.contract_standard_hours = float_round(standard_hours, precision_digits=2)
+                else:
+                    company_calendar = contract.company_id.resource_calendar_id
+                    if company_calendar:
+                        standard_hours = self._get_standard_hours_from_calendar(
+                            company_calendar, 
+                            payslip.date_from, 
+                            payslip.date_to
+                        )
+                        payslip.contract_standard_hours = float_round(standard_hours, precision_digits=2)
+                    else:
+                        payslip.contract_standard_hours = self._get_default_standard_hours(
+                            payslip.date_from, 
+                            payslip.date_to
+                        )
+            else:
+                payslip.contract_standard_hours = 0.0
+
+    @api.depends('employee_id', 'date_from', 'date_to')
+    def _compute_overtime_hours(self):
+        """基于attendance中的overtime_hours字段计算加班小时数"""
+        for payslip in self:
+            if payslip.employee_id and payslip.date_from and payslip.date_to:
+                attendance_records = self.env['hr.attendance'].search([
+                    ('employee_id', '=', payslip.employee_id.id),
+                    ('check_in', '>=', payslip.date_from),
+                    ('check_in', '<=', payslip.date_to),
+                    ('check_out', '!=', False)
+                ])
+                
+                # 直接从attendance记录中获取overtime_hours
+                total_overtime = sum(att.overtime_hours for att in attendance_records if att.overtime_hours)
+                payslip.overtime_hours = float_round(total_overtime, precision_digits=2)
+            else:
+                payslip.overtime_hours = 0.0
+
+    def _get_standard_hours_from_calendar(self, calendar, date_from, date_to):
+        """从日历获取标准工作小时数"""
+        try:
+            # 转换日期为datetime对象
+            day_from = datetime.combine(fields.Date.from_string(date_from), time.min)
+            day_to = datetime.combine(fields.Date.from_string(date_to), time.max)
+            
+            # 获取时区
+            tz = timezone(calendar.tz or self.env.user.tz or 'UTC')
+            
+            # 计算标准工作小时数（不考虑请假）
+            standard_hours = calendar.get_work_hours_count(
+                tz.localize(day_from),
+                tz.localize(day_to),
+                compute_leaves=False,  # 不计算请假
+            )
+            
+            return standard_hours or 0.0
+        except Exception as e:
+            _logger.error("Error calculating standard hours from calendar: %s", str(e))
+            # 出错时返回默认值
+            return self._get_default_standard_hours(date_from, date_to)
+
+    def _get_default_standard_hours(self, date_from, date_to):
+        """获取默认标准工作小时数（40小时/周）"""
+        try:
+            # 计算日期范围内的天数
+            from_date = fields.Date.from_string(date_from)
+            to_date = fields.Date.from_string(date_to)
+            
+            # 计算工作天数（排除周末）
+            total_days = (to_date - from_date).days + 1
+            work_days = 0
+            
+            current_date = from_date
+            while current_date <= to_date:
+                # 检查是否是工作日（星期一到星期五）
+                if current_date.weekday() < 5:  # 0=Monday, 4=Friday
+                    work_days += 1
+                current_date += relativedelta(days=1)
+            
+            # 默认每天8小时
+            default_hours_per_day = 8.0
+            return work_days * default_hours_per_day
+        except Exception:
+            return 0.0
 
     def _compute_details_by_salary_rule_category_ids(self):
         """Compute function for Salary Rule Category for getting
@@ -230,85 +345,245 @@ class HrPayslip(models.Model):
         applied for the given contract between date_from and date_to
         """
         res = []
-        # fill only if the contract as a working schedule linked
-        for contract in contracts.filtered(
-                lambda contract: contract.resource_calendar_id):
-            day_from = datetime.combine(fields.Date.from_string(date_from),
-                                        time.min)
-            day_to = datetime.combine(fields.Date.from_string(date_to),
-                                      time.max)
-            # compute leave days
-            leaves = {}
-            calendar = contract.resource_calendar_id
-            tz = timezone(calendar.tz)
-            day_leave_intervals = contract.employee_id.list_leaves(
-                day_from, day_to, calendar=contract.resource_calendar_id)
-            multi_leaves = []
-            for day, hours, leave in day_leave_intervals:
-                work_hours = calendar.get_work_hours_count(
-                    tz.localize(datetime.combine(day, time.min)),
-                    tz.localize(datetime.combine(day, time.max)),
-                    compute_leaves=False,
-                )
-                if len(leave) > 1:
-                    for each in leave:
-                        if each.holiday_id:
-                            multi_leaves.append(each.holiday_id)
-                else:
-                    holiday = leave.holiday_id
-                    current_leave_struct = leaves.setdefault(
-                        holiday.holiday_status_id, {
-                            'name': holiday.holiday_status_id.name or _(
-                                'Global Leaves'),
-                            'sequence': 5,
-                            'code': holiday.holiday_status_id.code or 'GLOBAL',
-                            'number_of_days': 0.0,
-                            'number_of_hours': 0.0,
-                            'contract_id': contract.id,
-                        })
-                    current_leave_struct['number_of_hours'] += hours
-                    if work_hours:
-                        current_leave_struct[
-                            'number_of_days'] += hours / work_hours
-            # compute worked days
-            work_data = contract.employee_id.get_work_days_data(
-                day_from, day_to, calendar=contract.resource_calendar_id)
-            attendances = {
-                'name': _("Normal Working Days paid at 100%"),
-                'sequence': 1,
-                'code': 'WORK100',
-                'number_of_days': work_data['days'],
-                'number_of_hours': work_data['hours'],
-                'contract_id': contract.id,
-            }
-            res.append(attendances)
-            uniq_leaves = [*set(multi_leaves)]
-            c_leaves = {}
-            for rec in uniq_leaves:
-                duration = rec.duration_display.replace("days", "").strip()
-                duration_in_hours = float(duration) * 24
-                c_leaves.setdefault(rec.holiday_status_id,
-                                    {'hours': duration_in_hours})
-            for item in c_leaves:
-                if not leaves or item not in leaves:
-                    data = {
-                        'name': item.name,
-                        'sequence': 20,
-                        'code': item.code or 'LEAVES',
-                        'number_of_hours': c_leaves[item]['hours'],
-                        'number_of_days': c_leaves[item][
-                                              'hours'] / work_hours,
+        
+        for contract in contracts:
+            if contract.payroll_type == 'attendances':
+                # ATTENDANCE-BASED CALCULATION
+                # Get attendance records for the period
+                attendance_records = self.env['hr.attendance'].search([
+                    ('employee_id', '=', contract.employee_id.id),
+                    ('check_in', '>=', date_from),
+                    ('check_in', '<=', date_to),
+                    ('check_out', '!=', False)
+                ])
+                
+                # Calculate total worked hours and overtime hours
+                total_hours = sum(att.worked_hours for att in attendance_records)
+                total_overtime = sum(att.overtime_hours for att in attendance_records if att.overtime_hours)
+                
+                total_hours = float_round(total_hours, precision_digits=2)
+                total_overtime = float_round(total_overtime, precision_digits=2)
+                
+                # Calculate regular hours (total hours minus overtime)
+                regular_hours = total_hours - total_overtime
+                
+                # Get actual working days
+                worked_days = set()
+                for attendance in attendance_records:
+                    worked_days.add(attendance.check_in.date())
+                
+                # Add regular hours entry
+                res.append({
+                    'name': _("Normal Working Hours"),
+                    'sequence': 1,
+                    'code': 'WORK100',
+                    'number_of_days': len(worked_days),
+                    'number_of_hours': float_round(regular_hours, precision_digits=2),
+                    'contract_id': contract.id,
+                })
+                
+                # Add overtime entry if any
+                if total_overtime > 0:
+                    res.append({
+                        'name': _("Overtime Hours"),
+                        'sequence': 2,
+                        'code': 'OVERTIME',
+                        'number_of_days': len(worked_days),
+                        'number_of_hours': float_round(total_overtime, precision_digits=2),
+                        'contract_id': contract.id,
+                    })
+                
+            elif contract.payroll_type == 'daily_wage':
+                # DAILY WAGE CALCULATION
+                # Get attendance records for the period
+                attendance_records = self.env['hr.attendance'].search([
+                    ('employee_id', '=', contract.employee_id.id),
+                    ('check_in', '>=', date_from),
+                    ('check_in', '<=', date_to),
+                    ('check_out', '!=', False)
+                ])
+                
+                # Get unique worked days
+                worked_days = set()
+                total_overtime = 0
+                for attendance in attendance_records:
+                    worked_days.add(attendance.check_in.date())
+                    if attendance.overtime_hours:
+                        total_overtime += attendance.overtime_hours
+                
+                total_overtime = float_round(total_overtime, precision_digits=2)
+                actual_days = len(worked_days)
+                
+                # Calculate standard days (based on contract calendar)
+                standard_days = self._get_standard_days_for_period(contract, date_from, date_to)
+                
+                # Determine regular days
+                regular_days = min(actual_days, standard_days)
+                
+                # Calculate overtime days (if any overtime hours)
+                overtime_days = total_overtime / 8.0 if total_overtime > 0 else 0  # Assuming 8 hours per day
+                
+                # Add regular days entry
+                res.append({
+                    'name': _("Normal Working Days"),
+                    'sequence': 1,
+                    'code': 'DAILY_WAGE',
+                    'number_of_days': float_round(regular_days, precision_digits=2),
+                    'number_of_hours': float_round(regular_days * 8, precision_digits=2),  # Assuming 8 hours per day
+                    'contract_id': contract.id,
+                })
+                
+                # Add overtime entry if any
+                if total_overtime > 0:
+                    res.append({
+                        'name': _("Overtime Hours"),
+                        'sequence': 2,
+                        'code': 'OVERTIME',
+                        'number_of_days': float_round(overtime_days, precision_digits=2),
+                        'number_of_hours': float_round(total_overtime, precision_digits=2),
+                        'contract_id': contract.id,
+                    })
+                
+            else:
+                # FIXED SALARY CALCULATION (existing logic)
+                # fill only if the contract as a working schedule linked
+                if contract.resource_calendar_id:
+                    day_from = datetime.combine(fields.Date.from_string(date_from),
+                                                time.min)
+                    day_to = datetime.combine(fields.Date.from_string(date_to),
+                                              time.max)
+                    # compute leave days
+                    leaves = {}
+                    calendar = contract.resource_calendar_id
+                    tz = timezone(calendar.tz)
+                    day_leave_intervals = contract.employee_id.list_leaves(
+                        day_from, day_to, calendar=contract.resource_calendar_id)
+                    multi_leaves = []
+                    for day, hours, leave in day_leave_intervals:
+                        work_hours = calendar.get_work_hours_count(
+                            tz.localize(datetime.combine(day, time.min)),
+                            tz.localize(datetime.combine(day, time.max)),
+                            compute_leaves=False,
+                        )
+                        if len(leave) > 1:
+                            for each in leave:
+                                if each.holiday_id:
+                                    multi_leaves.append(each.holiday_id)
+                        else:
+                            holiday = leave.holiday_id
+                            current_leave_struct = leaves.setdefault(
+                                holiday.holiday_status_id, {
+                                    'name': holiday.holiday_status_id.name or _(
+                                        'Global Leaves'),
+                                    'sequence': 5,
+                                    'code': holiday.holiday_status_id.code or 'GLOBAL',
+                                    'number_of_days': 0.0,
+                                    'number_of_hours': 0.0,
+                                    'contract_id': contract.id,
+                                })
+                            current_leave_struct['number_of_hours'] += hours
+                            if work_hours:
+                                current_leave_struct[
+                                    'number_of_days'] += hours / work_hours
+                    
+                    # compute worked days
+                    work_data = contract.employee_id.get_work_days_data(
+                        day_from, day_to, calendar=contract.resource_calendar_id)
+                    attendances = {
+                        'name': _("Normal Working Days paid at 100%"),
+                        'sequence': 1,
+                        'code': 'WORK100',
+                        'number_of_days': work_data['days'],
+                        'number_of_hours': work_data['hours'],
                         'contract_id': contract.id,
                     }
-                    res.append(data)
-                for time_off in leaves:
-                    if item == time_off:
-                        leaves[item]['number_of_hours'] += c_leaves[item][
-                            'hours']
-                        leaves[item]['number_of_days'] \
-                            += c_leaves[item]['hours'] / work_hours
-            res.extend(leaves.values())
+                    res.append(attendances)
+                    uniq_leaves = [*set(multi_leaves)]
+                    c_leaves = {}
+                    for rec in uniq_leaves:
+                        duration = rec.duration_display.replace("days", "").strip()
+                        duration_in_hours = float(duration) * 24
+                        c_leaves.setdefault(rec.holiday_status_id,
+                                            {'hours': duration_in_hours})
+                    for item in c_leaves:
+                        if not leaves or item not in leaves:
+                            data = {
+                                'name': item.name,
+                                'sequence': 20,
+                                'code': item.code or 'LEAVES',
+                                'number_of_hours': c_leaves[item]['hours'],
+                                'number_of_days': c_leaves[item][
+                                                      'hours'] / work_hours,
+                                'contract_id': contract.id,
+                            }
+                            res.append(data)
+                        for time_off in leaves:
+                            if item == time_off:
+                                leaves[item]['number_of_hours'] += c_leaves[item][
+                                    'hours']
+                                leaves[item]['number_of_days'] \
+                                    += c_leaves[item]['hours'] / work_hours
+                    res.extend(leaves.values())
         return res
+
+    def _get_contract_standard_hours_for_period(self, contract, date_from, date_to):
+        """Helper method to get standard hours from contract for a period"""
+        if contract.resource_calendar_id:
+            calendar = contract.resource_calendar_id
+        else:
+            calendar = contract.company_id.resource_calendar_id
+        
+        if calendar:
+            day_from = datetime.combine(fields.Date.from_string(date_from), time.min)
+            day_to = datetime.combine(fields.Date.from_string(date_to), time.max)
+            
+            # 获取时区
+            tz = timezone(calendar.tz or self.env.user.tz or 'UTC')
+            
+            # 计算标准工作小时数（不考虑请假）
+            standard_hours = calendar.get_work_hours_count(
+                tz.localize(day_from),
+                tz.localize(day_to),
+                compute_leaves=False, 
+            )
+            
+            return standard_hours or 0.0
+        else:
+            return self._get_default_standard_hours(date_from, date_to)
+
+    def _get_standard_days_for_period(self, contract, date_from, date_to):
+        """Helper method to get standard working days from contract for a period"""
+        if contract.resource_calendar_id:
+            calendar = contract.resource_calendar_id
+        else:
+            calendar = contract.company_id.resource_calendar_id
+        
+        if calendar:
+            # Count working days based on calendar
+            working_days = 0
+            current_date = fields.Date.from_string(date_from)
+            end_date = fields.Date.from_string(date_to)
+            
+            while current_date <= end_date:
+                # Check if this day is a working day according to the calendar
+                if calendar.attendance_ids.filtered(lambda a: int(a.dayofweek) == current_date.weekday()):
+                    working_days += 1
+                current_date += relativedelta(days=1)
+            
+            return float(working_days)
+        else:
+            # Default: count weekdays (Monday to Friday)
+            start_date = fields.Date.from_string(date_from)
+            end_date = fields.Date.from_string(date_to)
+            working_days = 0
+            current_date = start_date
+            
+            while current_date <= end_date:
+                if current_date.weekday() < 5:  # Monday (0) to Friday (4)
+                    working_days += 1
+                current_date += relativedelta(days=1)
+            
+            return float(working_days)
 
     @api.model
     def get_inputs(self, contracts, date_from, date_to):
@@ -446,15 +721,26 @@ class HrPayslip(models.Model):
             worked_days_dict[worked_days_line.code] = worked_days_line
         for input_line in payslip.input_line_ids:
             inputs_dict[input_line.code] = input_line
+        
         categories = BrowsableObject(payslip.employee_id.id, {}, self.env)
         inputs = InputLine(payslip.employee_id.id, inputs_dict, self.env)
         worked_days = WorkedDays(payslip.employee_id.id, worked_days_dict,
                                  self.env)
         payslips = Payslips(payslip.employee_id.id, payslip, self.env)
         rules = BrowsableObject(payslip.employee_id.id, rules_dict, self.env)
-        baselocaldict = {'categories': categories, 'rules': rules,
-                         'payslip': payslips, 'worked_days': worked_days,
-                         'inputs': inputs}
+        
+        # FIXED: Make sure all contract fields are available in the context
+        baselocaldict = {
+            'categories': categories, 
+            'rules': rules,
+            'payslip': payslips, 
+            'worked_days': worked_days,
+            'inputs': inputs,
+            'contract_standard_hours': payslip.contract_standard_hours,
+            'actual_working_hours': payslip.actual_working_hours,
+            'overtime_hours': payslip.overtime_hours,
+        }
+        
         # get the ids of the structures on the contracts and their
         # parent id as well
         contracts = self.env['hr.contract'].browse(contract_ids)
@@ -470,10 +756,32 @@ class HrPayslip(models.Model):
         sorted_rule_ids = [id for id, sequence in
                            sorted(rule_ids, key=lambda x: x[1])]
         sorted_rules = self.env['hr.salary.rule'].browse(sorted_rule_ids)
+        
         for contract in contracts:
             employee = contract.employee_id
-            localdict = dict(baselocaldict, employee=employee,
-                             contract=contract)
+            # Create localdict with contract specific values - FIX: pass ALL contract fields
+            localdict = dict(baselocaldict, employee=employee, contract=contract)
+            
+            # CRITICAL FIX: Add contract fields directly to localdict
+            # This ensures all contract fields are available in salary rule calculations
+            for field_name in contract._fields:
+                if field_name not in ['id', '__last_update', 'display_name']:
+                    try:
+                        localdict[field_name] = contract[field_name]
+                    except:
+                        pass
+            
+            # DEBUG LOGGING - Add this to see what values are available
+            _logger.info("=== OVERTIME CALCULATION DEBUG ===")
+            _logger.info("Contract ID: %s", contract.id)
+            _logger.info("Employee: %s", employee.name)
+            _logger.info("Overtime hours from payslip: %s", payslip.overtime_hours)
+            _logger.info("Over hour rate from contract: %s", contract.over_hour)
+            _logger.info("Over day rate from contract: %s", contract.over_day)
+            _logger.info("Payroll type: %s", contract.payroll_type)
+            _logger.info("Calculated overtime amount (hourly): %s", 
+                        payslip.overtime_hours * contract.over_hour if contract.over_hour else 0)
+            
             for rule in sorted_rules:
                 key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<!--    Data file for Contribution Register-->
+    <!--    Data file for Contribution Register-->
     <data noupdate="1">
         <record id="contribution_register_employees" model="hr.contribution.register">
             <field name="name">Employees</field>
-            <field name="partner_id" eval="False"/>
+            <field name="partner_id" eval="False" />
         </record>
         <record id="BASIC" model="hr.salary.rule.category">
             <field name="name">Basic</field>
@@ -34,15 +34,15 @@
             <field name="name">House Rent Allowance</field>
             <field name="code">HRA</field>
         </record>
-         <record id="DA" model="hr.salary.rule.category">
+        <record id="DA" model="hr.salary.rule.category">
             <field name="name">Dearness Allowance</field>
             <field name="code">DA</field>
         </record>
-         <record id="Travel" model="hr.salary.rule.category">
+        <record id="Travel" model="hr.salary.rule.category">
             <field name="name">Travel Allowance</field>
             <field name="code">Travel</field>
         </record>
-         <record id="Meal" model="hr.salary.rule.category">
+        <record id="Meal" model="hr.salary.rule.category">
             <field name="name">Meal Allowance</field>
             <field name="code">Meal</field>
         </record>
@@ -54,94 +54,364 @@
             <field name="name">Other Allowance</field>
             <field name="code">Other</field>
         </record>
+        <!-- ADDED: Overtime category -->
+        <record id="OVERTIME_CAT" model="hr.salary.rule.category">
+            <field name="name">Overtime</field>
+            <field name="code">OVERTIME</field>
+        </record>
+
+        <!-- MODIFIED: Basic salary rule to support all payroll types - SIMPLIFIED -->
         <record id="hr_rule_basic" model="hr.salary.rule">
             <field name="name">Basic Salary</field>
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="1" />
             <field name="code">BASIC</field>
-            <field name="category_id" ref="hr_payroll_community.BASIC"/>
+            <field name="category_id" ref="hr_payroll_community.BASIC" />
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.wage</field>
+            <field name="amount_python_compute">
+result = 0.0
+
+# Check payroll type
+if contract.payroll_type == 'attendances':
+    # Attendance-based calculation
+    # Get regular hours from WORK100 code
+    regular_hours = 0.0
+    try:
+        regular_hours = worked_days.WORK100.number_of_hours
+    except:
+        regular_hours = 0.0
+    
+    # Calculate using hourly_wage (which includes basic + allowances)
+    if contract.hourly_wage > 0:
+        result = regular_hours * contract.hourly_wage
+
+elif contract.payroll_type == 'daily_wage':
+    # Daily wage calculation - basic salary part only
+    # Get worked days from DAILY_WAGE code
+    worked_days_count = 0.0
+    try:
+        worked_days_count = worked_days.DAILY_WAGE.number_of_days
+    except:
+        worked_days_count = 0.0
+    
+    # Calculate basic daily wage = contract.wage / 30
+    basic_daily_wage = contract.wage / 30.0 if contract.wage > 0 else 0.0
+    result = worked_days_count * basic_daily_wage
+else:
+    # Fixed salary calculation (default)
+    result = contract.wage
+            </field>
         </record>
-        <record id="hr_rule_taxable" model="hr.salary.rule">
-            <field name="name">Gross</field>
-            <field name="sequence" eval="100"/>
-            <field name="code">GROSS</field>
-            <field name="category_id" ref="hr_payroll_community.GROSS"/>
-            <field name="condition_select">none</field>
+
+        <!-- FIXED: Overtime salary rule - Uses payslip.overtime_hours field -->
+        <record id="hr_rule_overtime" model="hr.salary.rule">
+            <field name="name">Overtime Pay</field>
+            <field name="sequence" eval="50" />
+            <field name="code">OVERTIME</field>
+            <field name="category_id" ref="hr_payroll_community.OVERTIME_CAT" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">
+# Apply overtime if over_hour is configured in contract
+result = contract.over_hour > 0
+            </field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
+            <field name="amount_python_compute">
+result = 0.0
+
+# Use overtime_hours from payslip model directly
+# This field is computed from attendance records
+if payslip.overtime_hours > 0 and contract.over_hour > 0:
+    result = payslip.overtime_hours * contract.over_hour
+            </field>
         </record>
-        <record id="hr_rule_net" model="hr.salary.rule">
-            <field name="name">Net Salary</field>
-            <field name="sequence" eval="200"/>
-            <field name="code">NET</field>
-            <field name="category_id" ref="hr_payroll_community.NET"/>
-            <field name="condition_select">none</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.DED</field>
-            <field name="register_id" ref="contribution_register_employees"/>
-        </record>
+
+        <!-- HRA rule for all payroll types - SIMPLIFIED -->
         <record id="hr_rule_hra" model="hr.salary.rule">
             <field name="name">House Rent Allowance</field>
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="3" />
             <field name="code">HRA</field>
-            <field name="category_id" ref="hr_payroll_community.HRA"/>
+            <field name="category_id" ref="hr_payroll_community.ALW" />
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.hra</field>
+            <field name="amount_python_compute">
+result = 0.0
+
+if contract.payroll_type == 'daily_wage':
+    # For daily wage, calculate HRA per day
+    worked_days_count = 0.0
+    try:
+        worked_days_count = worked_days.DAILY_WAGE.number_of_days
+    except:
+        worked_days_count = 0.0
+    
+    # Daily HRA = contract.hra / 30
+    hra_per_day = contract.hra / 30.0 if contract.hra > 0 else 0.0
+    result = worked_days_count * hra_per_day
+
+elif contract.payroll_type == 'attendances':
+    # For attendance payroll, calculate based on worked hours
+    # Daily HRA = contract.hra / 30
+    hra_per_day = contract.hra / 30.0 if contract.hra > 0 else 0.0
+    # Assuming 8 hours per day for HRA calculation
+    hours_per_day = 8.0
+    hra_per_hour = hra_per_day / hours_per_day if hours_per_day > 0 else 0.0
+    regular_hours = 0.0
+    try:
+        regular_hours = worked_days.WORK100.number_of_hours
+    except:
+        regular_hours = 0.0
+    
+    result = regular_hours * hra_per_hour
+else:
+    # For fixed payroll, use full monthly HRA
+    result = contract.hra
+            </field>
         </record>
+
+        <!-- DA rule for all payroll types - SIMPLIFIED -->
         <record id="hr_rule_da" model="hr.salary.rule">
             <field name="name">Dearness Allowance</field>
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="4" />
             <field name="code">DA</field>
-            <field name="category_id" ref="hr_payroll_community.DA"/>
+            <field name="category_id" ref="hr_payroll_community.ALW" />
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.da</field>
+            <field name="amount_python_compute">
+result = 0.0
+
+if contract.payroll_type == 'daily_wage':
+    # For daily wage, calculate DA per day
+    worked_days_count = 0.0
+    try:
+        worked_days_count = worked_days.DAILY_WAGE.number_of_days
+    except:
+        worked_days_count = 0.0
+    
+    # Daily DA = contract.da / 30
+    da_per_day = contract.da / 30.0 if contract.da > 0 else 0.0
+    result = worked_days_count * da_per_day
+
+elif contract.payroll_type == 'attendances':
+    # For attendance payroll, calculate based on worked hours
+    # Daily DA = contract.da / 30
+    da_per_day = contract.da / 30.0 if contract.da > 0 else 0.0
+    # Assuming 8 hours per day for DA calculation
+    hours_per_day = 8.0
+    da_per_hour = da_per_day / hours_per_day if hours_per_day > 0 else 0.0
+    regular_hours = 0.0
+    try:
+        regular_hours = worked_days.WORK100.number_of_hours
+    except:
+        regular_hours = 0.0
+    
+    result = regular_hours * da_per_hour
+else:
+    # For fixed payroll, use full monthly DA
+    result = contract.da
+            </field>
         </record>
+
+        <!-- Travel allowance rule for all payroll types - SIMPLIFIED -->
         <record id="hr_rule_travel" model="hr.salary.rule">
             <field name="name">Travel Allowance</field>
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="5" />
             <field name="code">Travel</field>
-            <field name="category_id" ref="hr_payroll_community.Travel"/>
+            <field name="category_id" ref="hr_payroll_community.ALW" />
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.travel_allowance</field>
+            <field name="amount_python_compute">
+result = 0.0
+
+if contract.payroll_type == 'daily_wage':
+    # For daily wage, calculate Travel allowance per day
+    worked_days_count = 0.0
+    try:
+        worked_days_count = worked_days.DAILY_WAGE.number_of_days
+    except:
+        worked_days_count = 0.0
+    
+    # Daily Travel = contract.travel_allowance / 30
+    travel_per_day = contract.travel_allowance / 30.0 if contract.travel_allowance > 0 else 0.0
+    result = worked_days_count * travel_per_day
+
+elif contract.payroll_type == 'attendances':
+    # For attendance payroll, calculate based on worked hours
+    # Daily Travel = contract.travel_allowance / 30
+    travel_per_day = contract.travel_allowance / 30.0 if contract.travel_allowance > 0 else 0.0
+    # Assuming 8 hours per day for Travel calculation
+    hours_per_day = 8.0
+    travel_per_hour = travel_per_day / hours_per_day if hours_per_day > 0 else 0.0
+    regular_hours = 0.0
+    try:
+        regular_hours = worked_days.WORK100.number_of_hours
+    except:
+        regular_hours = 0.0
+    
+    result = regular_hours * travel_per_hour
+else:
+    # For fixed payroll, use full monthly Travel allowance
+    result = contract.travel_allowance
+            </field>
         </record>
+
+        <!-- Meal allowance rule for all payroll types - SIMPLIFIED -->
         <record id="hr_rule_meal" model="hr.salary.rule">
             <field name="name">Meal Allowance</field>
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="6" />
             <field name="code">Meal</field>
-            <field name="category_id" ref="hr_payroll_community.Meal"/>
+            <field name="category_id" ref="hr_payroll_community.ALW" />
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.meal_allowance</field>
+            <field name="amount_python_compute">
+result = 0.0
+
+if contract.payroll_type == 'daily_wage':
+    # For daily wage, calculate Meal allowance per day
+    worked_days_count = 0.0
+    try:
+        worked_days_count = worked_days.DAILY_WAGE.number_of_days
+    except:
+        worked_days_count = 0.0
+    
+    # Daily Meal = contract.meal_allowance / 30
+    meal_per_day = contract.meal_allowance / 30.0 if contract.meal_allowance > 0 else 0.0
+    result = worked_days_count * meal_per_day
+
+elif contract.payroll_type == 'attendances':
+    # For attendance payroll, calculate based on worked hours
+    # Daily Meal = contract.meal_allowance / 30
+    meal_per_day = contract.meal_allowance / 30.0 if contract.meal_allowance > 0 else 0.0
+    # Assuming 8 hours per day for Meal calculation
+    hours_per_day = 8.0
+    meal_per_hour = meal_per_day / hours_per_day if hours_per_day > 0 else 0.0
+    regular_hours = 0.0
+    try:
+        regular_hours = worked_days.WORK100.number_of_hours
+    except:
+        regular_hours = 0.0
+    
+    result = regular_hours * meal_per_hour
+else:
+    # For fixed payroll, use full monthly Meal allowance
+    result = contract.meal_allowance
+            </field>
         </record>
+
+        <!-- Medical allowance rule for all payroll types - SIMPLIFIED -->
         <record id="hr_rule_medical" model="hr.salary.rule">
             <field name="name">Medical Allowance</field>
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="7" />
             <field name="code">Medical</field>
-            <field name="category_id" ref="hr_payroll_community.Medical"/>
+            <field name="category_id" ref="hr_payroll_community.ALW" />
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.medical_allowance</field>
+            <field name="amount_python_compute">
+result = 0.0
+
+if contract.payroll_type == 'daily_wage':
+    # For daily wage, calculate Medical allowance per day
+    worked_days_count = 0.0
+    try:
+        worked_days_count = worked_days.DAILY_WAGE.number_of_days
+    except:
+        worked_days_count = 0.0
+    
+    # Daily Medical = contract.medical_allowance / 30
+    medical_per_day = contract.medical_allowance / 30.0 if contract.medical_allowance > 0 else 0.0
+    result = worked_days_count * medical_per_day
+
+elif contract.payroll_type == 'attendances':
+    # For attendance payroll, calculate based on worked hours
+    # Daily Medical = contract.medical_allowance / 30
+    medical_per_day = contract.medical_allowance / 30.0 if contract.medical_allowance > 0 else 0.0
+    # Assuming 8 hours per day for Medical calculation
+    hours_per_day = 8.0
+    medical_per_hour = medical_per_day / hours_per_day if hours_per_day > 0 else 0.0
+    regular_hours = 0.0
+    try:
+        regular_hours = worked_days.WORK100.number_of_hours
+    except:
+        regular_hours = 0.0
+    
+    result = regular_hours * medical_per_hour
+else:
+    # For fixed payroll, use full monthly Medical allowance
+    result = contract.medical_allowance
+            </field>
         </record>
+
+        <!-- Other allowance rule for all payroll types - SIMPLIFIED -->
         <record id="hr_rule_other" model="hr.salary.rule">
             <field name="name">Other Allowance</field>
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="8" />
             <field name="code">Other</field>
-            <field name="category_id" ref="hr_payroll_community.Other"/>
+            <field name="category_id" ref="hr_payroll_community.ALW" />
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.other_allowance</field>
+            <field name="amount_python_compute">
+result = 0.0
+
+if contract.payroll_type == 'daily_wage':
+    # For daily wage, calculate Other allowance per day
+    worked_days_count = 0.0
+    try:
+        worked_days_count = worked_days.DAILY_WAGE.number_of_days
+    except:
+        worked_days_count = 0.0
+    
+    # Daily Other = contract.other_allowance / 30
+    other_per_day = contract.other_allowance / 30.0 if contract.other_allowance > 0 else 0.0
+    result = worked_days_count * other_per_day
+
+elif contract.payroll_type == 'attendances':
+    # For attendance payroll, calculate based on worked hours
+    # Daily Other = contract.other_allowance / 30
+    other_per_day = contract.other_allowance / 30.0 if contract.other_allowance > 0 else 0.0
+    # Assuming 8 hours per day for Other calculation
+    hours_per_day = 8.0
+    other_per_hour = other_per_day / hours_per_day if hours_per_day > 0 else 0.0
+    regular_hours = 0.0
+    try:
+        regular_hours = worked_days.WORK100.number_of_hours
+    except:
+        regular_hours = 0.0
+    
+    result = regular_hours * other_per_hour
+else:
+    # For fixed payroll, use full monthly Other allowance
+    result = contract.other_allowance
+            </field>
         </record>
+
+        <record id="hr_rule_taxable" model="hr.salary.rule">
+            <field name="name">Gross</field>
+            <field name="sequence" eval="100" />
+            <field name="code">GROSS</field>
+            <field name="category_id" ref="hr_payroll_community.GROSS" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.OVERTIME</field>
+        </record>
+
+        <record id="hr_rule_net" model="hr.salary.rule">
+            <field name="name">Net Salary</field>
+            <field name="sequence" eval="200" />
+            <field name="code">NET</field>
+            <field name="category_id" ref="hr_payroll_community.NET" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.OVERTIME + categories.DED</field>
+            <field name="register_id" ref="contribution_register_employees" />
+        </record>
+
         <!-- Salary Structure -->
-         <record id="structure_base" model="hr.payroll.structure">
+        <record id="structure_base" model="hr.payroll.structure">
             <field name="code">BASE</field>
             <field name="name">Base for new structures</field>
-            <field eval="[(6, 0, [ref('hr_rule_basic'), ref('hr_rule_taxable'),ref('hr_rule_net')])]" name="rule_ids"/>
-            <field name="company_id" ref="base.main_company"/>
+            <field
+                eval="[(6, 0, [ref('hr_rule_basic'), ref('hr_rule_taxable'),ref('hr_rule_net'), ref('hr_rule_overtime'), ref('hr_rule_hra'), ref('hr_rule_da'), ref('hr_rule_travel'), ref('hr_rule_meal'), ref('hr_rule_medical'), ref('hr_rule_other')])]"
+                name="rule_ids" />
+            <field name="company_id" ref="base.main_company" />
         </record>
         <!-- Decimal Precision -->
         <record forcecreate="True" id="decimal_payroll" model="decimal.precision">

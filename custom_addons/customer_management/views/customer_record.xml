@@ -36,14 +36,14 @@
                             <field name="branch_id" class="input-field" />
                             <field name="workplace" placeholder="Select workplace" class="input-field" />
                             <field name="employee_id" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Employee" class="input-field" />
-                            <field name="vehicle_brand" placeholder="Select Vehicle Brand" class="input-field" />
-                            <field name="vehicle_model" domain="[('brand_id', '=', vehicle_brand)]" placeholder="Select Vehicle Model" class="input-field" />
+                            <field name="vehicle_brand" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Vehicle Brand" class="input-field" />
+                            <field name="vehicle_model" options="{'no_create': True, 'no_create_edit': True}" domain="[('brand_id', '=', vehicle_brand)]" placeholder="Select Vehicle Model" class="input-field" />
                             <field name="manufactured_year_id" placeholder="Select Manufactured Year" options="{'no_create': True, 'no_create_edit': True}" class="input-field" />
                             <field name="service_type" required="1" class="input-field" />
-                            <field name="service_option" invisible="service_type != 'service'" required="1" class="input-field" />
+                            <field name="service_option" options="{'no_create': True, 'no_create_edit': True}" invisible="service_type != 'service'" required="1" class="input-field" />
                             <field name="glass_option" invisible="service_type != 'glass_sale'" required="1" class="input-field" />
                             <field name="retailer_type" invisible="glass_option != 'retailer_glass'" required="1" class="input-field" />
-                            <field name="glass_destination" placeholder="Select Glass Destination" class="input-field" />
+                            <field name="glass_destination" options="{'no_create': True, 'no_create_edit': True}" placeholder="Select Glass Destination" class="input-field" />
                             <field name="name" placeholder="Enter Customer's Name" class="input-field" />
                             <field name="phone" placeholder="Enter Customer's Contact Number" class="input-field" />
                             <field name="service_complexity" required="1" class="input-field" />

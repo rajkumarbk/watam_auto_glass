@@ -30,7 +30,7 @@ class HrEmployeeBase(models.AbstractModel):
         store=True,
         readonly=False,
         check_company=True)
-    work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
+    work_phone = fields.Char('Mobile Number', compute="_compute_phones", store=True, readonly=False)
     phone = fields.Char(related="user_id.phone")
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
