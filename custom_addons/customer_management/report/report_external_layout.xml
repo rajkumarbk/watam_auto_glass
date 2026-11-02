@@ -8,16 +8,16 @@
                     <!-- Use t-if and t-else to dynamically select header image -->
                     <t
                         t-if="branch_name and any(code in branch_name for code in ['101','102','103','104','105','106','107','108','109','110'])">
-                        <img class="img-fluid h-130px"
+                        <img class="img-fluid" style="height:160px;"
                             src="/customer_management/static/img/header_salem.png"
                             alt="Salem Logo" />
                     </t>
                     <t t-else="">
-                        <img class="img-fluid h-130px"
+                        <img class="img-fluid" style="height:160px;"
                             src="/customer_management/static/img/header_watam.png"
                             alt="Watam Logo" />
                     </t>
-                </div>
+                </div>  
             </div>
         </div>
     </template>
@@ -41,7 +41,7 @@
         <div class="footer" style="font-size: 12px !important; font-family: Arial!important;">
             <div class="text-center">
                 <!-- Footer image -->
-                <!-- <img class="img-fluid h-130px"
+                <!-- <img class="img-fluid"
                     src="/customer_management/static/img/footer.png" alt="Logo" /> -->
             </div>
         </div>

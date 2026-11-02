@@ -5,3 +5,4 @@ from . import fingerprint_templates
 from . import hr_employee
 from . import res_config_settings
 from . import watam_customization
+from . import attendance_absence_reason

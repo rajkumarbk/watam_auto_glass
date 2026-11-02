@@ -5,7 +5,7 @@
         <field name="model">problem.solution</field>
         <field name="arch" type="xml">
             <list decoration-warning="solution != False">
-                <field name="date" />
+                <field name="datetime" />
                 <field name="previous_date" />
                 <field name="branch_id" />
                 <field name="new_branch_id" />

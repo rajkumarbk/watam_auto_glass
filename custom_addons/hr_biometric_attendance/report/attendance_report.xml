@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="action_report_attendance" model="ir.actions.report">
+    <!-- <record id="action_report_attendance" model="ir.actions.report">
         <field name="name">Attendance Report</field>
         <field name="model">attendance.report.wizard</field>
         <field name="report_type">qweb-pdf</field>
@@ -16,7 +16,7 @@
         <field name="paperformat_id" ref="hr_biometric_attendance.paperformat_minimal_margins"/>
         <field name="binding_model_id" ref="hr_biometric_attendance.model_attendance_report_wizard"/>
         <field name="binding_type">report</field>
-    </record>
+    </record> -->
 
     <record id="paperformat_minimal_margins" model="report.paperformat">
         <field name="name">Attendance Report Minimal Margins</field>
@@ -104,18 +104,18 @@
                             <table class="table table-bordered table-sm" style="width: 100%; border-collapse: collapse; font-size: 15px; text-align: center;">
                                 <thead>
                                     <tr>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Date</th>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Day</th>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Check In</th>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Check Out</th>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Absent</th>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center;">Worked Hours</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 15%;">Date</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 15%;">Day</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 15%;">Check In</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 15%;">Check Out</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 15%;">Worked Hours</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 25%;">Remarks</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <t t-if="attendance_data">
                                         <t t-foreach="attendance_data" t-as="record">
-                                            <tr>
+                                            <tr t-attf-style="#{'background-color: #d9d9d9;' if record.get('day') in ('Fri', 'Sat') else ''}">
                                                 <td style="border: 1px solid #000; padding: 4px;">
                                                     <span t-esc="record.get('date', '')"/>
                                                 </td>
@@ -129,10 +129,15 @@
                                                     <span t-esc="record.get('check_out', '')"/>
                                                 </td>
                                                 <td style="border: 1px solid #000; padding: 4px;">
-                                                    <t t-if="record.get('absent') == 'Yes'">ABS</t>
+                                                    <span t-esc="record.get('total_hours', '')"/>
                                                 </td>
                                                 <td style="border: 1px solid #000; padding: 4px;">
-                                                    <span t-esc="record.get('total_hours', '')"/>
+                                                    <t t-if="record.get('absent') == 'Yes'">
+                                                        <t t-if="record.get('reason')">
+                                                            <span t-esc="record.get('reason')"/>
+                                                        </t>
+                                                        <t t-else="">ABS</t>
+                                                    </t>
                                                 </td>
                                             </tr>
                                         </t>

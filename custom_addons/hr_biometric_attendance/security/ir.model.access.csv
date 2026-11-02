@@ -6,3 +6,5 @@ access_zk_user_management_user,access.zk.user.management,model_zk_user_managemen
 access_employee_biometric_user,access.employee.biometric,model_employee_biometric,base.group_user,1,1,1,1
 access_clear_fingerprint_templates_user,access.fingerprint.templates,model_fingerprint_templates,base.group_user,1,1,1,1
 access_attendance_report_wizard,access.attendance.report.wizard,model_attendance_report_wizard,base.group_user,1,1,1,1
+
+access_attendance_absence_reason,attendance.absence.reason,model_attendance_absence_reason,base.group_user,1,1,1,1

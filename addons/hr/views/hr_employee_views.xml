@@ -104,12 +104,12 @@
                                 <group>
                                     <group string="Basic Information">
                                         <field name="name" required="1" placeholder="e.g. John Doe"/>
-                                        <field name="identification_id" required="1" placeholder="e.g. 123456789"/>
-                                        <field name="passport_id" required="1" placeholder="e.g. P12345678"/>
-                                        <field name="country_id" options='{"no_open": True, "no_create": True}' required="1" placeholder="Select Country"/>
-                                        <field name="birthday" required="1"/>
-                                        <field name="marital" required="1"/>
-                                        <field name="gender" required="1"/>
+                                        <field name="identification_id" placeholder="e.g. 123456789"/>
+                                        <field name="passport_id" placeholder="e.g. P12345678"/>
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}' placeholder="Select Country"/>
+                                        <field name="birthday"/>
+                                        <field name="marital"/>
+                                        <field name="gender"/>
                                         <div class="o_employee_avatar m-0 p-0">
                                             <field name="image_1920" widget='image' class="oe_avatar m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                                             <field name="show_hr_icon_display" invisible="1" />

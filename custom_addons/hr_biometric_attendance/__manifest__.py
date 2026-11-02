@@ -24,6 +24,7 @@
         'views/watam_customization.xml',
         'views/biometric_device_attendance_menus.xml',
         'report/attendance_report.xml',
+        'views/attendance_absence_reason_views.xml',
         # 'report/report_external_layout.xml',
         'wizard/attendance_report_wizard.xml',
     ],

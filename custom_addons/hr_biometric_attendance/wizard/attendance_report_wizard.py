@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from odoo import api, fields, models, _
 from pytz import timezone, UTC
+from dateutil.relativedelta import relativedelta
 
 
 class AttendanceReportWizard(models.TransientModel):
@@ -8,12 +9,12 @@ class AttendanceReportWizard(models.TransientModel):
     _description = "Attendance Report Wizard"
 
     start_date = fields.Date(
-        string="Start Date",
-        required=True,
-        default=lambda self: fields.Date.today().replace(day=1),
-    )
+    string="Start Date",
+    required=True,
+    default=lambda self: (fields.Date.today() - relativedelta(months=1)).replace(day=21),
+)
     end_date = fields.Date(
-        string="End Date", required=True, default=lambda self: fields.Date.today()
+        string="End Date", required=True, default=lambda self: fields.Date.today().replace(day=20)
     )
     employee_ids = fields.Many2many(
         "hr.employee",
@@ -91,6 +92,10 @@ class AttendanceReportWizard(models.TransientModel):
         # Build full report: one row per employee per date
         report_data = []
         current_date = self.start_date
+        reason_records = self.env["attendance.absence.reason"].search([
+            ("date_from", "<=", self.end_date),
+            ("date_to", ">=", self.start_date),
+        ])
         while current_date <= self.end_date:
             date_str = current_date.strftime("%Y-%m-%d")
             day_name = current_date.strftime("%a")  # Mon, Tue, ..., Fri, Sat, Sun
@@ -126,10 +131,18 @@ class AttendanceReportWizard(models.TransientModel):
                     },
                 )
 
-                check_in = data["check_in"] or "-"
-                check_out = data["check_out"] or "-"
+                is_weekend = day_name in ["Fri", "Sat"]
+                reason = ""
+                for r in reason_records.sorted(lambda r: not r.employee_id):
+                    if r.date_from <= current_date <= r.date_to and (
+                        not r.employee_id or r.employee_id == employee
+                    ):
+                        reason = r.reason
+                        break
+                check_in = data["check_in"] or ("" if is_weekend else "-")
+                check_out = data["check_out"] or ("" if is_weekend else "-")
 
-                total_hours = "-"
+                total_hours = "" if is_weekend else "-"
                 if (
                     data["check_in"]
                     and data["check_out"]
@@ -146,7 +159,6 @@ class AttendanceReportWizard(models.TransientModel):
 
                 # Decide if absent
                 absent = ""
-                is_weekend = day_name in ["Fri", "Sat"]
                 has_attendance = data["check_in"] or data["check_out"]
                 complete_attendance = data["check_in"] and data["check_out"]
 
@@ -169,6 +181,7 @@ class AttendanceReportWizard(models.TransientModel):
                             else "Normal"
                         ),
                         "address": data.get("address", ""),
+                        "reason": reason,
                     }
                 )
 
@@ -213,7 +226,7 @@ class AttendanceReportWizard(models.TransientModel):
             day_name = rec["day"]
             is_weekend = day_name in ["Fri", "Sat"]
 
-            if not is_weekend and rec["absent"] == "Yes":
+            if not is_weekend and rec["absent"] == "Yes" and not rec.get("reason"):
                 summary[emp]["absent_count"] += 1
 
             if rec["total_hours"] != "-" and not is_weekend:
@@ -223,6 +236,8 @@ class AttendanceReportWizard(models.TransientModel):
                     summary[emp]["worked_days"] += 1
                 except:
                     pass
+            elif rec.get("reason") and not is_weekend:
+                summary[emp]["worked_days"] += 1
 
         # Format summary
         result = []

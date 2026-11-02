@@ -10,6 +10,8 @@ from .master_data import what_solution
 from .master_data import service_option
 from .master_data import service_option
 from . import evaluation_criteria
+from . import employee_monthly_score
+from . import employee_monthly_score_wizard
 from . import customer_record
 from . import problem_solution
 from . import wizard_employee_report

@@ -14,7 +14,7 @@
                 <field name="proactivity_initiative" />
                 <field name="uniform_safety" />
                 <field name="reporting" />
-                <field name="total_score" widget="badge" decoration-success="total_score &gt;= 95" decoration-warning="total_score &gt;= 90 and total_score &lt; 95" decoration-danger="total_score &lt; 90" />
+                <field name="total_score" widget="badge" decoration-success="total_score == 100" decoration-info="total_score &gt;= 96 and total_score &lt; 100" decoration-warning="total_score &gt;= 90 and total_score &lt; 96" decoration-muted="total_score &gt;= 80 and total_score &lt; 90" decoration-danger="total_score &lt; 80"/>
             </list>
         </field>
     </record>

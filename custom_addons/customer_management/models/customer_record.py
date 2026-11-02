@@ -14,7 +14,7 @@ class ClientRecord(models.Model):
     _rec_name = "vehicle_number"
 
     # Fields definition
-    employee_id = fields.Many2one("hr.employee", string="Employee Name")
+    employee_id = fields.Many2one("hr.employee", string="Employee Name", required=True)
     assistant_staff = fields.Many2one("hr.employee", string="Secondary Technician")
     branch_id = fields.Many2one(
         "res.company",

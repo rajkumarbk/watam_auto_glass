@@ -1,0 +1,133 @@
+<odoo>
+  <data>
+
+    <!-- Wizard Form -->
+    <record id="view_employee_monthly_score_wizard_form" model="ir.ui.view">
+      <field name="name">employee.monthly.score.wizard.form</field>
+      <field name="model">employee.monthly.score.wizard</field>
+      <field name="arch" type="xml">
+        <form string="Generate Employee of the Month Scores">
+          <group>
+            <field name="month_date" />
+            <field name="branch_ids" widget="many2many_tags" />
+          </group>
+          <footer>
+            <button name="action_generate" type="object" string="Generate" class="btn-primary" />
+            <button string="Cancel" class="btn-secondary" special="cancel" />
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_employee_monthly_score_wizard" model="ir.actions.act_window">
+      <field name="name">Generate Monthly Scores</field>
+      <field name="res_model">employee.monthly.score.wizard</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+      <field name="binding_model_id" ref="model_employee_monthly_score" />
+      <field name="binding_view_types">list</field>
+    </record>
+
+    <!-- Main List View -->
+    <record id="view_employee_monthly_score_list" model="ir.ui.view">
+      <field name="name">employee.monthly.score.list</field>
+      <field name="model">employee.monthly.score</field>
+      <field name="arch" type="xml">
+        <list string="Employee of the Month" decoration-success="rank==1" decoration-info="rank==2" decoration-warning="rank==3" create="false">
+          <header>
+            <button name="%(action_open_generate_wizard)d" type="action" string="EOTM" display="always" class="btn-primary"/>
+          </header>
+          <field name="month" width="90px"/>
+          <field name="branch_id" width="65px"/>
+          <field name="employee_id" width="250px"/>
+          <field name="complex_done" width="95px"/>
+          <field name="med_done" width="80px"/>
+          <field name="easy_done" width="80px"/>
+          <field name="sec_tech_count" width="105px"/>
+          <field name="google_review" width="130px"/>
+          <field name="supervisor_score" width="115px"/>
+          <field name="full_final_score" width="110px" widget="badge" decoration-success="rank==1" decoration-info="rank==2" decoration-warning="rank==3"/>
+        </list>
+      </field>
+    </record>
+
+    <!-- Main Form View -->
+    <record id="view_employee_monthly_score_form" model="ir.ui.view">
+      <field name="name">employee.monthly.score.form</field>
+      <field name="model">employee.monthly.score</field>
+      <field name="arch" type="xml">
+        <form string="Employee Monthly Score">
+          <sheet>
+            <widget name="web_ribbon" title="Winner" bg_color="text-bg-success" invisible="rank != 1"/>
+            <widget name="web_ribbon" title="Runner-up" bg_color="text-bg-info" invisible="rank != 2"/>
+            <widget name="web_ribbon" title="Third Place" bg_color="text-bg-warning" invisible="rank != 3"/>
+            <group>
+              <group>
+                <field name="employee_id" readonly="1"/>
+                <field name="branch_id" readonly="1"/>
+                <field name="month" readonly="1"/>
+                <field name="rank" invisible="1"/>
+              </group>
+              <group>
+                <field name="google_review" />
+                <field name="full_final_score" />
+              </group>
+            </group>
+            <notebook>
+              <page string="Work Counts">
+                <group>
+                  <group string="Employee">
+                    <field name="complex_done" readonly="1" />
+                    <field name="med_done" readonly="1" />
+                    <field name="easy_done" readonly="1" />
+                    <field name="sec_tech_count" readonly="1" />
+                    <field name="supervisor_score" readonly="1" />
+                  </group>
+                  <group string="Branch">
+                    <field name="total_emp_branch" string="Total Employees" readonly="1" />
+                    <field name="total_complex_branch" string="Total Complex" readonly="1" />
+                    <field name="total_med_branch" string="Total Medium" readonly="1" />
+                    <field name="total_easy_branch" string="Total Easy" readonly="1" />
+                  </group>
+                </group>
+              </page>
+              <page string="Averages">
+                <group>
+                  <field name="avg_complex" readonly="1" />
+                  <field name="avg_med" readonly="1" />
+                  <field name="avg_easy" readonly="1" />
+                </group>
+              </page>
+              <page string="Final Scores">
+                <group>
+                  <field name="final_complex_score" string="Final Complex Score" readonly="1" />
+                  <field name="final_med_score" string="Final Medium Score" readonly="1" />
+                  <field name="final_easy_score" string="Final Easy Score" readonly="1" />
+                  <field name="final_google_score" string="Final Google Score" readonly="1" />
+                  <field name="final_sec_tech_score" string="Final Secondary Technician Score" readonly="1" />
+                  <field name="final_supervisor_score" string="Final Supervisor Score" readonly="1" />
+                  <field name="full_final_score" string="Full Final Score" readonly="1" />
+                </group>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_employee_monthly_score" model="ir.actions.act_window">
+      <field name="name">Employee of the Month</field>
+      <field name="res_model">employee.monthly.score</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_open_generate_wizard" model="ir.actions.act_window">
+      <field name="name">Generate Monthly Scores</field>
+      <field name="res_model">employee.monthly.score.wizard</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+
+  </data>
+</odoo>

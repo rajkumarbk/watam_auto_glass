@@ -34,6 +34,8 @@ Long description of module's purpose
         "views/customer_record.xml",
         "views/problem_solution.xml",
         "views/evaluation_criteria.xml",
+        "views/employee_monthly_score_views.xml",
+        # "views/employee_monthly_score_wizard.xml",
         "views/views.xml",
         "views/templates.xml",
         "views/wizard_employee_report_view.xml",

@@ -36,6 +36,9 @@ access_evaluation_criteria_user,access.evaluation.criteria,model_evaluation_crit
 access_evaluation_criteria_supervisor,access.evaluation.criteria,model_evaluation_criteria,group_customer_supervisor,1,1,1,0
 access_evaluation_criteria_admin,access.evaluation.criteria,model_evaluation_criteria,group_customer_admin,1,1,1,1
 
+access_employee_monthly_score_user,employee.monthly.score.user,model_employee_monthly_score,base.group_user,1,1,1,0
+access_employee_monthly_score_wizard_user,employee.monthly.score.wizard.user,model_employee_monthly_score_wizard,base.group_user,1,1,1,1
+
 access_what_solution_user,access.what.solution,model_what_solution,base.group_user,1,0,0,0
 access_what_solution_supervisor,access.what.solution,model_what_solution,group_customer_supervisor,1,1,1,0
 access_what_solution_admin,access.what.solution,model_what_solution,group_customer_admin,1,1,1,1
