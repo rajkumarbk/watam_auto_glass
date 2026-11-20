@@ -118,25 +118,31 @@ class ProblemSolution(models.Model):
     def create(self, vals):
         """Override create to ensure branch_id and previous_date are properly saved"""
         # Log for debugging
-        if 'branch_id' in vals:
+        if "branch_id" in vals:
             _logger.info(f"Creating record with branch_id: {vals.get('branch_id')}")
-        if 'previous_date' in vals:
-            _logger.info(f"Creating record with previous_date: {vals.get('previous_date')}")
+        if "previous_date" in vals:
+            _logger.info(
+                f"Creating record with previous_date: {vals.get('previous_date')}"
+            )
         return super(ProblemSolution, self).create(vals)
 
     # Security methods
     def write(self, vals):
         """Prevent editing records after submission for non-admin users"""
         # Log for debugging
-        if 'branch_id' in vals:
-            _logger.info(f"Writing branch_id: {vals.get('branch_id')} for record {self.id}")
-        if 'previous_date' in vals:
-            _logger.info(f"Writing previous_date: {vals.get('previous_date')} for record {self.id}")
-        
+        if "branch_id" in vals:
+            _logger.info(
+                f"Writing branch_id: {vals.get('branch_id')} for record {self.id}"
+            )
+        if "previous_date" in vals:
+            _logger.info(
+                f"Writing previous_date: {vals.get('previous_date')} for record {self.id}"
+            )
+
         for record in self:
             if record.submitted and not self.env.user.has_group("base.group_system"):
                 # Allow only status changes after submission
-                if set(vals.keys()) - {'status', 'submitted'}:
+                if set(vals.keys()) - {"status", "submitted"}:
                     raise UserError(
                         _(
                             "You cannot edit a submitted record. Please contact the administrator."
@@ -160,28 +166,34 @@ class ProblemSolution(models.Model):
         for record in self:
             # Get current branch_id and previous_date before any updates
             current_branch = record.branch_id.id if record.branch_id else False
-            current_previous_date = record.previous_date if record.previous_date else False
-            
+            current_previous_date = (
+                record.previous_date if record.previous_date else False
+            )
+
             # Explicitly preserve branch_id, previous_date and other important fields
             vals = {
                 "submitted": True,
             }
-            
+
             # Force include branch_id in the write operation
             if current_branch:
-                vals['branch_id'] = current_branch
-            
+                vals["branch_id"] = current_branch
+
             # Force include previous_date in the write operation
             if current_previous_date:
-                vals['previous_date'] = current_previous_date
-            
-            _logger.info(f"Submitting record {record.id} with branch_id: {current_branch}, previous_date: {current_previous_date}")
+                vals["previous_date"] = current_previous_date
+
+            _logger.info(
+                f"Submitting record {record.id} with branch_id: {current_branch}, previous_date: {current_previous_date}"
+            )
             record.write(vals)
-            
+
             # Verify it was saved
-            record.invalidate_cache(['branch_id', 'previous_date'])
-            _logger.info(f"After submit, branch_id is: {record.branch_id.id if record.branch_id else 'False'}, previous_date is: {record.previous_date or 'False'}")
-        
+            record.invalidate_cache(["branch_id", "previous_date"])
+            _logger.info(
+                f"After submit, branch_id is: {record.branch_id.id if record.branch_id else 'False'}, previous_date is: {record.previous_date or 'False'}"
+            )
+
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,
@@ -209,24 +221,34 @@ class ProblemSolution(models.Model):
         """Update fields when a vehicle record is selected"""
         if self.vehicle_record_id:
             cr = self.vehicle_record_id
-            
+
             # Log the branch_id and date being loaded
-            _logger.info(f"Loading branch_id from vehicle_record: {cr.branch_id.id if cr.branch_id else 'None'}")
+            _logger.info(
+                f"Loading branch_id from vehicle_record: {cr.branch_id.id if cr.branch_id else 'None'}"
+            )
             _logger.info(f"Loading date from vehicle_record: {cr.date or 'None'}")
-            
+
             update_fields = {
                 "vehicle_brand": cr.vehicle_brand.id if cr.vehicle_brand else False,
                 "vehicle_model": cr.vehicle_model.id if cr.vehicle_model else False,
-                "manufactured_year_id": cr.manufactured_year_id.id if cr.manufactured_year_id else False,
+                "manufactured_year_id": (
+                    cr.manufactured_year_id.id if cr.manufactured_year_id else False
+                ),
                 "vehicle_display": cr.vehicle_display,
                 "photo": cr.photo,
                 "employee_id": cr.employee_id.id if cr.employee_id else False,
                 "branch_id": cr.branch_id.id if cr.branch_id else False,
-                "previous_date": cr.date if cr.date else False,  # Get the date from customer.record
-                "assistant_staff": cr.assistant_staff.id if cr.assistant_staff else False,
+                "previous_date": (
+                    cr.date if cr.date else False
+                ),  # Get the date from customer.record
+                "assistant_staff": (
+                    cr.assistant_staff.id if cr.assistant_staff else False
+                ),
                 "name": cr.name,
                 "phone": cr.phone,
-                "glass_destination": cr.glass_destination.id if cr.glass_destination else False,
+                "glass_destination": (
+                    cr.glass_destination.id if cr.glass_destination else False
+                ),
                 "workplace": cr.workplace,
                 "service_complexity": cr.service_complexity,
                 "service_type": cr.service_type,
@@ -238,27 +260,29 @@ class ProblemSolution(models.Model):
             self.update(update_fields)
         else:
             # Clear fields if no vehicle record is selected
-            self.update({
-                "vehicle_brand": False,
-                "vehicle_model": False,
-                "manufactured_year_id": False,
-                "vehicle_display": False,
-                "photo": False,
-                "employee_id": False,
-                "branch_id": False,
-                "previous_date": False,
-                "assistant_staff": False,
-                "name": False,
-                "phone": False,
-                "glass_destination": False,
-                "workplace": False,
-                "service_complexity": False,
-                "service_type": False,
-                "service_option": False,
-                "glass_option": False,
-                "retailer_type": False,
-                "invoice_number": False,
-            })
+            self.update(
+                {
+                    "vehicle_brand": False,
+                    "vehicle_model": False,
+                    "manufactured_year_id": False,
+                    "vehicle_display": False,
+                    "photo": False,
+                    "employee_id": False,
+                    "branch_id": False,
+                    "previous_date": False,
+                    "assistant_staff": False,
+                    "name": False,
+                    "phone": False,
+                    "glass_destination": False,
+                    "workplace": False,
+                    "service_complexity": False,
+                    "service_type": False,
+                    "service_option": False,
+                    "glass_option": False,
+                    "retailer_type": False,
+                    "invoice_number": False,
+                }
+            )
 
     # Computed methods
     @api.depends("vehicle_brand", "vehicle_model", "manufactured_year_id")
@@ -279,11 +303,11 @@ class ProblemSolution(models.Model):
             # Preserve branch_id and previous_date when changing status
             vals = {"status": "started"}
             if record.branch_id:
-                vals['branch_id'] = record.branch_id.id
+                vals["branch_id"] = record.branch_id.id
             if record.previous_date:
-                vals['previous_date'] = record.previous_date
+                vals["previous_date"] = record.previous_date
             record.write(vals)
-        
+
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,
@@ -298,11 +322,11 @@ class ProblemSolution(models.Model):
             # Preserve branch_id and previous_date when changing status
             vals = {"status": "done"}
             if record.branch_id:
-                vals['branch_id'] = record.branch_id.id
+                vals["branch_id"] = record.branch_id.id
             if record.previous_date:
-                vals['previous_date'] = record.previous_date
+                vals["previous_date"] = record.previous_date
             record.write(vals)
-        
+
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,

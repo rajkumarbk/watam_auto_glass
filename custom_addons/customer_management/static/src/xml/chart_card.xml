@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="customer_management.CmChart">
+        <div class="cm_chart">
+            <div class="cm_chart__title"><t t-esc="props.title"/></div>
+            <div class="cm_chart__body">
+                <canvas t-ref="canvas"/>
+                <div t-if="!props.data.length" class="cm_chart__empty">No data</div>
+            </div>
+        </div>
+    </t>
+</templates>

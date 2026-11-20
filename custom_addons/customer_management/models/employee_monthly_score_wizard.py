@@ -6,12 +6,14 @@ class EmployeeMonthlyScoreWizard(models.TransientModel):
     _description = "Generate Employee Monthly Scores"
 
     month_date = fields.Date(
-        string="Month", required=True,
+        string="Month",
+        required=True,
         default=fields.Date.context_today,
         help="Any date within the target month",
     )
     branch_ids = fields.Many2many(
-        "res.company", string="Branches",
+        "res.company",
+        string="Branches",
         help="Leave empty to generate for all branches",
     )
 

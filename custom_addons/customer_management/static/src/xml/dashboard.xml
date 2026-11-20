@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="customer_management.Dashboard">
+        <div class="cm_dash">
+            <div class="cm_dash__head">
+                <div>
+                    <h1 class="cm_dash__title">Dashboard</h1>
+                    <div class="cm_dash__range">
+                        <t t-esc="periodLabel"/>
+                        <t t-if="state.data.date_from">
+                            · <t t-esc="state.data.date_from"/> → <t t-esc="state.data.date_to"/>
+                        </t>
+                    </div>
+                </div>
+                <button class="btn cm_dash__filter_btn" t-on-click="toggleFilters">
+                    <i class="fa fa-sliders me-2"/>Filter
+                </button>
+            </div>
+
+            <div t-if="state.showFilters" class="cm_dash__filters">
+                <div class="cm_dash__chips">
+                    <t t-foreach="periods" t-as="p" t-key="p.key">
+                        <button
+                            t-attf-class="cm_chip #{state.filters.period === p.key ? 'active' : ''}"
+                            t-on-click="() => this.setPeriod(p.key)">
+                            <t t-esc="p.label"/>
+                        </button>
+                    </t>
+                </div>
+                <div class="cm_dash__row">
+                    <div t-if="state.filters.period === 'custom'" class="cm_dash__dates">
+                        <input type="date" class="form-control" t-model="state.filters.date_from" t-on-change="onChange"/>
+                        <span>→</span>
+                        <input type="date" class="form-control" t-model="state.filters.date_to" t-on-change="onChange"/>
+                    </div>
+                    <select class="form-select" t-model="state.filters.company_id" t-on-change="onCompanyChange">
+                        <option value="">All Companies</option>
+                        <t t-foreach="state.options.companies" t-as="c" t-key="c.id">
+                            <option t-att-value="c.id"><t t-esc="c.name"/></option>
+                        </t>
+                    </select>
+                    <select class="form-select" t-model="state.filters.branch_id" t-on-change="onChange">
+                        <option value="">All Branches</option>
+                        <t t-foreach="branches" t-as="b" t-key="b.id">
+                            <option t-att-value="b.id"><t t-esc="b.name"/></option>
+                        </t>
+                    </select>
+                </div>
+            </div>
+
+            <div t-attf-class="cm_dash__cards #{state.loading ? 'is-loading' : ''}">
+                <div class="cm_card cm_card--blue">
+                    <div class="cm_card__icon"><i class="fa fa-wrench"/></div>
+                    <div class="cm_card__label">Ongoing Work</div>
+                    <div class="cm_card__value"><t t-esc="state.data.ongoing"/></div>
+                </div>
+                <div class="cm_card cm_card--green">
+                    <div class="cm_card__icon"><i class="fa fa-check-circle"/></div>
+                    <div class="cm_card__label">Total Jobs Done</div>
+                    <div class="cm_card__value"><t t-esc="state.data.done"/></div>
+                </div>
+                <div class="cm_card cm_card--gold">
+                    <div class="cm_card__icon"><i class="fa fa-trophy"/></div>
+                    <div class="cm_card__label">Top Employee</div>
+                    <t t-if="state.data.top_employee">
+                        <div class="cm_card__value cm_card__value--text">
+                            <t t-esc="state.data.top_employee.name"/>
+                        </div>
+                        <div class="cm_card__sub">
+                            <t t-esc="state.data.top_employee.count"/> jobs done
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="cm_card__value cm_card__value--text">—</div>
+                    </t>
+                </div>
+            </div>
+                        <div t-attf-class="cm_dash__charts #{state.loading ? 'is-loading' : ''}">
+                <div class="cm_chart_wrap cm_chart_wrap--wide">
+                    <CmChart title="'Jobs Trend'" type="'line'" data="state.data.charts.trend || []"/>
+                </div>
+                <div class="cm_chart_wrap cm_chart_wrap--wide">
+                    <CmChart title="'Jobs by Branch'" type="'bar'" data="state.data.charts.branch || []"/>
+                </div>
+                <div class="cm_chart_wrap">
+                    <CmChart title="'Service Type'" type="'doughnut'" data="state.data.charts.service_type || []"/>
+                </div>
+                <div class="cm_chart_wrap">
+                    <CmChart title="'Complexity'" type="'doughnut'" data="state.data.charts.complexity || []"/>
+                </div>
+                <div class="cm_chart_wrap">
+                    <CmChart title="'OEM vs Aftermarket'" type="'doughnut'" data="state.data.charts.retailer_type || []"/>
+                </div>
+                <div class="cm_chart_wrap">
+                    <CmChart title="'Top Employees (Finished)'" type="'hbar'" data="state.data.charts.employee || []"/>
+                </div>
+                <div class="cm_chart_wrap">
+                    <CmChart title="'Top Vehicle Brands'" type="'hbar'" data="state.data.charts.brand || []"/>
+                </div>
+                <div class="cm_chart_wrap">
+                    <CmChart title="'Top Glass Positions'" type="'hbar'" data="state.data.charts.glass || []"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

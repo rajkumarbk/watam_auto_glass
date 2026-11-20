@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from . import models
+from . import dashboard
 from .master_data import vehicle_brand
 from .master_data import vehicle_model
 from .master_data import vehicle_manufactured_year

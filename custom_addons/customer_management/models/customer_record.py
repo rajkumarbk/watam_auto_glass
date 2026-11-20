@@ -20,6 +20,7 @@ class ClientRecord(models.Model):
         "res.company",
         string="Branch Name",
         default=lambda self: self.env.company,
+        index=True,
     )
     name = fields.Char(string="Customer Name", required=True)
     phone = fields.Char(string="Mobile Number", required=True, size=10)
@@ -44,6 +45,7 @@ class ClientRecord(models.Model):
         string="Date",
         default=fields.Date.context_today,
         readonly=True,
+        index=True,
     )
     photo = fields.Binary(string="Photo")
     notes = fields.Text(string="Notes")
@@ -90,6 +92,7 @@ class ClientRecord(models.Model):
         string="Status",
         default="not_started",
         tracking=True,
+        index=True,
     )
     service_complexity = fields.Selection(
         [

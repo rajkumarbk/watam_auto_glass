@@ -212,21 +212,16 @@ class EmployeeMonthlyScore(models.Model):
                 rec.total_easy_branch + rec.total_med_branch + rec.total_complex_branch
             )
             rec.final_complex_score = min(
-                (rec.complex_done / rec.avg_complex) * 2.0
-                if rec.avg_complex else 0.0,
-                2.0
+                (rec.complex_done / rec.avg_complex) * 2.0 if rec.avg_complex else 0.0,
+                2.0,
             )
 
             rec.final_med_score = min(
-                (rec.med_done / rec.avg_med) * 1.5
-                if rec.avg_med else 0.0,
-                1.5
+                (rec.med_done / rec.avg_med) * 1.5 if rec.avg_med else 0.0, 1.5
             )
 
             rec.final_easy_score = min(
-                (rec.easy_done / rec.avg_easy) * 1.5
-                if rec.avg_easy else 0.0,
-                1.5
+                (rec.easy_done / rec.avg_easy) * 1.5 if rec.avg_easy else 0.0, 1.5
             )
             rec.final_google_score = (
                 (rec.google_review / total_done) * 3.0 if rec.google_review else 0.0

@@ -44,6 +44,11 @@ Long description of module's purpose
         "web.assets_backend": [
             "customer_management/static/src/css/style.css",
             "customer_management/static/src/scss/menu_icons.scss",
+            "customer_management/static/src/scss/dashboard.scss",
+            "customer_management/static/src/js/chart_card.js",
+            "customer_management/static/src/xml/chart_card.xml",
+            "customer_management/static/src/js/dashboard.js",
+            "customer_management/static/src/xml/dashboard.xml",
             # 'customer_management/static/srcjs/camera_widget.js',
             # 'customer_management/static/src/xml/camera_widget.xml',
         ],

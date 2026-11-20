@@ -9,7 +9,7 @@
         <form string="Generate Employee of the Month Scores">
           <group>
             <field name="month_date" />
-            <field name="branch_ids" widget="many2many_tags" />
+            <field name="branch_ids" readonly="1" widget="many2many_tags" />
           </group>
           <footer>
             <button name="action_generate" type="object" string="Generate" class="btn-primary" />
