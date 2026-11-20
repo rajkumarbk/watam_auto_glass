@@ -32,7 +32,7 @@
         <field name="binding_type">report</field>
     </record>
 
-    
+
 
     <template id="attendance_report_template">
         <t t-call="web.html_container">
@@ -107,12 +107,15 @@
                             <table class="table table-bordered table-sm" style="width: 100%; border-collapse: collapse; font-size: 15px; text-align: center;">
                                 <thead>
                                     <tr>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 15%;">Date</th>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 15%;">Day</th>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 15%;">Check In</th>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 15%;">Check Out</th>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 15%;">Worked Hours</th>
-                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 25%;">Remarks</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 12%;">Date</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 8%;">Day</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 10%;">Check In</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 10%;">Break Out</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 10%;">Break In</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 13%;">Break Duration</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 10%;">Check Out</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 13%;">Worked Hours</th>
+                                        <th style="border: 1px solid #000; padding: 4px; text-align: center; width: 14%;">Remarks</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -129,6 +132,15 @@
                                                     <span t-esc="record.get('check_in', '')"/>
                                                 </td>
                                                 <td style="border: 1px solid #000; padding: 4px;">
+                                                    <span t-esc="record.get('break_out', '')"/>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 4px;">
+                                                    <span t-esc="record.get('break_in', '')"/>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 4px;">
+                                                    <span t-esc="record.get('break_duration', '')"/>
+                                                </td>
+                                                <td style="border: 1px solid #000; padding: 4px;">
                                                     <span t-esc="record.get('check_out', '')"/>
                                                 </td>
                                                 <td style="border: 1px solid #000; padding: 4px;">
@@ -139,7 +151,9 @@
                                                         <t t-if="record.get('reason')">
                                                             <span t-esc="record.get('reason')"/>
                                                         </t>
-                                                        <t t-else="">ABS</t>
+                                                        <t t-else="">
+                                                            <span t-esc="record.get('absent_note', 'ABS')"/>
+                                                        </t>
                                                     </t>
                                                 </td>
                                             </tr>
@@ -148,7 +162,7 @@
 
                                     <t t-else="">
                                         <tr>
-                                            <td colspan="6" style="border: 1px solid #000; padding: 8px; text-align: center;">
+                                            <td colspan="9" style="border: 1px solid #000; padding: 8px; text-align: center;">
                                                 No attendance records found.
                                             </td>
                                         </tr>

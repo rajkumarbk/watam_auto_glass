@@ -9,12 +9,16 @@ class AttendanceReportWizard(models.TransientModel):
     _description = "Attendance Report Wizard"
 
     start_date = fields.Date(
-    string="Start Date",
-    required=True,
-    default=lambda self: (fields.Date.today() - relativedelta(months=1)).replace(day=21),
-)
+        string="Start Date",
+        required=True,
+        default=lambda self: (fields.Date.today() - relativedelta(months=1)).replace(
+            day=21
+        ),
+    )
     end_date = fields.Date(
-        string="End Date", required=True, default=lambda self: fields.Date.today().replace(day=20)
+        string="End Date",
+        required=True,
+        default=lambda self: fields.Date.today().replace(day=20),
     )
     employee_ids = fields.Many2many(
         "hr.employee",
@@ -59,7 +63,11 @@ class AttendanceReportWizard(models.TransientModel):
             if employee_name not in data_by_day[date_str]:
                 data_by_day[date_str][employee_name] = {
                     "check_in": None,
+                    "break_out": None,
+                    "break_in": None,
                     "check_out": None,
+                    "break_out_dt": None,
+                    "break_in_dt": None,
                     "check_in_dt": None,
                     "check_out_dt": None,
                     "other_punches": [],
@@ -74,6 +82,12 @@ class AttendanceReportWizard(models.TransientModel):
             elif record.punch_type == "1":
                 data_by_day[date_str][employee_name]["check_out"] = punch_time
                 data_by_day[date_str][employee_name]["check_out_dt"] = ksa_time
+            elif record.punch_type == "2":
+                data_by_day[date_str][employee_name]["break_out"] = punch_time
+                data_by_day[date_str][employee_name]["break_out_dt"] = ksa_time
+            elif record.punch_type == "3":
+                data_by_day[date_str][employee_name]["break_in"] = punch_time
+                data_by_day[date_str][employee_name]["break_in_dt"] = ksa_time
             else:
                 punch_type_mapping = {
                     "2": "Break Out",
@@ -92,10 +106,12 @@ class AttendanceReportWizard(models.TransientModel):
         # Build full report: one row per employee per date
         report_data = []
         current_date = self.start_date
-        reason_records = self.env["attendance.absence.reason"].search([
-            ("date_from", "<=", self.end_date),
-            ("date_to", ">=", self.start_date),
-        ])
+        reason_records = self.env["attendance.absence.reason"].search(
+            [
+                ("date_from", "<=", self.end_date),
+                ("date_to", ">=", self.start_date),
+            ]
+        )
         while current_date <= self.end_date:
             date_str = current_date.strftime("%Y-%m-%d")
             day_name = current_date.strftime("%a")  # Mon, Tue, ..., Fri, Sat, Sun
@@ -122,9 +138,13 @@ class AttendanceReportWizard(models.TransientModel):
                     emp_name,
                     {
                         "check_in": None,
+                        "break_out": None,
+                        "break_in": None,
                         "check_out": None,
                         "check_in_dt": None,
                         "check_out_dt": None,
+                        "break_out_dt": None,
+                        "break_in_dt": None,
                         "device_id": "",
                         "address": "",
                         "other_punches": [],
@@ -157,14 +177,30 @@ class AttendanceReportWizard(models.TransientModel):
                         s = secs % 60
                         total_hours = f"{h:02d}:{m:02d}:{s:02d}"
 
+                break_secs = 0
+                break_duration = "" if is_weekend else "-"
+                if (
+                    data["break_out_dt"]
+                    and data["break_in_dt"]
+                    and data["break_in_dt"] > data["break_out_dt"]
+                ):
+                    secs = int(
+                        (data["break_in_dt"] - data["break_out_dt"]).total_seconds()
+                    )
+                    break_secs = secs
+                    break_duration = (
+                        f"{secs // 3600:02d}:{(secs % 3600) // 60:02d}:{secs % 60:02d}"
+                    )
                 # Decide if absent
                 absent = ""
                 has_attendance = data["check_in"] or data["check_out"]
                 complete_attendance = data["check_in"] and data["check_out"]
 
                 if not is_weekend and not complete_attendance:
-                    absent = "Yes"  # Only working days with incomplete/no attendance are absent
-
+                    absent = "Yes"
+                if not is_weekend and break_secs > 4200:
+                    absent = "Yes"
+                absent_note = "ABS (Long Break)" if break_secs > 4200 else "ABS"
                 report_data.append(
                     {
                         "date": date_str,
@@ -172,9 +208,13 @@ class AttendanceReportWizard(models.TransientModel):
                         "employee": emp_name,
                         "device_id": data.get("device_id", ""),
                         "check_in": check_in,
+                        "break_out": data["break_out"] or ("" if is_weekend else "-"),
+                        "break_in": data["break_in"] or ("" if is_weekend else "-"),
                         "check_out": check_out,
                         "total_hours": total_hours,
+                        "break_duration": break_duration,
                         "absent": absent,
+                        "absent_note": absent_note,
                         "punch_type": (
                             ", ".join(data["other_punches"])
                             if data["other_punches"]
@@ -229,7 +269,7 @@ class AttendanceReportWizard(models.TransientModel):
             if not is_weekend and rec["absent"] == "Yes" and not rec.get("reason"):
                 summary[emp]["absent_count"] += 1
 
-            if rec["total_hours"] != "-" and not is_weekend:
+            if rec["total_hours"] != "-" and not is_weekend and rec["absent"] != "Yes":
                 try:
                     h, m, s = map(int, rec["total_hours"].split(":"))
                     summary[emp]["total_hours_seconds"] += h * 3600 + m * 60 + s

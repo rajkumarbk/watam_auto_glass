@@ -6,8 +6,9 @@ class AttendanceAbsenceReason(models.Model):
     _name = "attendance.absence.reason"
     _description = "Attendance Absence Reason"
 
-    employee_id = fields.Many2one("hr.employee", string="Employee",
-                                  help="Empty = applies to all employees")
+    employee_id = fields.Many2one(
+        "hr.employee", string="Employee", help="Empty = applies to all employees"
+    )
     date_from = fields.Date(required=True)
     date_to = fields.Date(required=True)
     reason = fields.Char(required=True)
@@ -25,8 +26,9 @@ class AttendanceAbsenceReason(models.Model):
                 ("id", "!=", rec.id),
                 ("date_from", "<=", rec.date_to),
                 ("date_to", ">=", rec.date_from),
-                "|", ("employee_id", "=", rec.employee_id.id),
-                     ("employee_id", "=", False),
+                "|",
+                ("employee_id", "=", rec.employee_id.id),
+                ("employee_id", "=", False),
             ]
             if not rec.employee_id:
                 domain = [
