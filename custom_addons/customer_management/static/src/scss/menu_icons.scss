@@ -1,0 +1,21 @@
+@mixin menu-icon($xmlid, $code) {
+    [data-menu-xmlid="customer_management.#{$xmlid}"]::before {
+        font-family: FontAwesome;
+        content: $code;
+        margin-right: 6px;
+    }
+}
+
+@include menu-icon(menu_client_record, "\f0ad");            // wrench
+@include menu-icon(menu_client_record_finished, "\f058");   // check-circle
+@include menu-icon(menu_prob_soln, "\f071");                // warning triangle
+@include menu-icon(menu_solved_problems, "\f00c");          // check
+@include menu-icon(menu_evaluation_criteria, "\f080");      // bar-chart
+@include menu-icon(menu_employee_monthly_score, "\f091");   // trophy
+@include menu-icon(menu_master_data, "\f07c");              // folder-open
+@include menu-icon(menu_vehicle_brand, "\f02b");            // tag
+@include menu-icon(menu_vehicle_model, "\f1b9");            // car
+@include menu-icon(menu_vehicle_manufactured_year, "\f073");// calendar
+@include menu-icon(menu_vehicle_glass_details, "\f009");    // th-large
+@include menu-icon(menu_problem, "\f06a");                  // exclamation-circle
+@include menu-icon(menu_solution, "\f0eb");                 // lightbulb

@@ -43,6 +43,7 @@ Long description of module's purpose
     "assets": {
         "web.assets_backend": [
             "customer_management/static/src/css/style.css",
+            "customer_management/static/src/scss/menu_icons.scss",
             # 'customer_management/static/srcjs/camera_widget.js',
             # 'customer_management/static/src/xml/camera_widget.xml',
         ],
